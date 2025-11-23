@@ -30,7 +30,6 @@ class PackagistService
 		) {
 			try {
 				$package = $this->packagist->getPackagesNamesByVendor("vicky-project");
-				dd($package);
 
 				return collect($data["packageNames"] ?? [])->map(function ($package) {
 					dd($this->packagist->getPackage($package));
