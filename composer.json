@@ -4,13 +4,16 @@
 	"description": "",
 	"authors": [
 		{
-			"name": "Nicolas Widart",
-			"email": "n.widart@gmail.com"
+			"name": "Vicky Rahman",
+			"email": "pratamavr@gmail.com"
 		}
 	],
 	"require": {
 		"spatie/packagist-api": "^2.1",
-		"joshbrw/laravel-module-installer": "^1.0"
+		"joshbrw/laravel-module-installer": "^1.0",
+		"vicky-project/usermanagement-module": "dev-main",
+		"vicky-project/menumanagement-module": "dev-main",
+		"vicky-project/viewmanager-module": "dev-main"
 	},
 	"extra": {
 		"laravel": {
