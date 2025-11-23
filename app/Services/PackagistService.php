@@ -20,7 +20,7 @@ class PackagistService
 		$this->packagist = new PackagistClient($client, $generator);
 	}
 
-	public function getModule($page = 1, $perPage = 12)
+	public function getModules($page = 1, $perPage = 12)
 	{
 		$cacheKey = "packagist_laravel_module_{$page}_{$perPage}";
 
@@ -31,23 +31,25 @@ class PackagistService
 			try {
 				$package = $this->packagist->getPackagesNamesByVendor("vicky-project");
 
-				return collect($data["packageNames"] ?? [])->map(function ($package) {
-					dd($this->packagist->getPackage($package));
-					return [
-						"name" => $package["name"],
-						"description" => $package["description"] ?? "No description",
-						"url" => $package["url"],
-						"repository" => $package["repository"] ?? "",
-						"downloads" => $package["downloads"] ?? 0,
-						"favers" => $package["favers"] ?? 0,
-						"type" => "packagist",
-					];
-				});
+				return collect($data["packageNames"] ?? [])->map(
+					fn($package) => $this->packagist->getPackage($package)["package"]
+				);
 			} catch (\Exception $e) {
 				logger()->error("Packagist API error: " . $e->getMessage());
 			}
 
 			return collect();
+		});
+	}
+
+	public function getModule(string $name)
+	{
+		$cacheKey = "packagist_laravel_module_package_{$name}";
+
+		return Cache::remember($cacheKey, now()->addHours(24), function () use (
+			$name
+		) {
+			return $this->packagist->getPackage($name);
 		});
 	}
 }

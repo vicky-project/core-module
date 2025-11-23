@@ -22,10 +22,9 @@ class CoreController extends Controller
 	{
 		$page = $request->get("page", 1);
 
-		$packagistModule = $this->packagistService->getModule($page);
-		dd($packagistModule);
+		$modules = $this->packagistService->getModules($page);
 
-		return view("core::index");
+		return view("core::modules.index", compact("modules"));
 	}
 
 	/**
@@ -46,9 +45,11 @@ class CoreController extends Controller
 	/**
 	 * Show the specified resource.
 	 */
-	public function show($id)
+	public function show($core)
 	{
-		return view("core::show");
+		$package = $this->packagistService->getModule($core);
+		dd($package);
+		return view("core::modules.show", compact("package"));
 	}
 
 	/**
