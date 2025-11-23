@@ -13,8 +13,8 @@
 		"spatie/packagist-api": "^2.1",
 		"joshbrw/laravel-module-installer": "^1.0",
 		"vicky-project/usermanagement-module": "^1.0",
-		"vicky-project/menumanagement-module": "*",
-		"vicky-project/viewmanager-module": "*"
+		"vicky-project/menumanagement-module": "^1.0",
+		"vicky-project/viewmanager-module": "^1.0"
 	},
 	"extra": {
 		"laravel": {
