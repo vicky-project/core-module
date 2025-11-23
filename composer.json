@@ -1,0 +1,33 @@
+{
+	"name": "vicky-project/core",
+	"type": "laravel-module",
+	"description": "",
+	"authors": [
+		{
+			"name": "Nicolas Widart",
+			"email": "n.widart@gmail.com"
+		}
+	],
+	"require": {
+		"spatie/packagist-api": "^2.1",
+		"joshbrw/laravel-module-installer": "^1.0"
+	},
+	"extra": {
+		"laravel": {
+			"providers": [],
+			"aliases": {}
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Modules\\Core\\": "app/",
+			"Modules\\Core\\Database\\Factories\\": "database/factories/",
+			"Modules\\Core\\Database\\Seeders\\": "database/seeders/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Modules\\Core\\Tests\\": "tests/"
+		}
+	}
+}
