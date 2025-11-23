@@ -11,9 +11,9 @@
 	"require": {
 		"spatie/packagist-api": "^2.1",
 		"joshbrw/laravel-module-installer": "^1.0",
-		"vicky-project/usermanagement-module": "dev-main",
-		"vicky-project/menumanagement-module": "dev-main",
-		"vicky-project/viewmanager-module": "dev-main"
+		"vicky-project/usermanagement-module": "*",
+		"vicky-project/menumanagement-module": "*",
+		"vicky-project/viewmanager-module": "*"
 	},
 	"extra": {
 		"laravel": {
