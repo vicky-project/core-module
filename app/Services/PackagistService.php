@@ -29,10 +29,11 @@ class PackagistService
 			$perPage
 		) {
 			try {
-				$package = $this->packagist->getPackagesNamesByVendor("spatie");
+				$package = $this->packagist->getPackagesNamesByVendor("vicky-project");
 				dd($package);
 
-				return collect($data["results"] ?? [])->map(function ($package) {
+				return collect($data["packageNames"] ?? [])->map(function ($package) {
+					dd($this->packagist->getPackage($package));
 					return [
 						"name" => $package["name"],
 						"description" => $package["description"] ?? "No description",
