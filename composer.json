@@ -2,7 +2,7 @@
 	"name": "vicky-project/core-module",
 	"type": "laravel-module",
 	"description": "",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"authors": [
 		{
 			"name": "Vicky Rahman",
