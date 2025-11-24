@@ -140,6 +140,8 @@ class PackagistService
 			);
 			return null;
 		}
+
+		return null;
 	}
 
 	public function getVendorPackageWithVersionInfo($vendor)
