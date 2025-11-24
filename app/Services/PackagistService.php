@@ -7,7 +7,6 @@ use Spatie\Packagist\PackagistUrlGenerator;
 use Spatie\Packagist\PackagistClient;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Collection;
 
 class PackagistService
 {
@@ -21,7 +20,7 @@ class PackagistService
 		$this->packagist = new PackagistClient($client, $generator);
 	}
 
-	public function searchLaravelModules(): Collection
+	public function searchLaravelModules(): array
 	{
 		$cacheKey = "packagist_laravel_module";
 
