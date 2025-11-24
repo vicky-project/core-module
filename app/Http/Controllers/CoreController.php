@@ -21,7 +21,6 @@ class CoreController extends Controller
 	public function index(Request $request)
 	{
 		$modules = $this->packagistService->getModules();
-		dd($modules);
 
 		return view("core::modules.index", compact("modules"));
 	}
