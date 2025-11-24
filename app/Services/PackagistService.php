@@ -47,10 +47,9 @@ class PackagistService
 
 	protected function getLatestStableVersion(array $packages): array
 	{
-		dd($packages);
 		return array_filter(
 			$packages,
-			fn($version) => !preg_match("/dev|alpha|beta|rc/i", $version)
+			fn($version) => !preg_match("/dev|alpha|beta|rc/i", array_keys($version))
 		);
 	}
 
