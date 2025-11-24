@@ -20,7 +20,10 @@ class CoreController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$packagistModule = $this->packagistService->getVendorPackageWithVersionInfo();
+		$vendorName = "vicky-project";
+		$packagistModule = $this->packagistService->getVendorPackageWithVersionInfo(
+			$vendorName
+		);
 		dd($installedModule);
 		$installedModule = $this->packagistService->getInstalledModule();
 
