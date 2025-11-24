@@ -1,7 +1,7 @@
 {
 	"name": "vicky-project/core-module",
 	"type": "laravel-module",
-	"description": "",
+	"description": "Core module for admin panel application. Could be manage all module installed or not yet.",
 	"license": "MIT",
 	"authors": [
 		{

@@ -16,7 +16,7 @@
           </div>
           <div>
             <div class="fs-6 fw-semibold text-primary">{{ $module["name"] }}</div>
-            <div class="text-body-secondary text-uppercase fw-semibold small">{{ $modul["description"] }}</div>
+            <div class="text-body-secondary text-uppercase fw-semibold small">{{ $module["description"] }}</div>
           </div>
         </div>
         <div class="dropdown">
@@ -36,8 +36,7 @@
   <div class="col-auto">
     <div class="card">
       <div class="card-body">
-        <p class="text-center">No available here
-        </p>
+        <p class="text-center">No Module available here.</p>
       </div>
     </div>
   </div>
