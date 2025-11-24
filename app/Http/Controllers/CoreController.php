@@ -20,9 +20,9 @@ class CoreController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$packagistModule = $this->packagistService->searchLaravelModules();
+		$packagistModule = $this->packagistService->getVendorPackageWithVersionInfo();
+		dd($installedModule);
 		$installedModule = $this->packagistService->getInstalledModule();
-		dd($installedModule, $installedModule);
 
 		return view("core::modules.index", compact("modules"));
 	}
