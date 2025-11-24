@@ -140,7 +140,7 @@ class PackagistService
 		$cacheKey =
 			config("api.cache_key_prefix") . "_packagist_installed_{$packageName}";
 		$composerLock = json_decode(file_get_contents($composerLockPath), true);
-		dd($composerLock["packages"]);
+		dd($packageName, $composerLock["packages"]);
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$packageName,
