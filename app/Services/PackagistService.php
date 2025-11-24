@@ -23,7 +23,7 @@ class PackagistService
 
 	public function getPackagesByVendor($vendor): array
 	{
-		$cacheKey = config("core.cache_key_prefix") . "_packagist";
+		$cacheKey = config("core.cache_key_prefix", "") . "_packagist";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$vendor
@@ -41,7 +41,8 @@ class PackagistService
 
 	protected function getPackage(string $packageName): ?array
 	{
-		$cacheKey = cache("core.cache_key_prefix") . "_packagist_{$packageName}";
+		$cacheKey =
+			cache("core.cache_key_prefix", "") . "_packagist_{$packageName}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$packageName
@@ -138,9 +139,7 @@ class PackagistService
 		}
 
 		$cacheKey =
-			config("api.cache_key_prefix") . "_packagist_installed_{$packageName}";
-		$composerLock = json_decode(file_get_contents($composerLockPath), true);
-		dd($packageName, $composerLock["packages"]);
+			config("core.cache_key_prefix", "") . "_package_installed_{$packageName}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$packageName,
@@ -148,8 +147,8 @@ class PackagistService
 		) {
 			try {
 				$composerLock = json_decode(file_get_contents($composerLockPath), true);
-				dd($composerLock["packages"]);
-				foreach ($composerLock["packages"] ?? [] as $package) {
+
+				foreach ($composerLock["packages"] as $package) {
 					if ($package["name"] === $packageName) {
 						return ltrim($package["version"] ?? null, "v");
 					}
