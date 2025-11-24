@@ -11,14 +11,14 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             @if($module["is_installed"])
-            <span class="badge badge-info">Latest: v{{$module["latest_version"]}}</span>
+            <span class="badge badge-outline-info">Latest: v{{$module["latest_version"]}}</span>
             @elseif($module["update_available"])
             <div>
-              <span class="badge badge-warning">Current: v{{$module["installed_version"]}}</span>
+              <span class="badge badge-outline-warning">Current: v{{$module["installed_version"]}}</span>
               <span class="badge badge-success">Update: v{{$module["latest_version"]}}</span>
             </div>
             @else
-            <span class="badge badge-success">v{{$module["installed_version"]}}</span>
+            <span class="badge badge-outline-success">{{$module["installed_version"]}}</span>
             @endif
           </div>
           <div>
@@ -32,6 +32,37 @@
         <small class="text-muted d-block mb-2">{{$module["name"]}}</small>
       </div>
       <div class="card-footer d-flex justify-content-between align-items-center">
+        <div class="mb-3">
+          @if(!$module['is_installed'])
+          <form action="{{ route('core.install-package', $module['name']) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')"> Install</button>
+          </form>
+          @elseif($module['update_available'])
+          <form action="{{ route('cores.update-package', $module['name']) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} to latest version?')">
+              Update
+            </button>
+          </form>
+          @else
+          @if($module['status'] === 'enabled')
+          <form action="{{ route('cores.disable', $module['display_name']) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-outline-warning btn-sm">
+              Disable
+            </button>
+          </form>
+          @else
+          <form action="{{ route('cores.enable', $module['display_name']) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-outline-success btn-sm">
+               Enable
+            </button>
+          </form>
+          @endif
+        @endif
+        </div>
       </div>
     </div>
   </div>
