@@ -22,7 +22,7 @@ class PackagistService
 
 	public function getPackagesByVendor($vendor): array
 	{
-		$cacheKey = "packagist_laravel_module";
+		$cacheKey = config("core.cache_key_prefix") . "_packagist";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$vendor
@@ -40,7 +40,7 @@ class PackagistService
 
 	protected function getPackage(string $packageName): ?array
 	{
-		$cacheKey = "packagist_package_{$packageName}";
+		$cacheKey = cache("core.cache_key_prefix") . "_packagist_{$packageName}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$packageName
@@ -69,8 +69,8 @@ class PackagistService
 		return [
 			"name" => $packageData["name"],
 			"description" => $packageData["description"] ?? "No description.",
-			"repository" => $packageData["'repository"] ?? "",
-			"downloads" => $packageData["'downloads"] ?? [],
+			"repository" => $packageData["repository"] ?? "",
+			"downloads" => $packageData["downloads"] ?? [],
 			"favers" => $packageData["favers"] ?? 0,
 			"github_stars" => $packageData["github_stars"] ?? 0,
 			"type" => $packageData["type"] ?? "library",
@@ -120,28 +120,33 @@ class PackagistService
 		if (!file_exists($composerLockPath)) {
 			return null;
 		}
+		$cacheKey = config("api.cache_key_prefix") . "_packagist_{$packageName}";
 
 		try {
-			$composerLock = json_decode(file_get_contents($composerLockPath), true);
-			foreach ($composerLock["packages"] ?? [] as $package) {
-				if ($package["name"] === $packageName) {
-					return ltrim($package["version"] ?? null, "v");
+			return Cache::remember($cacheKey, now()->addHours(24), function () use (
+				$packageName
+			) {
+				$composerLock = json_decode(file_get_contents($composerLockPath), true);
+				foreach ($composerLock["packages"] ?? [] as $package) {
+					if ($package["name"] === $packageName) {
+						return ltrim($package["version"] ?? null, "v");
+					}
 				}
-			}
 
-			foreach ($composerLock["packages-dev"] ?? [] as $package) {
-				if ($package["name"] === $packageName) {
-					return ltrim($package["version"] ?? null, "v");
+				foreach ($composerLock["packages-dev"] ?? [] as $package) {
+					if ($package["name"] === $packageName) {
+						return ltrim($package["version"] ?? null, "v");
+					}
 				}
-			}
+
+				return null;
+			});
 		} catch (\Exception $e) {
 			logger()->error(
 				"Error reading composer.lock for {$packageName}: " . $e->getMessage()
 			);
 			return null;
 		}
-
-		return null;
 	}
 
 	public function getVendorPackageWithVersionInfo($vendor)
