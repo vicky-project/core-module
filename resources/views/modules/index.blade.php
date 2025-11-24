@@ -11,18 +11,18 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             @if($module["is_installed"])
-            <span class="badge badge-outline-info">Latest: v{{$module["latest_version"]}}</span>
+            <span class="badge text-bg-info">Latest: v{{$module["installed_version"]}}</span>
             @elseif($module["update_available"])
             <div>
-              <span class="badge badge-outline-warning">Current: v{{$module["installed_version"]}}</span>
-              <span class="badge badge-success">Update: v{{$module["latest_version"]}}</span>
+              <span class="badge text-bg-warning">Current: v{{$module["installed_version"]}}</span>
+              <span class="badge text-bg-success">Update: v{{$module["latest_version"]}}</span>
             </div>
             @else
-            <span class="badge badge-outline-success">{{$module["installed_version"]}}</span>
+            <span class="badge text-bg-success">{{$module["latest_version"]}}</span>
             @endif
           </div>
           <div>
-            <span class="badge badge-{{$module['source'] === 'packagist' ? 'primary' : 'secondary'}}">{{ucfirst($module["source"])}}</span>
+            <span class="badge text-bg-{{$module['source'] === 'packagist' ? 'primary' : 'secondary'}}">{{ucfirst($module["source"])}}</span>
           </div>
         </div>
       </div>
