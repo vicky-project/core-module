@@ -38,7 +38,7 @@ class PackagistService
 		});
 	}
 
-	protected function getPackage(string $packageName)
+	protected function getPackage(string $packageName): ?array
 	{
 		$cacheKey = "packagist_package_{$packageName}";
 
@@ -46,7 +46,7 @@ class PackagistService
 			$packageName
 		) {
 			try {
-				return $this->packagist->getPackage($packageName);
+				return $this->packagist->getPackage($packageName)["package"];
 			} catch (\Exception $e) {
 				logger()->error(
 					"Packagist package error for {$packageName}: " . $e->getMessage()
@@ -59,32 +59,70 @@ class PackagistService
 	public function getPackageVersionInfo(string $name)
 	{
 		$packageData = $this->getPackage($name);
-		dd($packageData);
+		if (!$packageData) {
+			return null;
+		}
+
+		$latestVersion = $this->getLatestStableVersion($packageData);
+		$installedVersion = $this->getInstalledVersion($name);
+
+		dd($latestVersion, $installedVersion);
 	}
 
-	public function getInstalledModule()
+	public function getLatestStableVersion(array $packageData): ?string
+	{
+		if (!$packageData || !isset($packageData["versions"])) {
+			return nulll;
+		}
+
+		$allVersions = $packageData["versions"];
+		$stableVersion = [];
+
+		foreach ($allVersions as $version => $data) {
+			if (preg_match("/dev|alpha|beta|rc/i", $version)) {
+				continue;
+			}
+
+			if (!preg_match("/^\d+\.\d+\.\d+/", $version)) {
+				continue;
+			}
+
+			$stableVersion[] = $version;
+		}
+
+		if (!empty($stableVersion)) {
+			usort($stableVersion, "version_compare");
+			return end($stableVersion);
+		}
+		return null;
+	}
+
+	public function getInstalledVersion(string $packageName)
 	{
 		$composerLockPath = base_path("composer.lock");
 
 		if (!file_exists($composerLockPath)) {
-			return [];
+			return null;
 		}
+
 		try {
 			$composerLock = json_decode(file_get_contents($composerLockPath), true);
-			$moduleNames = [];
-
 			foreach ($composerLock["packages"] ?? [] as $package) {
-				if (($package["type"] ?? "") === "laravel-module") {
-					$moduleNames[] = $package["name"];
+				if ($package["name"] === $packageName) {
+					return ltrim($package["version"] ?? null, "v");
 				}
 			}
 
-			return $moduleNames;
+			foreach ($composerLock["packages-dev"] ?? [] as $package) {
+				if ($package["name"] === $packageName) {
+					return ltrim($package["version"] ?? null, "v");
+				}
+			}
 		} catch (\Exception $e) {
 			logger()->error(
-				"Error reading installed module from composer.lock: " . $e->getMessage()
+				"Error reading composer.lock for {$packageName}: " . $e->getMessage()
 			);
-			return [];
+			return null;
 		}
 	}
 
