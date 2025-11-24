@@ -37,9 +37,7 @@ class CoreController extends Controller
 			$availableModule
 		);
 
-		dd($allModules);
-
-		return view("core::modules.index", compact("modules"));
+		return view("core::modules.index", compact("allModules"));
 	}
 
 	private function mergeModulesData(
