@@ -33,7 +33,7 @@ class PackagistService
 					->map(fn($package) => $this->getModule($package))
 					->map(function ($package) {
 						$package["latest_version"] = $this->getLatestStableVersion(
-							$package["versions"]
+							array_keys($package["versions"])
 						);
 						return $package;
 					});
@@ -49,7 +49,7 @@ class PackagistService
 	{
 		return array_filter(
 			$packages,
-			fn($version) => !preg_match("/dev|alpha|beta|rc/i", array_keys($version))
+			fn($version) => !preg_match("/dev|alpha|beta|rc/i", $version)
 		);
 	}
 
