@@ -20,9 +20,8 @@ class CoreController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$page = $request->get("page", 1);
-
-		$modules = $this->packagistService->getModules($page);
+		$modules = $this->packagistService->getModules();
+		dd($modules);
 
 		return view("core::modules.index", compact("modules"));
 	}

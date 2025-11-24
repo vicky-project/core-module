@@ -20,14 +20,11 @@ class PackagistService
 		$this->packagist = new PackagistClient($client, $generator);
 	}
 
-	public function getModules($page = 1, $perPage = 12)
+	public function getModules()
 	{
-		$cacheKey = "packagist_laravel_module_{$page}_{$perPage}";
+		$cacheKey = "packagist_laravel_module";
 
-		return Cache::remember($cacheKey, now()->addHours(24), function () use (
-			$page,
-			$perPage
-		) {
+		return Cache::remember($cacheKey, now()->addHours(24), function () {
 			try {
 				$package = $this->packagist->getPackagesNamesByVendor("vicky-project");
 
