@@ -34,7 +34,7 @@
       <div class="card-footer d-flex justify-content-between align-items-center">
         <div class="mb-3">
           @if(!$module['is_installed'])
-          <form action="{{ route('core.install-package', $module['name']) }}" method="POST" class="d-inline">
+          <form action="{{ route('cores.install-package', $module['name']) }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')"> Install</button>
           </form>
