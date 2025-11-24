@@ -22,7 +22,6 @@ class ModuleManagerService
 		foreach ($allModules as $module) {
 			$moduleInfo = [
 				"name" => $module->getName(),
-				"alias" => $module->getAlias(),
 				"description" => $module->getDescription(),
 				"version" => $module->get("version", "1.0.0"),
 				"path" => $module->getPath(),
