@@ -120,35 +120,34 @@ class PackagistService
 		if (!file_exists($composerLockPath)) {
 			return null;
 		}
-		$cacheKey = config("api.cache_key_prefix") . "_packagist_{$packageName}";
+		$cacheKey =
+			config("api.cache_key_prefix") . "_packagist_installed_{$packageName}";
 
-		try {
-			return Cache::remember($cacheKey, now()->addHours(24), function () use (
-				$packageName
-			) {
+		return Cache::remember($cacheKey, now()->addHours(24), function () use (
+			$packageName
+		) {
+			try {
 				$composerLock = json_decode(file_get_contents($composerLockPath), true);
 				foreach ($composerLock["packages"] ?? [] as $package) {
 					if ($package["name"] === $packageName) {
-						dd($package["version"]);
 						return ltrim($package["version"] ?? null, "v");
 					}
 				}
 
 				foreach ($composerLock["packages-dev"] ?? [] as $package) {
 					if ($package["name"] === $packageName) {
-						dd($package["version"]);
 						return ltrim($package["version"] ?? null, "v");
 					}
 				}
 
 				return null;
-			});
-		} catch (\Exception $e) {
-			logger()->error(
-				"Error reading composer.lock for {$packageName}: " . $e->getMessage()
-			);
-			return null;
-		}
+			} catch (\Exception $e) {
+				logger()->error(
+					"Error reading composer.lock for {$packageName}: " . $e->getMessage()
+				);
+				return null;
+			}
+		});
 	}
 
 	public function getVendorPackageWithVersionInfo($vendor)
