@@ -20,13 +20,15 @@ class PackagistService
 		$this->packagist = new PackagistClient($client, $generator);
 	}
 
-	public function searchLaravelModules(): array
+	public function getPackagesByVendor($vendor): array
 	{
 		$cacheKey = "packagist_laravel_module";
 
-		return Cache::remember($cacheKey, now()->addHours(24), function () {
+		return Cache::remember($cacheKey, now()->addHours(24), function () use (
+			$vendor
+		) {
 			try {
-				return $this->packagist->getPackagesNamesByVendor("vicky-project");
+				return $this->packagist->getPackagesNamesByVendor($vendor);
 			} catch (\Exception $e) {
 				logger()->error("Packagist API error: " . $e->getMessage());
 				return [];
@@ -105,6 +107,16 @@ class PackagistService
 				"Error reading installed module from composer.lock: " . $e->getMessage()
 			);
 			return [];
+		}
+	}
+
+	public function getVendorPackageWithVersionInfo($vendor)
+	{
+		$packageResult = $this->getPackagesByVendor($vendor);
+		dd($packageResult);
+		$packageInfo = [];
+
+		foreach ($packageResult[""] as $package) {
 		}
 	}
 }
