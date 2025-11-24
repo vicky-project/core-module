@@ -38,7 +38,7 @@ class PackagistService
 		});
 	}
 
-	protected function getPackage(array $packageName)
+	protected function getPackage(string $packageName)
 	{
 		$cacheKey = "packagist_package_{$packageName}";
 
