@@ -24,7 +24,7 @@ class CoreController extends Controller
 		$packagistModule = $this->packagistService->getVendorPackageWithVersionInfo(
 			$vendorName
 		);
-		dd($installedModule);
+		dd($packagistModule);
 		$installedModule = $this->packagistService->getInstalledModule();
 
 		return view("core::modules.index", compact("modules"));

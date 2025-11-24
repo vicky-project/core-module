@@ -66,7 +66,23 @@ class PackagistService
 		$latestVersion = $this->getLatestStableVersion($packageData);
 		$installedVersion = $this->getInstalledVersion($name);
 
-		dd($latestVersion, $installedVersion);
+		return [
+			"name" => $packageData["name"],
+			"description" => $packageData["description"] ?? "No description.",
+			"repository" => $packageData["'repository"] ?? "",
+			"downloads" => $packageData["'downloads"] ?? [],
+			"favers" => $packageData["favers"] ?? 0,
+			"github_stars" => $packageData["github_stars"] ?? 0,
+			"type" => $packageData["type"] ?? "library",
+			"latest_version" => $latestVersion,
+			"installed_version" => $installedVersion,
+			"is_installed" => $installedVersion !== null,
+			"update_available" =>
+				$installedVersion &&
+				$latestVersion &&
+				version_compare($installedVersion, $latestVersion, "<"),
+			"time" => $packageData["time"] ?? now()->toISOString(),
+		];
 	}
 
 	public function getLatestStableVersion(array $packageData): ?string
@@ -97,7 +113,7 @@ class PackagistService
 		return null;
 	}
 
-	public function getInstalledVersion(string $packageName)
+	public function getInstalledVersion(string $packageName): ?string
 	{
 		$composerLockPath = base_path("composer.lock");
 
