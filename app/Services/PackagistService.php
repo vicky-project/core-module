@@ -145,6 +145,7 @@ class PackagistService
 		) {
 			try {
 				$composerLock = json_decode(file_get_contents($composerLockPath), true);
+				dd($composerLock["packages"]);
 				foreach ($composerLock["packages"] ?? [] as $package) {
 					if ($package["name"] === $packageName) {
 						return ltrim($package["version"] ?? null, "v");
