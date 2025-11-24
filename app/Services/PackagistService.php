@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use GuzzleHttp\Client;
+use Nwidart\Modules\Facades\Module;
 use Spatie\Packagist\PackagistUrlGenerator;
 use Spatie\Packagist\PackagistClient;
 use Illuminate\Support\Facades\Http;
@@ -115,11 +116,27 @@ class PackagistService
 
 	public function getInstalledVersion(string $packageName): ?string
 	{
+		$composerVersion = $this->getComposerInstalledVersion($packageName);
+		if ($composerVersion) {
+			return $composerVersion;
+		}
+
+		$moduleVersion = $this->getLocalModuleVersion($packageName);
+		if ($moduleVersion) {
+			return $moduleVersion;
+		}
+
+		return null;
+	}
+
+	private function getComposerInstalledVersion($packageName)
+	{
 		$composerLockPath = base_path("composer.lock");
 
 		if (!file_exists($composerLockPath)) {
 			return null;
 		}
+
 		$cacheKey =
 			config("api.cache_key_prefix") . "_packagist_installed_{$packageName}";
 
@@ -129,12 +146,6 @@ class PackagistService
 			try {
 				$composerLock = json_decode(file_get_contents($composerLockPath), true);
 				foreach ($composerLock["packages"] ?? [] as $package) {
-					if ($package["name"] === $packageName) {
-						return ltrim($package["version"] ?? null, "v");
-					}
-				}
-
-				foreach ($composerLock["packages-dev"] ?? [] as $package) {
 					if ($package["name"] === $packageName) {
 						return ltrim($package["version"] ?? null, "v");
 					}
@@ -150,6 +161,31 @@ class PackagistService
 		});
 	}
 
+	private function getLocalModuleVersion($packageName)
+	{
+		$moduleName = $this->extractModuleNameFromPackage($packageName);
+
+		if (Module::has($moduleName)) {
+			$module = Module::find($moduleName);
+
+			$moduleJsonPath = $module->getPath() . "/module.json";
+			if (file_exists($moduleJsonPath)) {
+				$moduleJson = json_decode(file_get_contents($moduleJsonPath), true);
+				return $moduleJson["version"] ?? "1.0.0";
+			}
+
+			$composerPath = $module->getPath() . "/composer.json";
+			if (file_exists($composerPath)) {
+				$composerContent = json_decode(file_get_contents($composerPath), true);
+				return $composerContent["version"] ?? "1.0.0";
+			}
+
+			return "1.0.0";
+		}
+
+		return null;
+	}
+
 	public function getVendorPackageWithVersionInfo($vendor)
 	{
 		$packageResult = $this->getPackagesByVendor($vendor);
@@ -163,5 +199,17 @@ class PackagistService
 		}
 
 		return $packagesInfo;
+	}
+
+	/**
+	 * Extract module name from package name
+	 */
+	public function extractModuleNameFromPackage($packageName)
+	{
+		$parts = explode("/", $packageName);
+		$name = end($parts);
+
+		// Convert kebab-case to StudlyCase (laravel-module -> LaravelModule)
+		return str_replace(" ", "", ucwords(str_replace("-", " ", $name)));
 	}
 }
