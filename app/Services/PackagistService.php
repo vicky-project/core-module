@@ -28,7 +28,9 @@ class PackagistService
 			$vendor
 		) {
 			try {
-				return $this->packagist->getPackagesNamesByVendor($vendor);
+				return $this->packagist->getPackagesNamesByVendor($vendor)[
+					"packageNames"
+				];
 			} catch (\Exception $e) {
 				logger()->error("Packagist API error: " . $e->getMessage());
 				return [];
@@ -36,52 +38,28 @@ class PackagistService
 		});
 	}
 
-	protected function getLatestStableVersion(array $packageData): ?string
+	protected function getPackage(array $packageName)
 	{
-		if (!$packageData || !isset($packageData["package"]["versions"])) {
-			return null;
-		}
-
-		$allVersions = $packageData["package"]["versions"];
-		$stableVersion = [];
-
-		foreach ($allVersions as $version => $data) {
-			if (preg_match("/dev|alpha|beta|rc/i", $version)) {
-				continue;
-			}
-
-			if (!preg_match("/^\d+\.\d+\.\d+/", $version)) {
-				continue;
-			}
-
-			$stableVersion[] = $version;
-		}
-
-		if (!empty($stableVersion)) {
-			usort($stableVersion, "version_compare");
-
-			return end($stableVersion);
-		}
-
-		return null;
-	}
-
-	public function getPackage(string $name): ?array
-	{
-		$cacheKey = "packagist_laravel_module_package_{$name}";
+		$cacheKey = "packagist_package_{$packageName}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
-			$name
+			$packageName
 		) {
 			try {
-				return $this->packagist->getPackage($name)["package"];
+				return $this->packagist->getPackage($packageName);
 			} catch (\Exception $e) {
 				logger()->error(
-					"Packagist package error for {$name}: " . $e->getMessage()
+					"Packagist package error for {$packageName}: " . $e->getMessage()
 				);
 				return null;
 			}
 		});
+	}
+
+	public function getPackageVersionInfo(string $name)
+	{
+		$packageData = $this->getPackage($name);
+		dd($packageData);
 	}
 
 	public function getInstalledModule()
@@ -113,10 +91,15 @@ class PackagistService
 	public function getVendorPackageWithVersionInfo($vendor)
 	{
 		$packageResult = $this->getPackagesByVendor($vendor);
-		dd($packageResult);
-		$packageInfo = [];
+		$packagesInfo = [];
 
-		foreach ($packageResult[""] as $package) {
+		foreach ($packageResult as $package) {
+			$packageInfo = $this->getPackageVersionInfo($package);
+			if ($packageInfo) {
+				$packagesInfo[] = $packageInfo;
+			}
 		}
+
+		return $packagesInfo;
 	}
 }
