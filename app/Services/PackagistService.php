@@ -26,7 +26,7 @@ class PackagistService
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () {
 			try {
-				$package = $this->packagist->getPackagesNamesByType("laravel-module");
+				$data = $this->packagist->getPackagesNamesByType("laravel-module");
 
 				return collect($data["packageNames"] ?? [])->map(
 					fn($package) => $this->packagist->getPackage($package)["package"]
