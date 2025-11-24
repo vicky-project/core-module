@@ -33,6 +33,14 @@
     </div>
   </div>
   @empty
+  <div class="col-auto">
+    <div class="card">
+      <div class="card-body">
+        <p class="text-center">No available here
+        </p>
+      </div>
+    </div>
+  </div>
   @endforelse
 </div>
 @endsection
