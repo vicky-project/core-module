@@ -4,6 +4,8 @@ namespace Modules\Core\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use Modules\Core\Services\PackagistService;
 use Modules\Core\Services\ModuleManagerService;
 
@@ -102,16 +104,77 @@ class CoreController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 */
-	public function create()
+	public function installPackage(string $module)
 	{
-		return view("core::create");
+		try {
+			$output = [];
+			$returnCode = 0;
+
+			$command = "composer require {$module}:* --no-dev -n";
+
+			exec($command, $output, $returnCode);
+
+			if ($returnCode === 0) {
+				Cache::forget(config("core.cache_key_prefix") . "_*");
+				$moduleName = $this->moduleService->extractModuleNameFromPackage(
+					$module
+				);
+
+				if ($this->moduleService->isLocalModule($module)) {
+					$this->moduleService->enableModule($module);
+				}
+
+				return back()->with(
+					"success",
+					"Package {$module} installed successfuly"
+				);
+			} else {
+				$errorMessage = implode("\n", array_slice($output, -5));
+
+				return back()->withErrors("Failed to update package: " . $errorMessage);
+			}
+		} catch (\Exception $e) {
+			return back()->withErrors(
+				"Error installing package: " . $e->getMessage()
+			);
+		}
 	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 */
-	public function store(Request $request)
+	public function updatePackage(Request $request, string $module)
 	{
+		try {
+			$output = [];
+			$returnCode = 0;
+
+			$command = "composer require {$module}:* --update-with-dependencies --no-dev -n";
+
+			exec($command, $output, $returnCode);
+
+			if ($returnCode === 0) {
+				Cache::forget(config("core.cache_key_prefix") . "_*");
+				$moduleName = $this->moduleService->extractModuleNameFromPackage(
+					$module
+				);
+
+				if ($this->moduleService->isLocalModule($module)) {
+					Artisan::call("module:migrate", [
+						"module" => $module,
+						"--force" => true,
+					]);
+				}
+
+				return back()->with("success", "Package {$module} updated successfuly");
+			} else {
+				$errorMessage = implode("\n", array_slice($output, -5));
+
+				return back()->withErrors("Failed to update package: " . $errorMessage);
+			}
+		} catch (\Exception $e) {
+			return back()->withErrors("Error updating package: " . $e->getMessage());
+		}
 	}
 
 	/**
@@ -127,16 +190,29 @@ class CoreController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function edit($id)
+	public function disableModule(string $module)
 	{
-		return view("core::edit");
+		$result = $this->moduleService->disableModule($module);
+
+		if ($result["success"]) {
+			return back()->with("success", $result["message"]);
+		}
+
+		return back()->withErrors($result["message"]);
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function update(Request $request, $id)
+	public function enableModule(Request $request, string $module)
 	{
+		$result = $this->moduleService->enableModule($module);
+
+		if ($result["success"]) {
+			return back()->with("success", $result["message"]);
+		}
+
+		return back()->withErrors($result["message"]);
 	}
 
 	/**

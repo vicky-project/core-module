@@ -20,11 +20,11 @@ Route::middleware(["auth"])
 				])->name("update-package");
 				Route::post("disable/{module}", [
 					CoreController::class,
-					"disablePackage",
+					"disableModule",
 				])->name("disable");
 				Route::post("enable/{module}", [
 					CoreController::class,
-					"disablePackage",
+					"enableModule",
 				])->name("enable");
 			});
 	});
