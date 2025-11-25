@@ -9,7 +9,7 @@ Route::middleware(["auth"])
 		Route::prefix("cores")
 			->name("cores.")
 			->group(function () {
-				Route::get("", [CoreController::class, "index"])->name("index");
+				Route::get("", [CoreController::class, "index"])->name("modules.index");
 				Route::post("install-package/{module}", [
 					CoreController::class,
 					"installPackage",
