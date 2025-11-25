@@ -80,6 +80,7 @@ class CoreController extends Controller
 				"is_installed" => $package["is_installed"],
 				"update_available" => $package["update_available"],
 				"status" => $status,
+				"is_local_module" => $package["is_local_module"],
 				"github_stars" => $package["github_stars"],
 				"downloads" => $package["downloads"],
 				"favers" => $package["favers"],
