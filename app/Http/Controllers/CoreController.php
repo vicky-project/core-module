@@ -47,14 +47,30 @@ class CoreController extends Controller
 		$installedModule,
 		$availableModule
 	) {
-		$mergeData = [];
+		$mergedData = [];
 
 		foreach ($packagistPackages as $package) {
-			$moduleName = $this->moduleService->extractModuleNameFromPackage(
+			$moduleName = $this->packagistService->extractModuleNameFromPackage(
 				$package["name"]
 			);
 
-			$mergeData[$package["name"]] = [
+			$status = "not_installed";
+			if ($package["is_installed"]) {
+				if ($package["is_local_module"]) {
+					$status = $package["module_status"];
+				} else {
+					$status = "installed";
+				}
+			}
+
+			if ($package["update_available"]) {
+				logger::info("Update available for {$package["name"]}:", [
+					"current" => $package["installed_version"],
+					"available" => $package["latest_version"],
+				]);
+			}
+
+			$mergedData[$package["name"]] = [
 				"source" => "packagist",
 				"name" => $package["name"],
 				"display_name" => $moduleName,
@@ -63,9 +79,7 @@ class CoreController extends Controller
 				"installed_version" => $package["installed_version"],
 				"is_installed" => $package["is_installed"],
 				"update_available" => $package["update_available"],
-				"status" => $package["is_installed"]
-					? $this->moduleService->getModuleStatus($moduleName)
-					: "not_installed",
+				"status" => $status,
 				"github_stars" => $package["github_stars"],
 				"downloads" => $package["downloads"],
 				"favers" => $package["favers"],
@@ -74,12 +88,36 @@ class CoreController extends Controller
 			];
 		}
 
+		foreach ($installedModule as $moduleName => $moduleInfo) {
+			$composerName =
+				$moduleInfo["composer_name"] ?? "vicky-project/{$moduleName}";
+
+			if (!isset($mergedData[$composerName])) {
+				$mergedData[$composerName] = [
+					"source" => "local",
+					"name" => $composerName,
+					"display_name" => $moduleName,
+					"description" => $moduleInfo["original_description"],
+					"latest_version" => $moduleInfo["version"],
+					"installed_version" => $moduleInfo["version"],
+					"is_installed" => true,
+					"update_available" => false,
+					"status" => $moduleInfo["status"],
+					"github_stars" => 0,
+					"downloads" => ["monthly" => 0, "total" => 0],
+					"favers" => 0,
+					"repository" => "",
+					"type" => "library",
+				];
+			}
+		}
+
 		foreach ($availableModule as $moduleName => $moduleInfo) {
 			$composerName =
 				$moduleInfo["composer_name"] ?? "vicky-project/{$moduleName}";
 
-			if (!isset($mergeData[$composerName])) {
-				$mergeData[$composerName] = [
+			if (!isset($mergedData[$composerName])) {
+				$mergedData[$composerName] = [
 					"source" => "local",
 					"name" => $composerName,
 					"display_name" => $moduleName,
@@ -98,7 +136,7 @@ class CoreController extends Controller
 			}
 		}
 
-		return array_values($mergeData);
+		return array_values($mergedData);
 	}
 
 	/**

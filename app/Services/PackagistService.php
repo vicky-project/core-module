@@ -67,6 +67,31 @@ class PackagistService
 
 		$latestVersion = $this->getLatestStableVersion($packageData);
 		$installedVersion = $this->getInstalledVersion($name);
+		$isInstalled = $installedVersion !== null;
+		$updateAvailable = false;
+		if ($installedVersion && $latestVersion) {
+			$normalizedInstalled = ltrim($installedVersion, "v");
+			$normalizedLatest = ltrim($latestVersion, "v");
+
+			$updateAvailable = version_compare(
+				$normalizedInstalled,
+				$normalizedLatest,
+				"<"
+			);
+
+			logger()->debug("Version compare for {$name}:", [
+				"installed" => $normalizedInstalled,
+				"latest" => $normalizedLatest,
+				"update_available" => $updateAvailable,
+			]);
+		}
+
+		$moduleStatus = "not_installed";
+		if ($this->isLocalModule($name)) {
+			$moduleName = $this->extractModuleNameFromPackage($name);
+			$module = Module::find($moduleName);
+			$moduleStatus = $module->isEnabled() ? "enabled" : "disabled";
+		}
 
 		return [
 			"name" => $packageData["name"],
@@ -78,11 +103,10 @@ class PackagistService
 			"type" => $packageData["type"] ?? "library",
 			"latest_version" => $latestVersion,
 			"installed_version" => $installedVersion,
-			"is_installed" => $installedVersion !== null,
-			"update_available" =>
-				$installedVersion &&
-				$latestVersion &&
-				version_compare($installedVersion, $latestVersion, "<"),
+			"is_installed" => $isInstalled,
+			"update_available" => $updateAvailable,
+			"module_status" => $moduleStatus,
+			"is_local_module" => $this->isLocalModule($name),
 			"time" => $packageData["time"] ?? now()->toISOString(),
 		];
 	}
@@ -214,5 +238,14 @@ class PackagistService
 
 		// Convert kebab-case to StudlyCase (laravel-module -> LaravelModule)
 		return str_replace(" ", "", ucwords(str_replace("-", " ", $name)));
+	}
+
+	/**
+	 * Check if a package corresponds to a local module
+	 */
+	public function isLocalModule($packageName)
+	{
+		$moduleName = $this->extractModuleNameFromPackage($packageName);
+		return Module::has($moduleName);
 	}
 }
