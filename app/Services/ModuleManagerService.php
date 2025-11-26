@@ -81,7 +81,7 @@ class ModuleManagerService
 
 		// Check dependencies and conflicts
 		$this->checkDependencies($packageName);
-		$this->checkConflicts($packageName);
+		//$this->checkConflicts($packageName);
 
 		// Check disk space
 		$this->checkDiskSpace();
@@ -103,24 +103,44 @@ class ModuleManagerService
 	protected function checkSystemRequirements()
 	{
 		$requirements = [
-			"php" => "8.0.0",
-			"memory_limit" => "128M",
-			"disk_space" => 100, // MB
+			"php" => [
+				"minimum" => "8.0.0",
+				"current" => PHP_VERSION,
+				"check" => version_compare(PHP_VERSION, "8.0.0", ">="),
+			],
+			"memory_limit" => [
+				"minimum" => "128M",
+				"current" => ini_get("memory_limit"),
+				"check" =>
+					$this->memoryToBytes(ini_get("memory_limit")) >=
+					$this->memoryToBytes("128M"),
+			],
+			"max_execution_time" => [
+				"minimum" => 30,
+				"current" => ini_get("max_execution_time"),
+				"check" =>
+					(int) ini_get("max_execution_time") >= 30 ||
+					ini_get("max_execution_time") == 0,
+			],
+			"max_input_time" => [
+				"minimum" => 60,
+				"current" => ini_get("max_input_time"),
+				"check" =>
+					(int) ini_get("max_input_time") >= 60 ||
+					ini_get("max_input_time") == -1,
+			],
 		];
 
-		// Check PHP version
-		if (version_compare(PHP_VERSION, $requirements["php"], "<")) {
-			throw new \Exception("PHP {$requirements["php"]} or higher is required.");
+		$errors = [];
+		foreach ($requirements as $key => $requirement) {
+			if (!$requirement["check"]) {
+				$errors[] = "{$key}: required {$requirement["minimum"]}, found {$requirement["current"]}";
+			}
 		}
 
-		// Check memory limit
-		$memory = ini_get("memory_limit");
-		if (
-			$this->memoryToBytes($memory) <
-			$this->memoryToBytes($requirements["memory_limit"])
-		) {
+		if (!empty($errors)) {
 			throw new \Exception(
-				"Memory limit of {$requirements["memory_limit"]} is required."
+				"System requirements not met: " . implode("; ", $errors)
 			);
 		}
 	}
@@ -134,6 +154,34 @@ class ModuleManagerService
 			throw new \Exception(
 				"Insufficient disk space. At least 100MB free space is required."
 			);
+		}
+
+		$directoriesToCheck = [
+			base_path("vendor"),
+			base_path("Modules"),
+			storage_path(),
+			base_path("bootstrap/cache"),
+		];
+
+		foreach ($directoriesToCheck as $directory) {
+			if (!is_writable($directory)) {
+				throw new \Exception("Directory not writable: {$directory}");
+			}
+		}
+	}
+
+	protected function checkDependencies($packageName, $version = null)
+	{
+		try {
+			$packagist = app(PackagistService::class);
+			$packagInfo = $packagist->getPackage($packageName);
+
+			if (!isset($packagInfo["require"])) {
+				return;
+			}
+
+			dd($packagInfo["require"]);
+		} catch (\Exception $e) {
 		}
 	}
 
