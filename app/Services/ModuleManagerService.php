@@ -157,8 +157,8 @@ class ModuleManagerService
 		}
 
 		$directoriesToCheck = [
-			base_path("Modules"),
-			storage_path(),
+			//base_path("Modules"),
+			storage_path("app/public"),
 			base_path("bootstrap/cache"),
 		];
 

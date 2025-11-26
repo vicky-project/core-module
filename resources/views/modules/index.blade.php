@@ -61,7 +61,7 @@
             <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')">
               <svg class="icon me-2">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-up') }}"></use>
+                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
               </svg>
               Update to {{ $module["latest_version"] }}
             </button>
