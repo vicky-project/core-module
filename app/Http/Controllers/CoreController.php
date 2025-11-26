@@ -64,7 +64,7 @@ class CoreController extends Controller
 			}
 
 			if ($package["update_available"]) {
-				logger::info("Update available for {$package["name"]}:", [
+				logger()->info("Update available for {$package["name"]}:", [
 					"current" => $package["installed_version"],
 					"available" => $package["latest_version"],
 				]);
