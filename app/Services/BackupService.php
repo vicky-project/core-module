@@ -139,7 +139,7 @@ class BackupService
 		exec($command, $output, $returnCode);
 
 		if ($returnCode !== 0) {
-			logger()->error("MySQL backup failed: ", $output);
+			logger()->error("MySQL backup failed: " . implode("\n", $output));
 			throw new Exception("MySQL backup failed with code: {$returnCode}");
 		}
 
@@ -174,7 +174,7 @@ class BackupService
 		exec($command, $output, $returnCode);
 
 		if ($returnCode !== 0) {
-			logger()->error("PostgreSQL backup failed: ", $output);
+			logger()->error("PostgreSQL backup failed: " . implode("\n", $output));
 			throw new Exception("PostgreSQL backup failed with code: {$returnCode}");
 		}
 	}
