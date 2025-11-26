@@ -46,8 +46,9 @@
       <div class="card-footer d-flex justify-content-between align-items-center">
         <div class="mb-3 text-center">
           @if(!$module['is_installed'])
-          <form action="{{ route('cores.install-package', $module['name']) }}" method="POST" class="d-inline">
+          <form action="{{ route('cores.install-package') }}" method="POST" class="d-inline">
             @csrf
+            <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')">
               <svg class="icon me-2">
                 <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
@@ -55,8 +56,9 @@
               Install v{{ $modul["latest_version"] ?? "1.0.0" }}</button>
           </form>
           @elseif($module['update_available'])
-          <form action="{{ route('cores.update-package', $module['name']) }}" method="POST" class="d-inline">
+          <form action="{{ route('cores.update-package') }}" method="POST" class="d-inline">
             @csrf
+            <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')">
               <svg class="icon me-2">
                 <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-up') }}"></use>
@@ -67,15 +69,17 @@
           @else
             @if(str($module['name'])->lower()->doesntContain('core'))
               @if($module['status'] === 'enabled')
-              <form action="{{ route('cores.disable', $module['display_name']) }}" method="POST" class="d-inline">
+              <form action="{{ route('cores.disable') }}" method="POST" class="d-inline">
                 @csrf
+                <input type="hidden" name="module" value="{{$module['display_name']}}">
                 <button type="submit" class="btn btn-outline-warning btn-sm">
                   Disable
                 </button>
               </form>
               @else
-              <form action="{{ route('cores.enable', $module['display_name']) }}" method="POST" class="d-inline">
+              <form action="{{ route('cores.enable') }}" method="POST" class="d-inline">
                 @csrf
+                <input type="hidden" name="module" value="{{$module['display_name']}}">
                 <button type="submit" class="btn btn-outline-success btn-sm">
                    Enable
                 </button>

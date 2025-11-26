@@ -10,21 +10,19 @@ Route::middleware(["auth"])
 			->name("cores.")
 			->group(function () {
 				Route::get("", [CoreController::class, "index"])->name("modules.index");
-				Route::post("install-package/{module}", [
+				Route::post("install-package", [
 					CoreController::class,
 					"installPackage",
 				])->name("install-package");
-				Route::post("update-package/{module}", [
+				Route::post("update-package", [
 					CoreController::class,
 					"updatePackage",
 				])->name("update-package");
-				Route::post("disable/{module}", [
-					CoreController::class,
-					"disableModule",
-				])->name("disable");
-				Route::post("enable/{module}", [
-					CoreController::class,
-					"enableModule",
-				])->name("enable");
+				Route::post("disable", [CoreController::class, "disableModule"])->name(
+					"disable"
+				);
+				Route::post("enable", [CoreController::class, "enableModule"])->name(
+					"enable"
+				);
 			});
 	});
