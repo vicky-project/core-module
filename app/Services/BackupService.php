@@ -99,6 +99,7 @@ class BackupService
 
 		switch ($databaseConfig["driver"]) {
 			case "mysql":
+			case "mariadb":
 				$this->backupMySQLDatabase($databaseConfig, $backupPath);
 				break;
 			case "pgsql":
