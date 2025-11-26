@@ -122,9 +122,16 @@ class BackupService
 	{
 		$backupFile = "{$backupPath}/database.sql";
 		$filePath = storage_path("app/{$backupFile}");
+		$bin =
+			$config["driver"] === "mysql"
+				? "mysqldump"
+				: ($config["driver"] === "mariadb"
+					? "mariadbdump"
+					: "");
 
 		$command = sprintf(
-			"mysqldump --host=%s --port=%s --user=%s --password=%s %s > %s",
+			"%s --host=%s --port=%s --user=%s --password=%s %s > %s",
+			escapeshellarg($bin),
 			escapeshellarg($config["host"]),
 			escapeshellarg($config["port"] ?? "3306"),
 			escapeshellarg($config["username"]),
