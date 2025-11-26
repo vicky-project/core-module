@@ -39,7 +39,7 @@ class PackagistService
 		});
 	}
 
-	protected function getPackage(string $packageName): ?array
+	public function getPackage(string $packageName): ?array
 	{
 		$cacheKey =
 			cache("core.cache_key_prefix", "") . "_packagist_{$packageName}";
