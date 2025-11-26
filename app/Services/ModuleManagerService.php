@@ -29,12 +29,15 @@ class ModuleManagerService
 	 */
 	public function installModule($packageName, $version = null)
 	{
+		$backupPath = null;
 		try {
 			// 1. Pre-installation check
 			$this->preInstallationCheck($packageName, $version);
 
 			// 2. Create backup
-			$backupPath = $this->backupService->createBackup();
+			$backupPath = $this->backupService->createBackup(
+				"pre-install-{$packageName}"
+			);
 
 			// 3. Install via composer
 			$this->composerService->requirePackage($packageName, $version);
@@ -43,7 +46,9 @@ class ModuleManagerService
 			$moduleName = $this->extractModuleName($packageName);
 
 			// 5. Trigger event for async post-installation
-			Event::dispatch(new ModuleInstalled($packageName, $version, $moduleName));
+			Event::dispatch(
+				new ModuleInstalled($packageName, $version, $moduleName, $backupPath)
+			);
 
 			return [
 				"success" => true,
@@ -54,7 +59,7 @@ class ModuleManagerService
 			];
 		} catch (\Exception $e) {
 			// Restore backup if installation fails
-			if (isset($backupPath)) {
+			if ($backupPath) {
 				$this->backupService->restoreBackup($backupPath);
 			}
 
@@ -63,7 +68,7 @@ class ModuleManagerService
 					$packageName,
 					$version,
 					$e->getMessage(),
-					$backupPath ?? null
+					$backupPath
 				)
 			);
 

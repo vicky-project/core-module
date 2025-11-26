@@ -2,11 +2,103 @@
 
 namespace Modules\Core\Services;
 
+use GuzzleHttp\Client;
+use Spatie\Packagist\PackagistClient;
+use Spatie\Packagist\PackagistUrlGenerator;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
+use Composer\Semver\Semver;
 
 class ComposerService
 {
+	protected $packagistClient;
+
+	public function __construct()
+	{
+		$client = new Client();
+		$urlGenerator = new PackagistUrlGenerator();
+		$this->packagistClient = new packagistClient($client, $urlGenerator);
+	}
+
+	/**
+	 * Get package information dari Packagist
+	 */
+	public function getPackageInfo($packageName, $version = null)
+	{
+		try {
+			Log::info("Fetching package info from Packagist: {$packageName}");
+
+			// Gunakan spatie/packagist-api untuk mengambil data package
+			$packageData = $this->packagistClient->getPackage($packageName);
+
+			if (!isset($packageData["package"])) {
+				throw new Exception("Package {$packageName} not found on Packagist");
+			}
+
+			$packageInfo = $packageData["package"];
+
+			// Jika version specified, cari version specific info
+			if ($version) {
+				return $this->getSpecificVersionInfo($packageInfo, $version);
+			}
+
+			Log::info("Successfully retrieved package info for: {$packageName}");
+			return $packageInfo;
+		} catch (Exception $e) {
+			Log::error(
+				"Failed to get package info for {$packageName}: " . $e->getMessage()
+			);
+			throw new Exception(
+				"Unable to retrieve package information: " . $e->getMessage()
+			);
+		}
+	}
+
+	/**
+	 * Get specific version information
+	 */
+	protected function getSpecificVersionInfo($packageInfo, $version)
+	{
+		if (!isset($packageInfo["versions"])) {
+			throw new Exception("No version information available for package");
+		}
+
+		// Normalize version name (remove 'v' prefix, etc.)
+		$normalizedVersion = $this->normalizeVersion($version);
+
+		foreach ($packageInfo["versions"] as $versionName => $versionData) {
+			if (
+				$versionName === $normalizedVersion ||
+				$this->versionMatches($versionName, $version)
+			) {
+				return $versionData;
+			}
+		}
+
+		throw new Exception("Version {$version} not found for package");
+	}
+
+	/**
+	 * Normalize version string
+	 */
+	protected function normalizeVersion($version)
+	{
+		// Remove 'v' prefix from version tags
+		return preg_replace("/^v/", "", $version);
+	}
+
+	/**
+	 * Check if version matches constraint
+	 */
+	protected function versionMatches($versionName, $constraint)
+	{
+		try {
+			return Semver::satisfies($versionName, $constraint);
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
 	public function requirePackage($packageName, $version = null)
 	{
 		$package = $version ? "{$packageName}:{$version}" : $packageName;
