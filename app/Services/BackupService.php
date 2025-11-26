@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use Spatie\Backup\Config\Config;
 use Spatie\Backup\Tasks\Backup\BackupJobFactory;
 use Spatie\Backup\BackupDestination\BackupDestination;
 use ZipArchive;
@@ -31,7 +32,9 @@ class BackupService
 			$backupId = $backupName ?: "module_installation_{$timestamp}";
 			Log::info("Starting backup with spatie/laravel-backup: {$backupId}");
 
-			$backupJob = BackupJobFactory::createFromConfig(config("backup"));
+			$backupJob = BackupJobFactory::createFromConfig(
+				Config::fromArray(config("backup"))
+			);
 			$backupJob->setFilename($backupId . ".zip");
 			$backupJob->run();
 
