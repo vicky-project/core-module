@@ -140,6 +140,10 @@ class CoreServiceProvider extends ServiceProvider
 						"config"
 					);
 					$this->merge_config_from($file->getPathname(), $key);
+
+					if ($config === "backup.php") {
+						$this->mergeConfigFrom($file->getPathname(), "backup");
+					}
 				}
 			}
 		}

@@ -17,15 +17,17 @@ class ModuleInstalled
 	public $packageName;
 	public $version;
 	public $moduleName;
+	public $backupPath;
 
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct($packageName, $version, $moduleName)
+	public function __construct($packageName, $version, $moduleName, $backupPath)
 	{
 		$this->packageName = $packageName;
 		$this->version = $version;
 		$this->moduleName = $moduleName;
+		$this->backupPath = $backupPath;
 	}
 
 	/**

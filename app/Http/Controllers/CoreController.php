@@ -64,7 +64,7 @@ class CoreController extends Controller
 			}
 
 			if ($package["update_available"]) {
-				logger::info("Update available for {$package["name"]}:", [
+				logger()->info("Update available for {$package["name"]}:", [
 					"current" => $package["installed_version"],
 					"available" => $package["latest_version"],
 				]);
@@ -143,8 +143,11 @@ class CoreController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 */
-	public function installPackage(string $module)
+	public function installPackage(Request $request)
 	{
+		$request->validate(["module" => "required|string"]);
+
+		$module = $request->input("module", null);
 		try {
 			$result = $this->moduleService->installModule($module);
 			Cache::forget(config("core.cache_key_prefix") . "_*");
@@ -171,8 +174,11 @@ class CoreController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 */
-	public function updatePackage(Request $request, string $module)
+	public function updatePackage(Request $request)
 	{
+		$request->validate(["module" => "required|string"]);
+
+		$module = $request->input("module", null);
 		try {
 			$output = [];
 			$returnCode = 0;
@@ -218,8 +224,11 @@ class CoreController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function disableModule(string $module)
+	public function disableModule(Request $request)
 	{
+		$request->validate(["module" => "required|string"]);
+
+		$module = $request->input("module", null);
 		$result = $this->moduleService->disableModule($module);
 
 		if ($result["success"]) {
@@ -232,8 +241,11 @@ class CoreController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function enableModule(Request $request, string $module)
+	public function enableModule(Request $request)
 	{
+		$request->validate(["module" => "required|string"]);
+
+		$module = $request->input("module", null);
 		$result = $this->moduleService->enableModule($module);
 
 		if ($result["success"]) {
