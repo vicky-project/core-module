@@ -139,6 +139,7 @@ class BackupService
 		exec($command, $output, $returnCode);
 
 		if ($returnCode !== 0) {
+			logger()->error("MySQL backup failed: ", $output);
 			throw new Exception("MySQL backup failed with code: {$returnCode}");
 		}
 
@@ -173,6 +174,7 @@ class BackupService
 		exec($command, $output, $returnCode);
 
 		if ($returnCode !== 0) {
+			logger()->error("PostgreSQL backup failed: ", $output);
 			throw new Exception("PostgreSQL backup failed with code: {$returnCode}");
 		}
 	}
@@ -185,6 +187,7 @@ class BackupService
 		$databasePath = $config["database"];
 
 		if (!file_exists($databasePath)) {
+			logger()->error("SQLite database not found: " . $databasePath);
 			throw new Exception("SQLite database file not found: {$databasePath}");
 		}
 
@@ -220,6 +223,7 @@ class BackupService
 
 			$zip->close();
 		} else {
+			logger()->error("Failed to create modules backup zip");
 			throw new Exception("Failed to create modules backup zip");
 		}
 	}
