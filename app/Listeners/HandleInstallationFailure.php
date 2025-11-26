@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\ModuleInstallationFailed;
 use Modules\Core\Services\BackupService;
