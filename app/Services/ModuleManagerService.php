@@ -2,6 +2,10 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Support\Facades\Event;
+use Modules\Core\Events\ModuleInstallationFailed;
+use Modules\Core\Events\ModuleInstalled;
+use Symfony\Component\Process\Process;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -9,6 +13,147 @@ use Illuminate\Support\Facades\Log;
 
 class ModuleManagerService
 {
+	protected $backupService;
+	protected $composerService;
+
+	public function __construct(
+		BackupService $backupService,
+		ComposerService $composerService
+	) {
+		$this->backupService = $backupService;
+		$this->composerService = $composerService;
+	}
+
+	/**
+	 * Install a module (run migrations and enable)
+	 */
+	public function installModule($packageName, $version = null)
+	{
+		try {
+			// 1. Pre-installation check
+			$this->preInstallationCheck($packageName, $version);
+
+			// 2. Create backup
+			$backupPath = $this->backupService->createBackup();
+
+			// 3. Install via composer
+			$this->composerService->requirePackage($packageName, $version);
+
+			// 4. Extract module name
+			$moduleName = $this->extractModuleName($packageName);
+
+			// 5. Trigger event for async post-installation
+			Event::dispatch(new ModuleInstalled($packageName, $version, $moduleName));
+
+			return [
+				"success" => true,
+				"message" =>
+					"Module installation started. Post-installation will run in background.",
+				"module_name" => $moduleName,
+				"backup_path" => $backupPath,
+			];
+		} catch (\Exception $e) {
+			// Restore backup if installation fails
+			if (isset($backupPath)) {
+				$this->backupService->restoreBackup($backupPath);
+			}
+
+			Event::dispatch(
+				new ModuleInstallationFailed(
+					$packageName,
+					$version,
+					$e->getMessage(),
+					$backupPath ?? null
+				)
+			);
+
+			throw $e;
+		}
+	}
+
+	protected function preInstallationCheck($packageName, $version)
+	{
+		// Check system requirements
+		$this->checkSystemRequirements();
+
+		// Check package exists and is accessible
+		$this->composerService->validatePackage($packageName, $version);
+
+		// Check dependencies and conflicts
+		$this->checkDependencies($packageName);
+		$this->checkConflicts($packageName);
+
+		// Check disk space
+		$this->checkDiskSpace();
+	}
+
+	/**
+	 * Extract module name from package name
+	 */
+	protected function extractModuleName($packageName)
+	{
+		// Extract module name from package name (vendor/package-name)
+		$parts = explode("/", $packageName);
+		$moduleName = end($parts);
+
+		// Convert kebab-case to StudlyCase for module name
+		return str_replace(" ", "", ucwords(str_replace("-", " ", $moduleName)));
+	}
+
+	protected function checkSystemRequirements()
+	{
+		$requirements = [
+			"php" => "8.0.0",
+			"memory_limit" => "128M",
+			"disk_space" => 100, // MB
+		];
+
+		// Check PHP version
+		if (version_compare(PHP_VERSION, $requirements["php"], "<")) {
+			throw new \Exception("PHP {$requirements["php"]} or higher is required.");
+		}
+
+		// Check memory limit
+		$memory = ini_get("memory_limit");
+		if (
+			$this->memoryToBytes($memory) <
+			$this->memoryToBytes($requirements["memory_limit"])
+		) {
+			throw new \Exception(
+				"Memory limit of {$requirements["memory_limit"]} is required."
+			);
+		}
+	}
+
+	protected function checkDiskSpace()
+	{
+		$freeSpace = disk_free_space(base_path());
+		$requiredSpace = 100 * 1024 * 1024; // 100MB in bytes
+
+		if ($freeSpace < $requiredSpace) {
+			throw new \Exception(
+				"Insufficient disk space. At least 100MB free space is required."
+			);
+		}
+	}
+
+	protected function memoryToBytes($memory)
+	{
+		$unit = strtolower(substr($memory, -1));
+		$value = (int) $memory;
+
+		switch ($unit) {
+			case "g":
+				return $value * 1024 * 1024 * 1024;
+			case "m":
+				return $value * 1024 * 1024;
+			case "k":
+				return $value * 1024;
+			default:
+				return $value;
+		}
+	}
+
 	/**
 	 * Get all installed modules with detailed information
 	 */
@@ -94,39 +239,6 @@ class ModuleManagerService
 	}
 
 	/**
-	 * Install a module (run migrations and enable)
-	 */
-	public function installModule($moduleName)
-	{
-		try {
-			if (!Module::has($moduleName)) {
-				return ["success" => false, "message" => "Module not found!"];
-			}
-
-			$module = Module::find($moduleName);
-
-			// Run module migrations
-			Artisan::call("module:migrate", ["module" => $moduleName]);
-
-			// Enable the module
-			$module->enable();
-
-			return [
-				"success" => true,
-				"message" => "Module {$moduleName} installed and enabled successfully!",
-			];
-		} catch (\Exception $e) {
-			Log::error(
-				"Module installation error for {$moduleName}: " . $e->getMessage()
-			);
-			return [
-				"success" => false,
-				"message" => "Failed to install module: " . $e->getMessage(),
-			];
-		}
-	}
-
-	/**
 	 * Enable a module [citation:9]
 	 */
 	public function enableModule($moduleName)
@@ -187,18 +299,6 @@ class ModuleManagerService
 
 		$module = Module::find($moduleName);
 		return $module->isEnabled() ? "enabled" : "disabled";
-	}
-
-	/**
-	 * Extract module name from package name
-	 */
-	public function extractModuleNameFromPackage($packageName)
-	{
-		$parts = explode("/", $packageName);
-		$name = end($parts);
-
-		// Convert kebab-case to StudlyCase (laravel-module -> LaravelModule)
-		return str_replace(" ", "", ucwords(str_replace("-", " ", $name)));
 	}
 
 	/**

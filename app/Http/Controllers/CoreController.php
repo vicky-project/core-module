@@ -146,31 +146,20 @@ class CoreController extends Controller
 	public function installPackage(string $module)
 	{
 		try {
-			$output = [];
-			$returnCode = 0;
+			$result = $this->moduleService->installModule($module);
+			Cache::forget(config("core.cache_key_prefix") . "_*");
 
-			$command = "composer require {$module}:* --no-dev -n";
+			if ($result["success"] === true) {
+				$moduleName = $result["module_name"];
 
-			exec($command, $output, $returnCode);
-
-			if ($returnCode === 0) {
-				Cache::forget(config("core.cache_key_prefix") . "_*");
-				$moduleName = $this->moduleService->extractModuleNameFromPackage(
-					$module
-				);
-
-				if ($this->moduleService->isLocalModule($module)) {
-					$this->moduleService->enableModule($module);
+				if ($this->moduleService->isLocalModule($moduleName)) {
+					$this->moduleService->enableModule($moduleName);
 				}
 
 				return back()->with(
 					"success",
-					"Package {$module} installed successfuly"
+					"Package {$moduleName} installed successfuly"
 				);
-			} else {
-				$errorMessage = implode("\n", array_slice($output, -5));
-
-				return back()->withErrors("Failed to update package: " . $errorMessage);
 			}
 		} catch (\Exception $e) {
 			return back()->withErrors(

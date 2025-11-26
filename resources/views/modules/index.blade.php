@@ -50,7 +50,7 @@
             @csrf
             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')">
               <svg class="icon me-2">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-download') }}"></use>
+                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
               </svg>
               Install v{{ $modul["latest_version"] ?? "1.0.0" }}</button>
           </form>
@@ -66,29 +66,20 @@
           </form>
           @else
             @if(str($module['name'])->lower()->doesntContain('core'))
-              @if($module["is_local_module"] && $module["is_installed"])
-                @if($module['status'] === 'enabled')
-                <form action="{{ route('cores.disable', $module['display_name']) }}" method="POST" class="d-inline">
-                  @csrf
-                  <button type="submit" class="btn btn-outline-warning btn-sm">
+              @if($module['status'] === 'enabled')
+              <form action="{{ route('cores.disable', $module['display_name']) }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-outline-warning btn-sm">
                   Disable
-                  </button>
-                </form>
-                @else
-                <form action="{{ route('cores.enable', $module['display_name']) }}" method="POST" class="d-inline">
-                  @csrf
-                  <button type="submit" class="btn btn-outline-success btn-sm">
-                   Enable
-                  </button>
-                </form>
-                @endif
+                </button>
+              </form>
               @else
-              <button class="btn btn-outline-success" disabled>
-                <svg class="icon me-2">
-                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-check') }}"></use>
-                </svg>
-                Installed v{{ $module["installed_version"] }}
-              </button>
+              <form action="{{ route('cores.enable', $module['display_name']) }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                   Enable
+                </button>
+              </form>
               @endif
             @endif
           @endif
