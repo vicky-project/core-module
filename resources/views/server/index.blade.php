@@ -90,13 +90,6 @@
                 </div>
             </div>
             
-            <!-- Modules Status -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Modules ({{ count($modules) }})</div>
-                </div>
-            </div>
-            
             <!-- Application Health -->
             <div class="metric-card">
                 <div class="metric-header">
