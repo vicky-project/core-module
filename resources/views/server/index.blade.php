@@ -19,42 +19,42 @@
       this.connect();
     }
             
-            initCharts() {
-                const ctx = document.getElementById('cpuChart').getContext('2d');
-                this.cpuChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'CPU Load (1min)',
-                            data: [],
-                            borderColor: '#3498db',
-                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10,
-                                ticks: {
-                                    callback: function(value) {
-                                        return value.toFixed(1);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
+    initCharts() {
+      const ctx = document.getElementById('cpuChart').getContext('2d');
+      this.cpuChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'CPU Load (1min)',
+            data: [],
+            borderColor: '#3498db',
+            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              ticks: {
+                callback: function(value) {
+                  return value.toFixed(1);
+                }
+              }
             }
+          }
+        }
+      });
+    }
             
     connect() {
       // Connect to metrics stream
-      this.eventSource = new EventSource('{{ route("cores.metrics") }}');
+      this.eventSource = new EventSource('{{ route("api.cores.metrics") }}');
                 
       this.eventSource.onopen = (event) => {
         this.updateConnectionStatus('connected', 'Connected');
@@ -108,16 +108,16 @@
       });
     }
             
-            updateMetrics(data) {
-                this.updateSystemInfo(data.system);
-                this.updateResourceUsage(data.resources);
-                this.updateCpuLoad(data.resources.cpu_usage);
-                this.updateMemoryUsage(data.resources);
-                this.updateDiskUsage(data.resources.disk_usage);
-                this.updateDatabaseStatus(data.database);
-                this.updateApplicationStatus(data.application, data.queue);
-                this.updateModulesStatus(data.modules);
-            }
+    updateMetrics(data) {
+      this.updateSystemInfo(data.system);
+      this.updateResourceUsage(data.resources);
+      this.updateCpuLoad(data.resources.cpu_usage);
+      this.updateMemoryUsage(data.resources);
+      this.updateDiskUsage(data.resources.disk_usage);
+      this.updateDatabaseStatus(data.database);
+      this.updateApplicationStatus(data.application, data.queue);
+      this.updateModulesStatus(data.modules);
+    }
             
             updateSystemInfo(system) {
                 document.getElementById('systemInfo').innerHTML = `
