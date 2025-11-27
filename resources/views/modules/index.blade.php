@@ -1,5 +1,7 @@
 @extends('viewmanager::layouts.app')
 
+@use('Modules\Core\Constants\Permissions')
+
 @section('page-title', 'Module Available')
 
 @section('content')
@@ -46,20 +48,20 @@
       <div class="card-footer d-flex justify-content-between align-items-center">
         <div class="mb-3 text-center">
           @if(!$module['is_installed'])
-          <form action="{{ route('cores.install-package') }}" method="POST" class="d-inline">
+          <form action="{{ route('cores.modules.install-package') }}" method="POST" class="d-inline">
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
-            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')">
+            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               <svg class="icon me-2">
                 <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
               </svg>
               Install v{{ $modul["latest_version"] ?? "1.0.0" }}</button>
           </form>
           @elseif($module['update_available'])
-          <form action="{{ route('cores.update-package') }}" method="POST" class="d-inline">
+          <form action="{{ route('cores.modules.update-package') }}" method="POST" class="d-inline">
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
-            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')">
+            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               <svg class="icon me-2">
                 <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
               </svg>
@@ -69,18 +71,18 @@
           @else
             @if(str($module['name'])->lower()->doesntContain('core'))
               @if($module['status'] === 'enabled')
-              <form action="{{ route('cores.disable') }}" method="POST" class="d-inline">
+              <form action="{{ route('cores.modules.disable') }}" method="POST" class="d-inline">
                 @csrf
                 <input type="hidden" name="module" value="{{$module['display_name']}}">
-                <button type="submit" class="btn btn-outline-warning btn-sm">
+                <button type="submit" class="btn btn-outline-warning btn-sm" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
                   Disable
                 </button>
               </form>
               @else
-              <form action="{{ route('cores.enable') }}" method="POST" class="d-inline">
+              <form action="{{ route('cores.modules.enable') }}" method="POST" class="d-inline">
                 @csrf
                 <input type="hidden" name="module" value="{{$module['display_name']}}">
-                <button type="submit" class="btn btn-outline-success btn-sm">
+                <button type="submit" class="btn btn-outline-success btn-sm" @disabled(Permissions::MANAGE_MODULES)>
                    Enable
                 </button>
               </form>

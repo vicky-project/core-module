@@ -43,7 +43,10 @@ class BackupService
 
 			return $backupPath;
 		} catch (Exception $e) {
-			Log::error("Spatie backup failed: " . $e->getMessage());
+			Log::error("Spatie backup failed: " . $e->getMessage(), [
+				"message" => $e->getMessage(),
+				"trace" => $e->getTrace(),
+			]);
 			throw new Exception("Backup creation failed: " . $e->getMessage());
 		}
 	}

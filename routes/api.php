@@ -1,8 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Core\Http\Controllers\CoreController;
+use Modules\Core\Http\Controllers\ServerMonitorController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('cores', CoreController::class)->names('core');
+Route::prefix("v1")->group(function () {
+	Route::prefix("cores")
+		->names("cores.")
+		->group(function () {
+			Route::get("metrics", [
+				ServerMonitorController::class,
+				"streamMetrics",
+			])->name("metrics");
+		});
 });

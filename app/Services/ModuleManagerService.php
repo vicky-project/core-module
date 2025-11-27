@@ -10,6 +10,7 @@ use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Helpers\CoreHelper;
 
 class ModuleManagerService
 {
@@ -117,8 +118,8 @@ class ModuleManagerService
 				"minimum" => "128M",
 				"current" => ini_get("memory_limit"),
 				"check" =>
-					$this->memoryToBytes(ini_get("memory_limit")) >=
-					$this->memoryToBytes("128M"),
+					CoreHelper::memoryToBytes(ini_get("memory_limit")) >=
+					CoreHelper::memoryToBytes("128M"),
 			],
 			"max_execution_time" => [
 				"minimum" => 30,
@@ -186,23 +187,6 @@ class ModuleManagerService
 
 			dd($packagInfo["require"]);
 		} catch (\Exception $e) {
-		}
-	}
-
-	protected function memoryToBytes($memory)
-	{
-		$unit = strtolower(substr($memory, -1));
-		$value = (int) $memory;
-
-		switch ($unit) {
-			case "g":
-				return $value * 1024 * 1024 * 1024;
-			case "m":
-				return $value * 1024 * 1024;
-			case "k":
-				return $value * 1024;
-			default:
-				return $value;
 		}
 	}
 

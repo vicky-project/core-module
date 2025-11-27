@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 use Modules\Core\Services\PackagistService;
 use Modules\Core\Services\ModuleManagerService;
+use Modules\Core\Constants\Permissions;
 
 class CoreController extends Controller
 {
@@ -20,6 +21,16 @@ class CoreController extends Controller
 	) {
 		$this->packagistService = $packagistService;
 		$this->moduleService = $moduleService;
+
+		$this->middleware(["permission:" . Permissions::VIEW_MODULES])->only([
+			"index",
+		]);
+		$this->middleware(["permission:" . Permissions::MANAGE_MODULES])->only([
+			"installPackage",
+			"updatePackage",
+			"disableModule",
+			"enableModule",
+		]);
 	}
 
 	/**
@@ -212,16 +223,6 @@ class CoreController extends Controller
 	}
 
 	/**
-	 * Show the specified resource.
-	 */
-	public function show($core)
-	{
-		$package = $this->packagistService->getModule($core);
-		dd($package);
-		return view("core::modules.show", compact("package"));
-	}
-
-	/**
 	 * Show the form for editing the specified resource.
 	 */
 	public function disableModule(Request $request)
@@ -253,12 +254,5 @@ class CoreController extends Controller
 		}
 
 		return back()->withErrors($result["message"]);
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 */
-	public function destroy($id)
-	{
 	}
 }

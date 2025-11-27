@@ -52,6 +52,10 @@ class InstallationService
 		}
 	}
 
+	/**
+	 * Modules\{ModuleName}\Installation\PreInstallation::class
+	 * nwthod handle()
+	 */
 	protected function runModulePreInstallation($module)
 	{
 		$preInstallationClass = "Modules\\{$module->getName()}\\Installation\\PreInstallation";
@@ -63,6 +67,10 @@ class InstallationService
 		}
 	}
 
+	/**
+	 * Modules\{ModuleName}\Installation\PostInstallation::class
+	 * method handle()
+	 */
 	protected function runModulePostInstallation($module)
 	{
 		$postInstallationClass = "Modules\\{$module->getName()}\\Installation\\PostInstallation";
@@ -115,6 +123,10 @@ class InstallationService
 		$this->runModuleOptimizations($module);
 	}
 
+	/**
+	 * Modules\{ModuleName}\Service\DatabaseOptimizer::class
+	 * method optimize()
+	 */
 	protected function runModuleOptimizations($module)
 	{
 		$optimizerClass = "Modules\\{$module->getName()}\\Services\\DatabaseOptimizer";
