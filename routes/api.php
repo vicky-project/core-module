@@ -5,7 +5,7 @@ use Modules\Core\Http\Controllers\ServerMonitorController;
 
 Route::prefix("v1")->group(function () {
 	Route::prefix("cores")
-		->names("cores.")
+		->name("cores.")
 		->group(function () {
 			Route::get("metrics", [
 				ServerMonitorController::class,
