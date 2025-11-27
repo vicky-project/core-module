@@ -2,10 +2,11 @@
 
 namespace Modules\Core\Http\Controllers;
 
-use Illuminate\Htt\Request;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\StreamedEvent;
 use Modules\Core\Services\ServerMonitorService;
+use Modules\Core\Constants\Permissions;
 
 class ServerMonitorController extends Controller
 {
@@ -14,6 +15,10 @@ class ServerMonitorController extends Controller
 	public function __construct(ServerMonitorService $serverMonitor)
 	{
 		$this->serverMonitor = $serverMonitor;
+
+		$this->middleware(["permission:" . Permissions::VIEW_SYSTEMS])->only([
+			"index",
+		]);
 	}
 
 	public function index(Request $request)

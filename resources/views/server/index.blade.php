@@ -8,16 +8,16 @@
 @section('scripts')
 <script>
   class ServerMonitor {
-            constructor() {
-                this.eventSource = null;
-                this.healthSource = null;
-                this.cpuData = [];
-                this.maxDataPoints = 20;
-                this.cpuChart = null;
+    constructor() {
+      this.eventSource = null;
+      this.healthSource = null;
+      this.cpuData = [];
+      this.maxDataPoints = 20;
+      this.cpuChart = null;
                 
-                this.initCharts();
-                this.connect();
-            }
+      this.initCharts();
+      this.connect();
+    }
             
             initCharts() {
                 const ctx = document.getElementById('cpuChart').getContext('2d');
@@ -52,61 +52,61 @@
                 });
             }
             
-            connect() {
-                // Connect to metrics stream
-                this.eventSource = new EventSource('/api/server-monitor/metrics');
+    connect() {
+      // Connect to metrics stream
+      this.eventSource = new EventSource('{{ route("cores.metrics") }}');
                 
-                this.eventSource.onopen = (event) => {
-                    this.updateConnectionStatus('connected', 'Connected');
-                    console.log('SSE connection established');
-                };
+      this.eventSource.onopen = (event) => {
+        this.updateConnectionStatus('connected', 'Connected');
+        console.log('SSE connection established');
+      };
                 
-                this.eventSource.onmessage = (event) => {
-                    this.updateConnectionStatus('connected', 'Connected');
-                    this.updateLastUpdate();
-                };
+      this.eventSource.onmessage = (event) => {
+        this.updateConnectionStatus('connected', 'Connected');
+        this.updateLastUpdate();
+      };
                 
-                this.eventSource.addEventListener('connected', (event) => {
-                    const data = JSON.parse(event.data);
-                    console.log('Server monitor connected:', data);
-                });
+      this.eventSource.addEventListener('connected', (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Server monitor connected:', data);
+      });
                 
-                this.eventSource.addEventListener('metrics', (event) => {
-                    const data = JSON.parse(event.data);
-                    this.updateMetrics(data);
-                    this.updateLastUpdate();
-                });
+      this.eventSource.addEventListener('metrics', (event) => {
+        const data = JSON.parse(event.data);
+        this.updateMetrics(data);
+        this.updateLastUpdate();
+      });
                 
-                this.eventSource.addEventListener('heartbeat', (event) => {
-                    const data = JSON.parse(event.data);
-                    console.log('Heartbeat:', data);
-                    this.updateConnectionStatus('connected', 'Connected');
-                });
+      this.eventSource.addEventListener('heartbeat', (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Heartbeat:', data);
+        this.updateConnectionStatus('connected', 'Connected');
+      });
                 
-                this.eventSource.addEventListener('error', (event) => {
-                    const data = JSON.parse(event.data);
-                    console.error('SSE error:', data);
-                    this.updateConnectionStatus('disconnected', 'Error');
-                });
+      this.eventSource.addEventListener('error', (event) => {
+        const data = JSON.parse(event.data);
+        console.error('SSE error:', data);
+        this.updateConnectionStatus('disconnected', 'Error');
+      });
                 
-                this.eventSource.onerror = (error) => {
-                    console.error('EventSource error:', error);
-                    this.updateConnectionStatus('disconnected', 'Connection Error');
-                    this.reconnect();
-                };
+      this.eventSource.onerror = (error) => {
+        console.error('EventSource error:', error);
+        this.updateConnectionStatus('disconnected', 'Connection Error');
+        this.reconnect();
+      };
                 
-                // Connect to health stream
-                this.connectHealthStream();
-            }
+      // Connect to health stream
+      this.connectHealthStream();
+    }
             
-            connectHealthStream() {
-                this.healthSource = new EventSource('/api/server-monitor/health');
+    connectHealthStream() {
+      this.healthSource = new EventSource('/api/server-monitor/health');
                 
-                this.healthSource.addEventListener('health', (event) => {
-                    const data = JSON.parse(event.data);
-                    this.updateHealthStatus(data);
-                });
-            }
+      this.healthSource.addEventListener('health', (event) => {
+        const data = JSON.parse(event.data);
+        this.updateHealthStatus(data);
+      });
+    }
             
             updateMetrics(data) {
                 this.updateSystemInfo(data.system);
