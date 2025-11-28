@@ -4,113 +4,114 @@
 
 @section('content')
 <div class="monitor-container">
-        <div class="monitor-header">
-            <h1>🚀 Server Monitor</h1>
-            <div class="status-indicators">
-                <div class="status-indicator">
-                    <div class="status-dot status-connected" id="connectionStatus"></div>
-                    <span id="connectionText">Connecting...</span>
-                </div>
-                <div class="status-indicator">
-                    <div class="status-dot" id="healthStatus"></div>
-                    <span id="healthText">Checking health...</span>
-                </div>
-                <div class="status-indicator">
-                    <span>Last update: </span>
-                    <span id="lastUpdate">--:--:--</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="metrics-grid">
-            <!-- System Information -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">System Information</div>
-                </div>
-                <div id="systemInfo">
-                    <div>Loading system information...</div>
-                </div>
-            </div>
-            
-            <!-- Resource Usage -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Resource Usage</div>
-                </div>
-                <div id="resourceUsage">
-                    <div>Loading resource usage...</div>
-                </div>
-            </div>
-            
-            <!-- CPU Load -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">CPU Load</div>
-                </div>
-                <div id="cpuLoad">
-                    <div>Loading CPU information...</div>
-                </div>
-                <canvas id="cpuChart" height="100"></canvas>
-            </div>
-            
-            <!-- Memory Usage -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Memory Usage</div>
-                </div>
-                <div id="memoryUsage">
-                    <div>Loading memory information...</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
-                </div>
-            </div>
-            
-            <!-- Disk Usage -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Disk Usage</div>
-                </div>
-                <div id="diskUsage">
-                    <div>Loading disk information...</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
-                </div>
-            </div>
-            
-            <!-- Database Status -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Database</div>
-                </div>
-                <div id="databaseStatus">
-                    <div>Loading database information...</div>
-                </div>
-            </div>
-            
-            <!-- Application Health -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Application Health</div>
-                </div>
-                <div id="applicationHealth">
-                    <div>Loading health information...</div>
-                </div>
-                <div class="connection-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="activeConnections">0</div>
-                        <div class="stat-label">Active Connections</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="queueSize">0</div>
-                        <div class="stat-label">Queue Size</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="monitor-header">
+    <h1>🚀 Server Monitor</h1>
+    <div class="status-indicators">
+      <div class="status-indicator">
+        <div class="status-dot status-connected" id="connectionStatus"></div>
+        <span id="connectionText">Connecting...</span>
+      </div>
+      <div class="status-indicator">
+        <div class="status-dot" id="healthStatus"></div>
+        <span id="healthText">Checking health...</span>
+      </div>
+      <div class="status-indicator">
+        <span>Last update: </span>
+        <span id="lastUpdate">--:--:--</span>
+      </div>
     </div>
+  </div>
+        
+  <div class="metrics-grid">
+    <!-- System Information -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">System Information</div>
+      </div>
+      <div id="systemInfo">
+        <div>Loading system information...</div>
+      </div>
+    </div>
+            
+    <!-- Resource Usage -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">Resource Usage</div>
+      </div>
+      <div id="resourceUsage">
+        <div>Loading resource usage...</div>
+      </div>
+    </div>
+            
+    <!-- CPU Load -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">CPU Load</div>
+      </div>
+      <div id="cpuLoad">
+        <div>Loading CPU information...</div>
+      </div>
+      <canvas id="cpuChart" height="100"></canvas>
+    </div>
+            
+    <!-- Memory Usage -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">Memory Usage</div>
+      </div>
+      <div id="memoryUsage">
+        <div>Loading memory information...</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
+      </div>
+    </div>
+            
+    <!-- Disk Usage -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">Disk Usage</div>
+      </div>
+      <div id="diskUsage">
+        <div>Loading disk information...</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
+      </div>
+    </div>
+            
+    <!-- Database Status -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">Database</div>
+      </div>
+      <div id="databaseStatus">
+        <div>Loading database information...</div>
+      </div>
+    </div>
+            
+    <!-- Application Health -->
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">Application Health</div>
+      </div>
+      <div id="applicationHealth">
+        <div>Loading health information...</div>
+      </div>
+      <div class="connection-stats">
+        <div class="stat-item">
+          <div class="stat-value" id="activeConnections">0</div>
+          <div class="stat-label">Active Connections</div>
+                    
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="queueSize">0</div>
+          <div class="stat-label">Queue Size</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')
