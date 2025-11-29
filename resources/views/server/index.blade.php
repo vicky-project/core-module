@@ -237,6 +237,7 @@
         };
 
         this.eventSource.addEventListener('metrics', (event) => {
+        console.log(JSON.parse(event))
           const data = JSON.parse(event.data);
           this.handleMetricsUpdate(data);
           this.updateLastUpdate();
@@ -265,7 +266,7 @@
         });
 
         this.eventSource.onerror = (error) => {
-          console.error('SSE connection error:', error);
+          console.error('SSE connection error:', error.message);
           this.updateConnectionStatus('disconnected', 'SSE Connection Error');
           this.reconnect();
         };
