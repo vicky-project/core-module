@@ -123,37 +123,46 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  class ServerMonitor {
+  class LaravelEventStreamMonitor {
     constructor() {
       this.eventSource = null;
-      this.healthSource = null;
-      this.cpuData = [];
-      this.maxDataPoints = 20;
-      this.cpuChart = null;
-                
+      this.metrics = {};
+      this.cpuHistory = [];
+      this.memoryHistory = [];
+      this.maxHistory = 20;
+      this.connectionType = null;
+
+      this.charts = {
+        cpu: null,
+        memory: null
+      };
+
       this.initCharts();
-      this.connect();
+      this.connectSSE(); // Default connection
     }
-            
+
     initCharts() {
-      const ctx = document.getElementById('cpuChart').getContext('2d');
-      this.cpuChart = new Chart(ctx, {
+      // CPU Chart
+      const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+      this.charts.cpu = new Chart(cpuCtx, {
         type: 'line',
         data: {
-          labels: [],
+          labels: Array.from({length: this.maxHistory}, (_, i) => ''),
           datasets: [{
             label: 'CPU Load (1min)',
-            data: [],
+            data: Array(this.maxHistory).fill(0),
             borderColor: '#3498db',
             backgroundColor: 'rgba(52, 152, 219, 0.1)',
             tension: 0.4,
-            fill: true
+            fill: true,
+            borderWidth: 2
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
+            x: { display: false },
             y: {
               beginAtZero: true,
               max: 10,
@@ -163,121 +172,183 @@
                 }
               }
             }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+                
+      // Memory Chart
+      const memoryEl = document.getElementById('memoryChart');
+      if(!memoryEl) return;
+      
+      const memoryCtx = memoryEl.getContext('2d');
+      this.charts.memory = new Chart(memoryCtx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: this.maxHistory}, (_, i) => ''),
+          datasets: [{
+            label: 'Memory Usage %',
+            data: Array(this.maxHistory).fill(0),
+            borderColor: '#2ecc71',
+            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+            tension: 0.4,
+            fill: true,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { display: false },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false }
           }
         }
       });
     }
             
-    connect() {
-      // Connect to metrics stream
-      this.eventSource = new EventSource('{{ route("api.v1.cores.metrics") }}');
-                
-      this.eventSource.onopen = (event) => {
-        this.updateConnectionStatus('connected', 'Connected');
-        console.log('SSE connection established');
-      };
-                
-      this.eventSource.onmessage = (event) => {
-        this.updateConnectionStatus('connected', 'Connected');
-        this.updateLastUpdate();
-      };
-                
-      this.eventSource.addEventListener('connected', (event) => {
-        console.log(event.data);
-        const data = JSON.parse(event.data);
-        console.log('Server monitor connected:', data);
-      });
-                
-      this.eventSource.addEventListener('metrics', (event) => {
-        const data = JSON.parse(event.data);
-        this.updateMetrics(data);
-        this.updateLastUpdate();
-      });
-                
-      this.eventSource.addEventListener('heartbeat', (event) => {
-        const data = JSON.parse(event.data);
-        console.log('Heartbeat:', data);
-        this.updateConnectionStatus('connected', 'Connected');
-      });
-                
-      this.eventSource.addEventListener('error', (event) => {
-        const data = JSON.parse(event.data);
-        console.error('SSE error:', data);
-        this.updateConnectionStatus('disconnected', 'Error');
-      });
-                
-      this.eventSource.onerror = (error) => {
-        console.error('EventSource error:', error);
-        this.updateConnectionStatus('disconnected', 'Connection Error');
-        this.reconnect();
-      };
-                
-      // Connect to health stream
-      this.connectHealthStream();
+    connectSSE() {
+      this.disconnect();
+      this.connectionType = 'sse';
+
+      try {
+        this.eventSource = new EventSource('{{ route("api.v1.cores.metrics") }}');
+
+        this.eventSource.onopen = () => {
+          this.updateConnectionStatus('connected', 'SSE Event Stream Connected');
+          console.log('Laravel SSE connected');
+        };
+
+        this.eventSource.onmessage = (event) => {
+          console.log('SSE raw message:', event);
+        };
+
+        this.eventSource.addEventListener('metrics', (event) => {
+          const data = JSON.parse(event.data);
+          this.handleMetricsUpdate(data);
+          this.updateLastUpdate();
+        });
+
+        this.eventSource.addEventListener('health', (event) => {
+          const data = JSON.parse(event.data);
+          this.handleHealthUpdate(data);
+        });
+
+        this.eventSource.addEventListener('modules', (event) => {
+          const data = JSON.parse(event.data);
+          this.handleModulesUpdate(data);
+        });
+
+        this.eventSource.addEventListener('heartbeat', (event) => {
+          const data = JSON.parse(event.data);
+          console.log('SSE heartbeat:', data);
+          this.updateConnectionStatus('connected', 'SSE Connected');
+        });
+
+        this.eventSource.addEventListener('error', (event) => {
+          const data = JSON.parse(event.data);
+          console.error('SSE server error:', data);
+          this.updateConnectionStatus('disconnected', 'SSE Error');
+        });
+
+        this.eventSource.onerror = (error) => {
+          console.error('SSE connection error:', error);
+          this.updateConnectionStatus('disconnected', 'SSE Connection Error');
+          this.reconnect();
+        };
+      } catch (error) {
+        console.error('Failed to connect SSE:', error);
+        this.updateConnectionStatus('disconnected', 'SSE Failed');
+      }
     }
 
-    connectHealthStream() {
-      this.healthSource = new EventSource('{{ route("api.v1.cores.health") }}');
-                
-      this.healthSource.addEventListener('health', (event) => {
-        const data = JSON.parse(event.data);
-        this.updateHealthStatus(data);
-      });
+    handleMetricsUpdate(metrics) {
+      this.metrics = metrics;
+      this.updateAllDisplays();
     }
 
-    updateMetrics(data) {
-      this.updateSystemInfo(data.system);
-      this.updateResourceUsage(data.resources);
-      this.updateCpuLoad(data.resources.cpu_usage);
-      this.updateMemoryUsage(data.resources);
-      this.updateDiskUsage(data.resources.disk_usage);
-      this.updateDatabaseStatus(data.database);
-      this.updateApplicationStatus(data.application, data.queue);
-      this.updateModulesStatus(data.modules);
+    handleHealthUpdate(health) {
+      this.updateHealthStatus(health);
+    }
+
+    handleModulesUpdate(data) {
+      this.updateModulesStatus(data.modules || []);
+    }
+
+    updateAllDisplays() {
+      this.updateSystemInfo(this.metrics.system);
+      this.updateResourceUsage(this.metrics.resources);
+      this.updateCpuLoad(this.metrics.resources.cpu_usage);
+      this.updateMemoryUsage(this.metrics.resources);
+      this.updateDiskUsage(this.metrics.resources.disk_usage);
+      this.updateDatabaseStatus(this.metrics.database);
+      this.updateApplicationStatus(this.metrics.application, this.metrics.queue);
+
+      // Update charts with history
+      if (this.metrics.history) {
+        this.updateCharts(this.metrics.history);
+      }
     }
 
     updateSystemInfo(system) {
+      if (!system) return;
+
       document.getElementById('systemInfo').innerHTML = `
-      <div class="metric-value">${system.hostname}</div>
+        <div class="metric-value">${system.hostname}</div>
         <div class="metric-subvalue">
           PHP ${system.php_version} • Laravel ${system.laravel_version}<br>
-          ${system.os} • ${system.environment}
+          ${system.os} • ${system.environment}<br>
+          Uptime: ${system.uptime}
         </div>`;
     }
 
     updateResourceUsage(resources) {
+      if (!resources) return;
+
       document.getElementById('resourceUsage').innerHTML = `
-      <div class="metric-value">${resources.memory_usage}</div>
-      <div class="metric-subvalue">
-        Peak: ${resources.memory_peak}<br>
-        Limit: ${resources.memory_limit}
-      </div>`;
+        <div class="metric-value">${resources.memory_usage}</div>
+        <div class="metric-subvalue">
+          ${resources.memory_percentage}% used • Limit: ${resources.memory_limit}
+        </div>`;
     }
 
     updateCpuLoad(cpuUsage) {
+      if (!cpuUsage) return;
+
       const load = cpuUsage.load_1min || 0;
 
-      // Update CPU chart
-      this.cpuData.push(load);
-      if (this.cpuData.length > this.maxDataPoints) {
-        this.cpuData.shift();
-      }
-
-      this.cpuChart.data.labels = Array.from({length: this.cpuData.length}, (_, i) => i + 1);
-      this.cpuChart.data.datasets[0].data = this.cpuData;
-      this.cpuChart.update('none');
-
       document.getElementById('cpuLoad').innerHTML = `
-      <div class="metric-value">${load.toFixed(2)}</div>
-      <div class="metric-subvalue">
-        5min: ${cpuUsage.load_5min} • 15min: ${cpuUsage.load_15min}
-      </div>`;
+        <div class="metric-value">${load.toFixed(2)}</div>
+        <div class="metric-subvalue">
+          5min: ${cpuUsage.load_5min} • 15min: ${cpuUsage.load_15min}
+        </div>`;
+        
+        // Update CPU history for chart
+        this.cpuHistory.push(load);
+        if (this.cpuHistory.length > this.maxHistory) {
+          this.cpuHistory.shift();
+        }
+
+        this.updateChart(this.charts.cpu, this.cpuHistory);
     }
 
     updateMemoryUsage(resources) {
-      const memoryUsed = this.parseBytes(resources.memory_usage);
-      const memoryLimit = this.parseBytes(resources.memory_limit);
-      const percentage = (memoryUsed / memoryLimit) * 100;
+      if (!resources) return;
+
+      const percentage = resources.memory_percentage || 0;
 
       const progress = document.getElementById('memoryProgress');
       progress.style.width = `${Math.min(percentage, 100)}%`;
@@ -289,9 +360,25 @@
       } else {
         progress.className = 'progress-fill';
       }
+
+      document.getElementById('memoryUsage').innerHTML = `
+        <div class="metric-value">${resources.memory_usage}</div>
+        <div class="metric-subvalue">
+          ${percentage}% used • Peak: ${resources.memory_peak}
+        </div>`;
+
+      // Update memory history for chart
+      this.memoryHistory.push(percentage);
+      if (this.memoryHistory.length > this.maxHistory) {
+        this.memoryHistory.shift();
+      }
+
+      this.updateChart(this.charts.memory, this.memoryHistory);
     }
 
     updateDiskUsage(diskUsage) {
+      if (!diskUsage) return;
+
       const progress = document.getElementById('diskProgress');
       progress.style.width = `${diskUsage.percentage}%`;
 
@@ -304,36 +391,47 @@
       }
 
       document.getElementById('diskUsage').innerHTML = `
-      <div class="metric-value">${diskUsage.used} / ${diskUsage.total}</div>
-      <div class="metric-subvalue">
-        ${diskUsage.percentage}% used • ${diskUsage.free} free
-      </div>`;
+        <div class="metric-value">${diskUsage.used} / ${diskUsage.total}</div>
+        <div class="metric-subvalue">
+          ${diskUsage.percentage}% used • ${diskUsage.free} free
+        </div>`;
     }
-
+    
     updateDatabaseStatus(database) {
+      if (!database) return;
+
       const statusClass = database.status === 'connected' ? 'status-enabled' : 'status-disabled';
+      const tablesInfo = database.tables ? ` • ${database.tables} tables` : '';
+
       document.getElementById('databaseStatus').innerHTML = `
         <span class="module-status ${statusClass}">${database.status.toUpperCase()}</span>
         <div class="metric-subvalue">
-          ${database.connection} • ${database.version}
+          ${database.connection} • ${database.version}${tablesInfo}
         </div>`;
     }
 
     updateApplicationStatus(application, queue) {
+      if (!application) return;
+
       document.getElementById('applicationHealth').innerHTML = `
         <div class="metric-value">${application.uptime}</div>
         <div class="metric-subvalue">
           ${application.cache_driver} • ${application.queue_driver}<br>
-          ${application.maintenance_mode ? 'MAINTENANCE MODE' : 'RUNNING'}
+          ${application.maintenance_mode ? '🛑 MAINTENANCE MODE' : '✅ RUNNING'}
         </div>`;
 
-                
-      document.getElementById('activeConnections').textContent = application.active_connections;
-      document.getElementById('queueSize').textContent = queue.size;
+      document.getElementById('activeConnections').textContent = application.active_connections || 0;
+      document.getElementById('queueSize').textContent = queue?.size || 0;
     }
 
     updateModulesStatus(modules) {
       const modulesList = document.getElementById('modulesList');
+      
+      if (!modules || modules.length === 0) {
+        modulesList.innerHTML = '<div>No modules found</div>';
+        return;
+      }
+
       modulesList.innerHTML = modules.map(module => `
         <div class="module-item">
           <span>${module.name} v${module.version}</span>
@@ -345,20 +443,38 @@
 
     updateHealthStatus(health) {
       const healthStatus = document.getElementById('healthStatus');
-      const healthText = document.getElementById('healthText');
+      const healthText = document.getElementById('healthStatusText');
+
+      if (!health) return;
 
       if (health.healthy) {
         healthStatus.className = 'status-dot status-connected';
         healthText.textContent = 'Healthy';
       } else {
         healthStatus.className = 'status-dot status-warning';
-        healthText.textContent = 'Issues Detected';
+        healthText.textContent = `Issues: ${health.failed_checks?.join(', ') || 'Unknown'}`;
+      }
+    }
+
+    updateChart(chart, data) {
+      if (chart && data) {
+        chart.data.datasets[0].data = data;
+        chart.update('none');
+      }
+    }
+
+    updateCharts(history) {
+      if (history.cpu) {
+        this.updateChart(this.charts.cpu, history.cpu.slice(-this.maxHistory));
+      }
+      if (history.memory) {
+        this.updateChart(this.charts.memory, history.memory.slice(-this.maxHistory));
       }
     }
 
     updateConnectionStatus(status, text) {
-      const statusDot = document.getElementById('connectionStatus');
-      const statusText = document.getElementById('connectionText');
+      const statusDot = document.getElementById('sseStatus');
+      const statusText = document.getElementById('sseStatusText');
 
       statusDot.className = `status-dot status-${status}`;
       statusText.textContent = text;
@@ -369,51 +485,48 @@
       document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
     }
 
-    parseBytes(bytesString) {
-      const units = {B: 1, KB: 1024, MB: 1048576, GB: 1073741824, TB: 1099511627776};
-      const match = bytesString.match(/^([\d.]+)\s*([KMGTP]?B)$/);
-      if (match) {
-        return parseFloat(match[1]) * units[match[2]];
-      }
-      
-      return 0;
-    }
-
     reconnect() {
-      if (this.eventSource) {
-        this.eventSource.close();
-      }
-      
-      if (this.healthSource) {
-        this.healthSource.close();
-      }
-
       setTimeout(() => {
         console.log('Attempting to reconnect...');
-        this.connect();
+        if (this.connectionType === 'sse') {
+          this.connectSSE();
+        } else if (this.connectionType === 'json') {
+          this.connectJSON();
+        }
       }, 5000);
     }
 
     disconnect() {
       if (this.eventSource) {
         this.eventSource.close();
+        this.eventSource = null;
       }
-      
-      if (this.healthSource) {
-        this.healthSource.close();
-      }
-      
       this.updateConnectionStatus('disconnected', 'Disconnected');
     }
   }
 
-  // Initialize server monitor when page loads
+  // Initialize monitor when page loads
   document.addEventListener('DOMContentLoaded', function() {
-    window.serverMonitor = new ServerMonitor();
+    window.laravelMonitor = new LaravelEventStreamMonitor();
+
+    // Handle page visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        console.log('Page hidden, disconnecting streams');
+        window.laravelMonitor.disconnect();
+      } else {
+        console.log('Page visible, reconnecting streams');
+        if (window.laravelMonitor.connectionType === 'sse') {
+          window.laravelMonitor.connectSSE();
+        } else if (window.laravelMonitor.connectionType === 'json') {
+          window.laravelMonitor.connectJSON();
+        }
+      }
+    });
 
     // Handle page unload
     window.addEventListener('beforeunload', function() {
-      window.serverMonitor.disconnect();
+      window.laravelMonitor.disconnect();
     });
   });
 </script>
