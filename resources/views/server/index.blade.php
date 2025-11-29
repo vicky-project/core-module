@@ -183,6 +183,7 @@
       };
                 
       this.eventSource.addEventListener('connected', (event) => {
+        console.log(event.data);
         const data = JSON.parse(event.data);
         console.log('Server monitor connected:', data);
       });
