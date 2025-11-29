@@ -42,7 +42,7 @@
           <form action="{{ route('cores.modules.update-package') }}" method="POST" class="d-inline">
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
-            <button type="submit" class="btn btn-primary btn-sm position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
+            <button type="submit" class="btn btn-primary position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               {{ $module["installed_version"] }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
                 <svg class="icon">
