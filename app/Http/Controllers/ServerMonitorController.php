@@ -29,7 +29,14 @@ class ServerMonitorController extends Controller
 	public function streamMetrics(Request $request)
 	{
 		return response()
-			->withHeaders([])
+			->withHeaders([
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+				"Access-Control-Allow-Origin" => "*",
+				"Access-Control-Allow-Headers" => "Cache-Control",
+			])
 			->eventStream(function () use ($request) {
 				try {
 					$clientId = $request->getClientId() ?? uniqid();
@@ -74,6 +81,37 @@ class ServerMonitorController extends Controller
 						"message" => "Monitor stream error",
 						"error" => $e->getMessage(),
 					]);
+				}
+			});
+	}
+
+	/**
+	 * Stream server health status
+	 */
+	public function streamHealth(Request $request)
+	{
+		return response()
+			->withHeaders([
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+			])
+			->eventStream(function () use ($request) {
+				try {
+					while (true) {
+						if (connection_aborted()) {
+							break;
+						}
+
+						$health = $this->serverMonitor->isServerHealthy();
+						$this->sendEvent("health", $health);
+
+						// Wait 5 seconds before next health check
+						sleep(5);
+					}
+				} catch (\Exception $e) {
+					logger()->error("SSE health stream error: " . $e->getMessage());
 				}
 			});
 	}

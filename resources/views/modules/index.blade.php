@@ -46,7 +46,7 @@
               {{ $module["installed_version"] }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
                 <svg class="icon">
-                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
+                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
                 </svg>{{$module["latest_version"]}}
                 <span class="visually-hidden">Update available</span>
               </span>
