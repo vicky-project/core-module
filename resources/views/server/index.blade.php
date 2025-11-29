@@ -237,7 +237,7 @@
         };
 
         this.eventSource.addEventListener('metrics', (event) => {
-        console.log(JSON.parse(event))
+        console.log(JSON.stringify(event))
           const data = JSON.parse(event.data);
           this.handleMetricsUpdate(data);
           this.updateLastUpdate();
