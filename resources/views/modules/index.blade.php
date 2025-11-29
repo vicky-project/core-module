@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="card-body">
-        <h5 class="card-title mb-2">{{$module["display_name"]}}</h5><span class="small ms-2">{{$module["is_installed"] ? $module['installed_version'] : ($module["latest_version"] ?? "1.0.0")}}</span>
+        <h5 class="card-title mb-2">{{$module["display_name"]}}<span class="small ms-2">{{$module["is_installed"] ? $module['installed_version'] : ($module["latest_version"] ?? "1.0.0")}}</span></h5>
         <p class="card-text text-muted small">{{ str($module["description"])->limit(120) }}</p>
         <small class="text-muted d-block mb-2">{{$module["name"]}}</small>
       </div>
