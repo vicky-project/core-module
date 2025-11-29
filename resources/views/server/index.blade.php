@@ -473,8 +473,8 @@
     }
 
     updateConnectionStatus(status, text) {
-      const statusDot = document.getElementById('sseStatus');
-      const statusText = document.getElementById('sseStatusText');
+      const statusDot = document.getElementById('connectionStatus');
+      const statusText = document.getElementById('connectionText');
 
       statusDot.className = `status-dot status-${status}`;
       statusText.textContent = text;
