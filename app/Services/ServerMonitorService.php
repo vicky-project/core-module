@@ -17,7 +17,6 @@ class ServerMonitorService
 	public function getServerStatus()
 	{
 		$memoryUsage = memory_get_usage(true);
-		$memoryPeak = memory_get_peak_usage(true);
 		$memoryLimit = $this->convertToBytes(ini_get("memory_limit"));
 		$diskTotal = disk_total_space(base_path());
 		$diskFree = disk_free_space(base_path());
@@ -27,40 +26,25 @@ class ServerMonitorService
 			"timestamp" => now()->toISOString(),
 			"system" => $this->getSystemInfo(),
 			"resources" => [
-				"memory_usage" => Number::fileSize($memoryUsage),
-				"memory_usage_raw" => $memoryUsage,
-				"memory_peak" => Number::fileSize($memoryPeak),
-				"memory_limit" => ini_get("memory_limit"),
-				"memory_limit_raw" => $memoryLimit,
+				"memory_usage" => $memoryUsage,
+				"memory_limit" => $memoryLimit,
 				"memory_percentage" =>
 					$memoryLimit > 0 ? round(($memoryUsage / $memoryLimit) * 100, 2) : 0,
 				"cpu_usage" => $this->getCpuUsage(),
 				"disk_usage" => [
-					"used" => Number::fileSize($diskUsed),
-					"used_raw" => $diskUsed,
-					"free" => Number::fileSize($diskFree),
-					"free_raw" => $diskFree,
-					"total" => Number::fileSize($diskTotal),
-					"total_raw" => $diskTotal,
+					"used" => $diskUsed,
+					"free" => $diskFree,
+					"total" => $diskTotal,
 					"percentage" =>
 						$diskTotal > 0 ? round(($diskUsed / $diskTotal) * 100, 2) : 0,
 				],
 			],
 			"application" => $this->getApplicationStatus(),
-			"modules" => $this->getModulesStatus(),
-			"database" => $this->getDatabaseStatus(),
-			"queue" => $this->getQueueStatus(),
-			"history" => [
-				"cpu" => $this->getCpuHistory(),
-				"memory" => $this->getMemoryHistory(),
-			],
+			//"database" => $this->getDatabaseStatus(),
 		];
 
-		// Update history
-		$this->updateHistory($metrics);
-
 		// Cache metrics untuk akses cepat
-		Cache::put("server_metrics", $metrics, 30);
+		Cache::put("server_metrics", $metrics, now()->addMinutes(1));
 
 		return $metrics;
 	}
@@ -165,7 +149,6 @@ class ServerMonitorService
 			"queue_driver" => config("queue.default"),
 			"session_driver" => config("session.driver"),
 			"uptime" => $this->getApplicationUptime(),
-			"active_connections" => $this->getActiveConnections(),
 		];
 	}
 

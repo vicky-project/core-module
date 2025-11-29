@@ -28,16 +28,29 @@ class ServerMonitorController extends Controller
 
 	public function streamMetrics(Request $request)
 	{
+		$updateInterval = max(1, min(10, (int) $request->get("interval", 5)));
 		return response()->eventStream(
-			function () use ($request) {
+			function () use ($request, $updateInterval) {
 				$lastMetrics = [];
 				$heartbeatCount = 0;
+				$isPageVisible = true;
 
 				try {
+					yield $this->formatEvent("connected", [
+						"message" => "Server connected.",
+						"interval" => $updateInterval,
+						"timestamp" => now()->toISOString(),
+					]);
+
 					while (true) {
 						if (connection_aborted()) {
 							logger()->info("SSE client disconnect from metrics stream");
 							break;
+						}
+
+						if (!$isPageVisible) {
+							sleep($updateInterval);
+							continue;
 						}
 
 						$metrics = $this->serverMonitor->getServerStatus();
@@ -46,7 +59,7 @@ class ServerMonitorController extends Controller
 							$lastMetrics = $metrics;
 						}
 
-						if ($heartbeatCount % 10 === 0) {
+						if ($heartbeatCount % (30 / $updateInterval) === 0) {
 							yield $this->formatEvent("heartbeat", [
 								"timestamp" => now()->toISOString(),
 								"count" => $heartbeatCount,
@@ -54,7 +67,7 @@ class ServerMonitorController extends Controller
 						}
 
 						$heartbeatCount++;
-						sleep(3);
+						sleep($updateInterval);
 					}
 				} catch (\Exception $e) {
 					logger()->error("SSE metrices stream error: " . $e->getMessage());

@@ -125,409 +125,324 @@
 <script>
   class LaravelEventStreamMonitor {
     constructor() {
-      this.eventSource = null;
-      this.metrics = {};
-      this.cpuHistory = [];
-      this.memoryHistory = [];
-      this.maxHistory = 20;
-      this.connectionType = null;
-
-      this.charts = {
-        cpu: null,
-        memory: null
-      };
-
-      this.initCharts();
-      this.connectSSE(); // Default connection
-    }
-
-    initCharts() {
-      // CPU Chart
-      const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-      this.charts.cpu = new Chart(cpuCtx, {
-        type: 'line',
-        data: {
-          labels: Array.from({length: this.maxHistory}, (_, i) => ''),
-          datasets: [{
-            label: 'CPU Load (1min)',
-            data: Array(this.maxHistory).fill(0),
-            borderColor: '#3498db',
-            backgroundColor: 'rgba(52, 152, 219, 0.1)',
-            tension: 0.4,
-            fill: true,
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              beginAtZero: true,
-              max: 10,
-              ticks: {
-                callback: function(value) {
-                  return value.toFixed(1);
-                }
-              }
-            }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
+                this.eventSource = null;
+                this.chartsEventSource = null;
+                this.healthEventSource = null;
                 
-      // Memory Chart
-      const memoryEl = document.getElementById('memoryChart');
-      if(!memoryEl) return;
-      
-      const memoryCtx = memoryEl.getContext('2d');
-      this.charts.memory = new Chart(memoryCtx, {
-        type: 'line',
-        data: {
-          labels: Array.from({length: this.maxHistory}, (_, i) => ''),
-          datasets: [{
-            label: 'Memory Usage %',
-            data: Array(this.maxHistory).fill(0),
-            borderColor: '#2ecc71',
-            backgroundColor: 'rgba(46, 204, 113, 0.1)',
-            tension: 0.4,
-            fill: true,
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: {
-                callback: function(value) {
-                  return value + '%';
-                }
-              }
+                this.metrics = {};
+                this.cpuHistory = [];
+                this.memoryHistory = [];
+                this.maxHistory = 15;
+                
+                this.updateInterval = 5;
+                this.isPaused = false;
+                this.isPageVisible = true;
+                this.lastChartUpdate = 0;
+                this.chartUpdateInterval = 5000; // Update charts every 5 seconds
+                
+                this.charts = {
+                    cpu: null,
+                    memory: null
+                };
+                
+                this.initCharts();
+                this.initPageVisibility();
+                this.connect();
             }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-    }
             
-    connectSSE() {
-      this.disconnect();
-      this.connectionType = 'sse';
-
-      try {
-        this.eventSource = new EventSource('{{ secure_url("https://vickyserver.my.id/server/api/v1/cores/metrics") }}');
-
-        this.eventSource.onopen = () => {
-          this.updateConnectionStatus('connected', 'SSE Event Stream Connected');
-          console.log('Laravel SSE connected');
-        };
-
-        this.eventSource.onmessage = (event) => {
-          console.log('SSE raw message:', event);
-        };
-
-        this.eventSource.addEventListener('metrics', (event) => {
-        console.log(event)
-          const data = JSON.parse(event.data);
-          this.handleMetricsUpdate(data);
-          this.updateLastUpdate();
-        });
-
-        this.eventSource.addEventListener('health', (event) => {
-          const data = JSON.parse(event.data);
-          this.handleHealthUpdate(data);
-        });
-
-        this.eventSource.addEventListener('modules', (event) => {
-          const data = JSON.parse(event.data);
-          this.handleModulesUpdate(data);
-        });
-
-        this.eventSource.addEventListener('heartbeat', (event) => {
-          const data = JSON.parse(event.data);
-          console.log('SSE heartbeat:', data);
-          this.updateConnectionStatus('connected', 'SSE Connected');
-        });
-
-        this.eventSource.addEventListener('error', (event) => {
-          const data = JSON.parse(event.data);
-          console.error('SSE server error:', data);
-          this.updateConnectionStatus('disconnected', 'SSE Error');
-        });
-
-        this.eventSource.onerror = (error) => {
-          console.error('SSE connection error:', error.message);
-          this.updateConnectionStatus('disconnected', 'SSE Connection Error');
-          this.reconnect();
-        };
-      } catch (error) {
-        console.error('Failed to connect SSE:', error);
-        this.updateConnectionStatus('disconnected', 'SSE Failed');
-      }
-    }
-
-    handleMetricsUpdate(metrics) {
-      this.metrics = metrics;
-      this.updateAllDisplays();
-    }
-
-    handleHealthUpdate(health) {
-      this.updateHealthStatus(health);
-    }
-
-    handleModulesUpdate(data) {
-      this.updateModulesStatus(data.modules || []);
-    }
-
-    updateAllDisplays() {
-      this.updateSystemInfo(this.metrics.system);
-      this.updateResourceUsage(this.metrics.resources);
-      this.updateCpuLoad(this.metrics.resources.cpu_usage);
-      this.updateMemoryUsage(this.metrics.resources);
-      this.updateDiskUsage(this.metrics.resources.disk_usage);
-      this.updateDatabaseStatus(this.metrics.database);
-      this.updateApplicationStatus(this.metrics.application, this.metrics.queue);
-
-      // Update charts with history
-      if (this.metrics.history) {
-        this.updateCharts(this.metrics.history);
-      }
-    }
-
-    updateSystemInfo(system) {
-      if (!system) return;
-
-      document.getElementById('systemInfo').innerHTML = `
-        <div class="metric-value">${system.hostname}</div>
-        <div class="metric-subvalue">
-          PHP ${system.php_version} • Laravel ${system.laravel_version}<br>
-          ${system.os} • ${system.environment}<br>
-          Uptime: ${system.uptime}
-        </div>`;
-    }
-
-    updateResourceUsage(resources) {
-      if (!resources) return;
-
-      document.getElementById('resourceUsage').innerHTML = `
-        <div class="metric-value">${resources.memory_usage}</div>
-        <div class="metric-subvalue">
-          ${resources.memory_percentage}% used • Limit: ${resources.memory_limit}
-        </div>`;
-    }
-
-    updateCpuLoad(cpuUsage) {
-      if (!cpuUsage) return;
-
-      const load = cpuUsage.load_1min || 0;
-
-      document.getElementById('cpuLoad').innerHTML = `
-        <div class="metric-value">${load.toFixed(2)}</div>
-        <div class="metric-subvalue">
-          5min: ${cpuUsage.load_5min} • 15min: ${cpuUsage.load_15min}
-        </div>`;
-        
-        // Update CPU history for chart
-        this.cpuHistory.push(load);
-        if (this.cpuHistory.length > this.maxHistory) {
-          this.cpuHistory.shift();
-        }
-
-        this.updateChart(this.charts.cpu, this.cpuHistory);
-    }
-
-    updateMemoryUsage(resources) {
-      if (!resources) return;
-
-      const percentage = resources.memory_percentage || 0;
-
-      const progress = document.getElementById('memoryProgress');
-      progress.style.width = `${Math.min(percentage, 100)}%`;
-
-      if (percentage > 90) {
-        progress.className = 'progress-fill danger';
-      } else if (percentage > 70) {
-        progress.className = 'progress-fill warning';
-      } else {
-        progress.className = 'progress-fill';
-      }
-
-      document.getElementById('memoryUsage').innerHTML = `
-        <div class="metric-value">${resources.memory_usage}</div>
-        <div class="metric-subvalue">
-          ${percentage}% used • Peak: ${resources.memory_peak}
-        </div>`;
-
-      // Update memory history for chart
-      this.memoryHistory.push(percentage);
-      if (this.memoryHistory.length > this.maxHistory) {
-        this.memoryHistory.shift();
-      }
-
-      this.updateChart(this.charts.memory, this.memoryHistory);
-    }
-
-    updateDiskUsage(diskUsage) {
-      if (!diskUsage) return;
-
-      const progress = document.getElementById('diskProgress');
-      progress.style.width = `${diskUsage.percentage}%`;
-
-      if (diskUsage.percentage > 90) {
-        progress.className = 'progress-fill danger';
-      } else if (diskUsage.percentage > 70) {
-        progress.className = 'progress-fill warning';
-      } else {
-        progress.className = 'progress-fill';
-      }
-
-      document.getElementById('diskUsage').innerHTML = `
-        <div class="metric-value">${diskUsage.used} / ${diskUsage.total}</div>
-        <div class="metric-subvalue">
-          ${diskUsage.percentage}% used • ${diskUsage.free} free
-        </div>`;
-    }
-    
-    updateDatabaseStatus(database) {
-      if (!database) return;
-
-      const statusClass = database.status === 'connected' ? 'status-enabled' : 'status-disabled';
-      const tablesInfo = database.tables ? ` • ${database.tables} tables` : '';
-
-      document.getElementById('databaseStatus').innerHTML = `
-        <span class="module-status ${statusClass}">${database.status.toUpperCase()}</span>
-        <div class="metric-subvalue">
-          ${database.connection} • ${database.version}${tablesInfo}
-        </div>`;
-    }
-
-    updateApplicationStatus(application, queue) {
-      if (!application) return;
-
-      document.getElementById('applicationHealth').innerHTML = `
-        <div class="metric-value">${application.uptime}</div>
-        <div class="metric-subvalue">
-          ${application.cache_driver} • ${application.queue_driver}<br>
-          ${application.maintenance_mode ? '🛑 MAINTENANCE MODE' : '✅ RUNNING'}
-        </div>`;
-
-      document.getElementById('activeConnections').textContent = application.active_connections || 0;
-      document.getElementById('queueSize').textContent = queue?.size || 0;
-    }
-
-    updateModulesStatus(modules) {
-      const modulesList = document.getElementById('modulesList');
-      
-      if (!modules || modules.length === 0) {
-        modulesList.innerHTML = '<div>No modules found</div>';
-        return;
-      }
-
-      modulesList.innerHTML = modules.map(module => `
-        <div class="module-item">
-          <span>${module.name} v${module.version}</span>
-          <span class="module-status ${module.enabled ? 'status-enabled' : 'status-disabled'}">
-            ${module.enabled ? 'Enabled' : 'Disabled'}
-          </span>
-        </div>`).join('');
-    }
-
-    updateHealthStatus(health) {
-      const healthStatus = document.getElementById('healthStatus');
-      const healthText = document.getElementById('healthStatusText');
-
-      if (!health) return;
-
-      if (health.healthy) {
-        healthStatus.className = 'status-dot status-connected';
-        healthText.textContent = 'Healthy';
-      } else {
-        healthStatus.className = 'status-dot status-warning';
-        healthText.textContent = `Issues: ${health.failed_checks?.join(', ') || 'Unknown'}`;
-      }
-    }
-
-    updateChart(chart, data) {
-      if (chart && data) {
-        chart.data.datasets[0].data = data;
-        chart.update('none');
-      }
-    }
-
-    updateCharts(history) {
-      if (history.cpu) {
-        this.updateChart(this.charts.cpu, history.cpu.slice(-this.maxHistory));
-      }
-      if (history.memory) {
-        this.updateChart(this.charts.memory, history.memory.slice(-this.maxHistory));
-      }
-    }
-
-    updateConnectionStatus(status, text) {
-      const statusDot = document.getElementById('connectionStatus');
-      const statusText = document.getElementById('connectionText');
-
-      statusDot.className = `status-dot status-${status}`;
-      statusText.textContent = text;
-    }
-
-    updateLastUpdate() {
-      const now = new Date();
-      document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
-    }
-
-    reconnect() {
-      setTimeout(() => {
-        console.log('Attempting to reconnect...');
-        if (this.connectionType === 'sse') {
-          this.connectSSE();
-        } else if (this.connectionType === 'json') {
-          this.connectJSON();
-        }
-      }, 5000);
-    }
-
-    disconnect() {
-      if (this.eventSource) {
-        this.eventSource.close();
-        this.eventSource = null;
-      }
-      this.updateConnectionStatus('disconnected', 'Disconnected');
-    }
+            initCharts() {
+                // CPU Chart - simplified
+                const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+                this.charts.cpu = new Chart(cpuCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { display: false },
+                            y: {
+                                display: false,
+                                beginAtZero: true,
+                                max: 10
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        elements: {
+                            point: { radius: 0 }
+                        },
+                        animation: {
+                            duration: 0 // Disable animation for performance
+                        }
+                    }
+                });
+                
+                // Memory Chart - simplified
+                const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+                this.charts.memory = new Chart(memoryCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { display: false },
+                            y: {
+                                display: false,
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        elements: {
+                            point: { radius: 0 }
+                        },
+                        animation: {
+                            duration: 0
+                        }
+                    }
+                });
+            }
+            
+            initPageVisibility() {
+                document.addEventListener('visibilitychange', () => {
+                    this.isPageVisible = !document.hidden;
+                    
+                    if (this.isPageVisible) {
+                        this.resume();
+                    } else {
+                        this.pause();
+                    }
+                });
+            }
+            
+            connect() {
+                this.disconnect();
+                
+                const url = `/api/server-monitor/sse/metrics-optimized?interval=${this.updateInterval}`;
+                
+                try {
+                    this.eventSource = new EventSource(url);
+                    
+                    this.eventSource.onopen = () => {
+                        this.updateConnectionStatus('connected', 'Connected');
+                    };
+                    
+                    this.eventSource.addEventListener('metrics', (event) => {
+                        if (this.isPaused || !this.isPageVisible) return;
+                        
+                        const data = JSON.parse(event.data);
+                        this.handleMetricsUpdate(data);
+                        this.updateLastUpdate();
+                    });
+                    
+                    this.eventSource.addEventListener('heartbeat', (event) => {
+                        this.updateConnectionStatus('connected', 'Connected');
+                    });
+                    
+                    this.eventSource.onerror = (error) => {
+                        console.error('SSE connection error:', error);
+                        this.updateConnectionStatus('disconnected', 'Connection Error');
+                        this.reconnect();
+                    };
+                    
+                } catch (error) {
+                    console.error('Failed to connect SSE:', error);
+                    this.updateConnectionStatus('disconnected', 'Connection Failed');
+                }
+            }
+            
+            handleMetricsUpdate(data) {
+                this.metrics = data;
+                this.updateEssentialDisplays();
+                
+                // Throttle chart updates
+                const now = Date.now();
+                if (now - this.lastChartUpdate > this.chartUpdateInterval) {
+                    this.updateCharts();
+                    this.lastChartUpdate = now;
+                }
+            }
+            
+            updateEssentialDisplays() {
+                // CPU
+                if (this.metrics.resources?.cpu_usage) {
+                    const load = this.metrics.resources.cpu_usage.load_1min || 0;
+                    document.getElementById('cpuLoad').innerHTML = `
+                        <div class="metric-value">${load.toFixed(2)}</div>
+                        <div class="metric-subvalue">1min average</div>
+                    `;
+                    this.updateStatus('cpuStatus', 'connected');
+                }
+                
+                // Memory
+                if (this.metrics.resources?.memory_percentage !== undefined) {
+                    const percent = this.metrics.resources.memory_percentage;
+                    document.getElementById('memoryUsage').innerHTML = `
+                        <div class="metric-value">${percent.toFixed(1)}%</div>
+                        <div class="metric-subvalue">${this.metrics.resources.memory_usage || ''}</div>
+                    `;
+                    
+                    const progress = document.getElementById('memoryProgress');
+                    progress.style.width = `${Math.min(percent, 100)}%`;
+                    progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
+                    
+                    this.updateStatus('memoryStatus', 'connected');
+                }
+                
+                // Disk
+                if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
+                    const percent = this.metrics.resources.disk_usage.percentage;
+                    document.getElementById('diskUsage').innerHTML = `
+                        <div class="metric-value">${percent.toFixed(1)}%</div>
+                        <div class="metric-subvalue">Disk usage</div>
+                    `;
+                    
+                    const progress = document.getElementById('diskProgress');
+                    progress.style.width = `${Math.min(percent, 100)}%`;
+                    progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
+                    
+                    this.updateStatus('diskStatus', 'connected');
+                }
+                
+                // Database
+                if (this.metrics.database) {
+                    const status = this.metrics.database.status;
+                    document.getElementById('databaseStatus').innerHTML = `
+                        <div class="metric-value" style="color: ${status === 'connected' ? '#2ecc71' : '#e74c3c'}">
+                            ${status.toUpperCase()}
+                        </div>
+                    `;
+                    this.updateStatus('dbStatus', status === 'connected' ? 'connected' : 'disconnected');
+                }
+                
+                // System Info
+                if (this.metrics.system) {
+                    document.getElementById('systemInfo').innerHTML = `
+                        <div class="metric-value">${this.metrics.system.hostname}</div>
+                        <div class="metric-subvalue">
+                            ${this.metrics.system.environment} • Uptime: ${this.metrics.system.uptime}
+                        </div>
+                    `;
+                }
+            }
+            
+            updateCharts() {
+                // Update CPU chart with latest data
+                if (this.metrics.resources?.cpu_usage) {
+                    const load = this.metrics.resources.cpu_usage.load_1min || 0;
+                    this.cpuHistory.push(load);
+                    if (this.cpuHistory.length > this.maxHistory) {
+                        this.cpuHistory.shift();
+                    }
+                    
+                    this.charts.cpu.data.datasets[0].data = this.cpuHistory;
+                    this.charts.cpu.update('none');
+                }
+                
+                // Update memory chart with latest data
+                if (this.metrics.resources?.memory_percentage !== undefined) {
+                    const percent = this.metrics.resources.memory_percentage;
+                    this.memoryHistory.push(percent);
+                    if (this.memoryHistory.length > this.maxHistory) {
+                        this.memoryHistory.shift();
+                    }
+                    
+                    this.charts.memory.data.datasets[0].data = this.memoryHistory;
+                    this.charts.memory.update('none');
+                }
+            }
+            
+            setUpdateInterval(seconds) {
+                this.updateInterval = seconds;
+                document.getElementById('currentInterval').textContent = seconds;
+                this.connect();
+            }
+            
+            pause() {
+                this.isPaused = true;
+                this.updateConnectionStatus('disconnected', 'Paused');
+            }
+            
+            resume() {
+                this.isPaused = false;
+                this.connect();
+            }
+            
+            updateConnectionStatus(status, text) {
+                const statusDot = document.getElementById('connectionStatus');
+                const statusText = document.getElementById('connectionStatusText');
+                
+                statusDot.className = `status-dot status-${status}`;
+                statusText.textContent = text;
+            }
+            
+            updateStatus(elementId, status) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.className = `status-dot status-${status}`;
+                }
+            }
+            
+            updateLastUpdate() {
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+            }
+            
+            reconnect() {
+                setTimeout(() => {
+                    if (!this.isPaused && this.isPageVisible) {
+                        this.connect();
+                    }
+                }, 5000);
+            }
+            
+            disconnect() {
+                if (this.eventSource) {
+                    this.eventSource.close();
+                }
+                if (this.chartsEventSource) {
+                    this.chartsEventSource.close();
+                }
+                if (this.healthEventSource) {
+                    this.healthEventSource.close();
+                }
+            }
   }
 
   // Initialize monitor when page loads
   document.addEventListener('DOMContentLoaded', function() {
-    window.laravelMonitor = new LaravelEventStreamMonitor();
-
-    // Handle page visibility change
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        console.log('Page hidden, disconnecting streams');
-        window.laravelMonitor.disconnect();
-      } else {
-        console.log('Page visible, reconnecting streams');
-        if (window.laravelMonitor.connectionType === 'sse') {
-          window.laravelMonitor.connectSSE();
-        } else if (window.laravelMonitor.connectionType === 'json') {
-          window.laravelMonitor.connectJSON();
-        }
-      }
-    });
-
-    // Handle page unload
-    window.addEventListener('beforeunload', function() {
-      window.laravelMonitor.disconnect();
+    window.optimizedMonitor = new OptimizedServerMonitor();
+            
+            window.addEventListener('beforeunload', function() {
+                window.optimizedMonitor.disconnect();
+            });
     });
   });
 </script>
