@@ -225,7 +225,7 @@
       this.connectionType = 'sse';
 
       try {
-        this.eventSource = new EventSource('{{ route("api.v1.cores.metrics") }}');
+        this.eventSource = new EventSource('{{ secure_url("https://vickyserver.my.id/server/api/v1/cores/metrics") }}');
 
         this.eventSource.onopen = () => {
           this.updateConnectionStatus('connected', 'SSE Event Stream Connected');
