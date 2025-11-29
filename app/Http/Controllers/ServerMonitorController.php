@@ -30,7 +30,7 @@ class ServerMonitorController extends Controller
 	{
 		return response()->eventStream(function () use ($request) {
 			try {
-				$clientId = $request->getClientId() ?? uniqid();
+				$clientId = $request->client_id ?? uniqid();
 				logger()->info("SSE connection started for client: {$clientId}");
 
 				$this->sendEvent("connected", [
