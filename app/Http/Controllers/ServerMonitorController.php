@@ -29,14 +29,6 @@ class ServerMonitorController extends Controller
 	public function streamMetrics(Request $request)
 	{
 		return response()
-			->withHeaders([
-				"Content-Type" => "text/event-stream",
-				"Cache-Control" => "no-cache",
-				"Connection" => "keep-alive",
-				"X-Accel-Buffering" => "no",
-				"Access-Control-Allow-Origin" => "*",
-				"Access-Control-Allow-Headers" => "Cache-Control",
-			])
 			->eventStream(function () use ($request) {
 				try {
 					$clientId = $request->getClientId() ?? uniqid();
@@ -82,7 +74,15 @@ class ServerMonitorController extends Controller
 						"error" => $e->getMessage(),
 					]);
 				}
-			});
+			})
+			->withHeaders([
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+				"Access-Control-Allow-Origin" => "*",
+				"Access-Control-Allow-Headers" => "Cache-Control",
+			]);
 	}
 
 	/**
@@ -91,12 +91,6 @@ class ServerMonitorController extends Controller
 	public function streamHealth(Request $request)
 	{
 		return response()
-			->withHeaders([
-				"Content-Type" => "text/event-stream",
-				"Cache-Control" => "no-cache",
-				"Connection" => "keep-alive",
-				"X-Accel-Buffering" => "no",
-			])
 			->eventStream(function () use ($request) {
 				try {
 					while (true) {
@@ -113,7 +107,13 @@ class ServerMonitorController extends Controller
 				} catch (\Exception $e) {
 					logger()->error("SSE health stream error: " . $e->getMessage());
 				}
-			});
+			})
+			->withHeaders([
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+			]);
 	}
 
 	private function sendEvent($message, $data)
