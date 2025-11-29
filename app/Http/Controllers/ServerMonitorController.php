@@ -28,61 +28,60 @@ class ServerMonitorController extends Controller
 
 	public function streamMetrics(Request $request)
 	{
-		return response()
-			->eventStream(function () use ($request) {
-				try {
-					$clientId = $request->getClientId() ?? uniqid();
-					logger()->info("SSE connection started for client: {$clientId}");
+		return response()->eventStream(function () use ($request) {
+			try {
+				$clientId = $request->getClientId() ?? uniqid();
+				logger()->info("SSE connection started for client: {$clientId}");
 
-					$this->sendEvent("connected", [
-						"message" => "Server monitor connected.",
-						"client_id" => $clientId,
-						"timestamp" => now()->toISOString(),
-					]);
+				$this->sendEvent("connected", [
+					"message" => "Server monitor connected.",
+					"client_id" => $clientId,
+					"timestamp" => now()->toISOString(),
+				]);
 
-					$heartbeatCount = 0;
-					while (true) {
-						if (connection_aborted()) {
-							logger()->info("SSE connection closed by client: {$clientId}");
-							break;
-						}
-
-						$metrics = $this->serverMonitor->getRealtimeMetrics();
-						$this->sendEvent("metrics", $metrics);
-
-						if ($heartbeatCount % 3 === 0) {
-							$this->sendEvent("heartbeat", [
-								"timestamp" => now()->toISOString(),
-								"count" => $heartbeatCount,
-							]);
-						}
-
-						$heartbeatCount++;
-
-						if (ob_get_level() > 0) {
-							ob_flush();
-						}
-
-						flush();
-
-						sleep(3);
+				$heartbeatCount = 0;
+				while (true) {
+					if (connection_aborted()) {
+						logger()->info("SSE connection closed by client: {$clientId}");
+						break;
 					}
-				} catch (\Exception $e) {
-					logger()->error("SSE stream error: " . $e->getMessage());
-					$this->sendEvent("error", [
-						"message" => "Monitor stream error",
-						"error" => $e->getMessage(),
-					]);
+
+					$metrics = $this->serverMonitor->getRealtimeMetrics();
+					$this->sendEvent("metrics", $metrics);
+
+					if ($heartbeatCount % 3 === 0) {
+						$this->sendEvent("heartbeat", [
+							"timestamp" => now()->toISOString(),
+							"count" => $heartbeatCount,
+						]);
+					}
+
+					$heartbeatCount++;
+
+					if (ob_get_level() > 0) {
+						ob_flush();
+					}
+
+					flush();
+
+					sleep(3);
 				}
-			})
-			->withHeaders([
-				"Content-Type" => "text/event-stream",
-				"Cache-Control" => "no-cache",
-				"Connection" => "keep-alive",
-				"X-Accel-Buffering" => "no",
-				"Access-Control-Allow-Origin" => "*",
-				"Access-Control-Allow-Headers" => "Cache-Control",
-			]);
+			} catch (\Exception $e) {
+				logger()->error("SSE stream error: " . $e->getMessage());
+				$this->sendEvent("error", [
+					"message" => "Monitor stream error",
+					"error" => $e->getMessage(),
+				]);
+			}
+		});
+		//->withHeaders([
+		//	"Content-Type" => "text/event-stream",
+		//	"Cache-Control" => "no-cache",
+		//	"Connection" => "keep-alive",
+		//	"X-Accel-Buffering" => "no",
+		//	"Access-Control-Allow-Origin" => "*",
+		//	"Access-Control-Allow-Headers" => "Cache-Control",
+		//]);
 	}
 
 	/**
@@ -90,30 +89,29 @@ class ServerMonitorController extends Controller
 	 */
 	public function streamHealth(Request $request)
 	{
-		return response()
-			->eventStream(function () use ($request) {
-				try {
-					while (true) {
-						if (connection_aborted()) {
-							break;
-						}
-
-						$health = $this->serverMonitor->isServerHealthy();
-						$this->sendEvent("health", $health);
-
-						// Wait 5 seconds before next health check
-						sleep(5);
+		return response()->eventStream(function () use ($request) {
+			try {
+				while (true) {
+					if (connection_aborted()) {
+						break;
 					}
-				} catch (\Exception $e) {
-					logger()->error("SSE health stream error: " . $e->getMessage());
+
+					$health = $this->serverMonitor->isServerHealthy();
+					$this->sendEvent("health", $health);
+
+					// Wait 5 seconds before next health check
+					sleep(5);
 				}
-			})
-			->withHeaders([
-				"Content-Type" => "text/event-stream",
-				"Cache-Control" => "no-cache",
-				"Connection" => "keep-alive",
-				"X-Accel-Buffering" => "no",
-			]);
+			} catch (\Exception $e) {
+				logger()->error("SSE health stream error: " . $e->getMessage());
+			}
+		});
+		//->withHeaders([
+		//	"Content-Type" => "text/event-stream",
+		//	"Cache-Control" => "no-cache",
+		//	"Connection" => "keep-alive",
+		//	"X-Accel-Buffering" => "no",
+		//]);
 	}
 
 	private function sendEvent($message, $data)
