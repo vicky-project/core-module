@@ -116,6 +116,6 @@ class ServerMonitorController extends Controller
 
 	private function sendEvent($message, $data)
 	{
-		yield new StreamedEvent(event: $message, data: $data);
+		return yield new StreamedEvent(event: $message, data: $data);
 	}
 }
