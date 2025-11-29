@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Number;
 use Nwidart\Modules\Facades\Module;
 
@@ -247,7 +248,35 @@ class ServerMonitorService
 					$failed = \DB::table("failed_jobs")->count();
 					break;
 				case "redis":
-					$size = \Redis::llen("queues:default");
+					// Menggunakan Redis facade dengan benar
+					if (
+						config("queue.connections.redis.connection", "default") ===
+						"default"
+					) {
+						$redis = Redis::connection();
+					} else {
+						$redis = Redis::connection(
+							config("queue.connections.redis.connection")
+						);
+					}
+
+					$queueName = config("queue.connections.redis.queue", "default");
+					$size = $redis->lLen("queues:{$queueName}");
+
+					// Get failed jobs count from Redis jika menggunakan failed_jobs database
+					try {
+						$failed = \DB::table("failed_jobs")->count();
+					} catch (\Exception $e) {
+						$failed = 0;
+					}
+					break;
+				case "sync":
+					$size = 0;
+					$failed = 0;
+					break;
+				default:
+					$size = 0;
+					$failed = 0;
 					break;
 			}
 
@@ -258,6 +287,7 @@ class ServerMonitorService
 				"status" => "running",
 			];
 		} catch (\Exception $e) {
+			Log::warning("Queue status check failed: " . $e->getMessage());
 			return [
 				"status" => "error",
 				"error" => $e->getMessage(),
@@ -320,5 +350,51 @@ class ServerMonitorService
 		$value = floatval(preg_replace("/[^0-9.]/", "", $memory));
 
 		return $value * ($units[$unit] ?? 1);
+	}
+
+	/**
+	 * Get Redis memory usage information
+	 */
+	public function getRedisStatus()
+	{
+		try {
+			$redis = Redis::connection();
+			$info = $redis->info("memory");
+
+			return [
+				"status" => "connected",
+				"used_memory" => Number::fileSize($info["used_memory"] ?? 0),
+				"used_memory_human" => $info["used_memory_human"] ?? "0B",
+				"used_memory_peak" => Number::fileSize($info["used_memory_peak"] ?? 0),
+				"used_memory_peak_human" => $info["used_memory_peak_human"] ?? "0B",
+				"keys" => $this->getRedisKeyCount(),
+			];
+		} catch (\Exception $e) {
+			return [
+				"status" => "disconnected",
+				"error" => $e->getMessage(),
+			];
+		}
+	}
+
+	protected function getRedisKeyCount()
+	{
+		try {
+			$redis = Redis::connection();
+			// Hati-hati dengan perintah KEYS di production, gunakan SCAN untuk environment production
+			if (app()->environment("production")) {
+				$iterator = null;
+				$count = 0;
+				do {
+					list($iterator, $keys) = $redis->scan($iterator, ["count" => 1000]);
+					$count += count($keys);
+				} while ($iterator > 0);
+				return $count;
+			} else {
+				return count($redis->keys("*"));
+			}
+		} catch (\Exception $e) {
+			return 0;
+		}
 	}
 }
