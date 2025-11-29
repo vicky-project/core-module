@@ -43,11 +43,11 @@
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-primary btn-sm position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
-              <svg class="icon">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
-              </svg>
               {{ $module["installed_version"] }}
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">{{$module["latest_version"]}}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
+                <svg class="icon">
+                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
+                </svg>{{$module["latest_version"]}}
                 <span class="visually-hidden">Update available</span>
               </span>
             </button>
