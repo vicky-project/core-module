@@ -28,60 +28,51 @@ class ServerMonitorController extends Controller
 
 	public function streamMetrics(Request $request)
 	{
-		return response()->eventStream(function () use ($request) {
-			try {
-				$clientId = $request->client_id ?? uniqid();
-				logger()->info("SSE connection started for client: {$clientId}");
-
-				$this->sendEvent("connected", [
-					"message" => "Server monitor connected.",
-					"client_id" => $clientId,
-					"timestamp" => now()->toISOString(),
-				]);
-
+		return response()->eventStream(
+			function () use ($request) {
+				$lastMetrics = [];
 				$heartbeatCount = 0;
-				while (true) {
-					if (connection_aborted()) {
-						logger()->info("SSE connection closed by client: {$clientId}");
-						break;
+
+				try {
+					while (true) {
+						if (connection_aborted()) {
+							logger()->info("SSE client disconnect from metrics stream");
+							break;
+						}
+
+						$metrics = $this->serverMonitor->getServerStatus();
+						if ($this->metricsChanged($lastMetrics, $metrics)) {
+							yield $this->formatEvent("metrics", $metrics);
+							$lastMetrics = $metrics;
+						}
+
+						if ($heartbeatCount % 10 === 0) {
+							yield $this->formatEvent("heartbeat", [
+								"timestamp" => now()->toISOString(),
+								"count" => $heartbeatCount,
+							]);
+						}
+
+						$heartbeatCount++;
+						sleep(3);
 					}
-
-					$metrics = $this->serverMonitor->getRealtimeMetrics();
-					$this->sendEvent("metrics", $metrics);
-
-					if ($heartbeatCount % 3 === 0) {
-						$this->sendEvent("heartbeat", [
-							"timestamp" => now()->toISOString(),
-							"count" => $heartbeatCount,
-						]);
-					}
-
-					$heartbeatCount++;
-
-					if (ob_get_level() > 0) {
-						ob_flush();
-					}
-
-					flush();
-
-					sleep(3);
+				} catch (\Exception $e) {
+					logger()->error("SSE metrices stream error: " . $e->getMessage());
+					yield $this->formatEvent("error", [
+						"message" => "Metrics stream error",
+						"error" => $e->getMessage(),
+					]);
 				}
-			} catch (\Exception $e) {
-				logger()->error("SSE stream error: " . $e->getMessage());
-				$this->sendEvent("error", [
-					"message" => "Monitor stream error",
-					"error" => $e->getMessage(),
-				]);
-			}
-		});
-		//->withHeaders([
-		//	"Content-Type" => "text/event-stream",
-		//	"Cache-Control" => "no-cache",
-		//	"Connection" => "keep-alive",
-		//	"X-Accel-Buffering" => "no",
-		//	"Access-Control-Allow-Origin" => "*",
-		//	"Access-Control-Allow-Headers" => "Cache-Control",
-		//]);
+			},
+			[
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+				"Access-Control-Allow-Origin" => "*",
+				"Access-Control-Allow-Headers" => "Cache-Control",
+			]
+		);
 	}
 
 	/**
@@ -89,33 +80,109 @@ class ServerMonitorController extends Controller
 	 */
 	public function streamHealth(Request $request)
 	{
-		return response()->eventStream(function () use ($request) {
-			try {
-				while (true) {
-					if (connection_aborted()) {
-						break;
+		return response()->eventStream(
+			function () use ($request) {
+				$lastHealth = [];
+
+				try {
+					while (true) {
+						if (connection_aborted()) {
+							break;
+						}
+
+						$health = $this->serverMonitor->isServerHealthy();
+
+						if ($this->healtChanged($lastHealth, $health)) {
+							yield $this->formatEvent("health", $health);
+							$lastHealth = $health;
+						}
+
+						// Wait 5 seconds before next health check
+						sleep(5);
 					}
-
-					$health = $this->serverMonitor->isServerHealthy();
-					$this->sendEvent("health", $health);
-
-					// Wait 5 seconds before next health check
-					sleep(5);
+				} catch (\Exception $e) {
+					logger()->error("SSE health stream error: " . $e->getMessage());
+					yield $this->formatEvent("error", [
+						"message" => "Health stream error",
+						"error" => $e->getMessage(),
+					]);
 				}
-			} catch (\Exception $e) {
-				logger()->error("SSE health stream error: " . $e->getMessage());
-			}
-		});
-		//->withHeaders([
-		//	"Content-Type" => "text/event-stream",
-		//	"Cache-Control" => "no-cache",
-		//	"Connection" => "keep-alive",
-		//	"X-Accel-Buffering" => "no",
-		//]);
+			},
+			[
+				"Content-Type" => "text/event-stream",
+				"Cache-Control" => "no-cache",
+				"Connection" => "keep-alive",
+				"X-Accel-Buffering" => "no",
+			]
+		);
 	}
 
-	private function sendEvent($message, $data)
+	private function metricsChanged($old, $new): bool
 	{
-		return yield new StreamedEvent(event: $message, data: $data);
+		if (empty($old)) {
+			return true;
+		}
+
+		$thresholds = [
+			"resources.memory_per centage" => 1,
+			"resources.disk_usage.percentage" => 1,
+			"resources.cpu_usage.load_1min" => 0.5,
+		];
+
+		foreach ($thresholds as $path => $threshold) {
+			$oldValue = $this->getNestedValue($old, $path);
+			$newValue = $this->getNestedValue($new, $path);
+
+			if ($this->isSignificantChange($oldValue, $newValue, $threshold)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function healtChanged($old, $new): bool
+	{
+		if (empty($old)) {
+			return true;
+		}
+
+		return $old["healhty"] !== $new["healhty"] ||
+			json_encode($old["checks"]) !== json_encode($new["checks"]);
+	}
+
+	private function getNestedValue($array, $path)
+	{
+		$keys = explode(".", $path);
+		$value = $array;
+
+		foreach ($keys as $key) {
+			if (!isset($value[$key])) {
+				return null;
+			}
+
+			$value = $value[$key];
+		}
+
+		return $value;
+	}
+
+	private function isSignificantChange($old, $nee, $threshold): bool
+	{
+		if ($old === null || $new === null) {
+			return true;
+		}
+
+		if (is_numeric($old) && is_numeric($new)) {
+			$change = abs($new - $old);
+			return $change > $threshold;
+		}
+
+		return $old !== $new;
+	}
+
+	private function formatEvent($message, $data)
+	{
+		return new StreamedEvent(event: $message, data: json_encode($data));
 	}
 }
