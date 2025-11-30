@@ -325,7 +325,7 @@
 
         const progress = document.getElementById('diskProgress');
         progress.style.width = `${Math.min(disk.percentage, 100)}%`;
-        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
+        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (disk.percentage > 70 ? '#f39c12' : '#3498db');
 
         this.updateStatus('diskStatus', 'connected');
       }
