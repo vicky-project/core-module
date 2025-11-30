@@ -29,75 +29,122 @@
         </span>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="metrics-grid">
-            <!-- CPU -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">CPU Load</div>
-                    <span class="status-dot status-connecting" id="cpuStatus"></span>
-                </div>
-                <div id="cpuLoad">Loading...</div>
-                <div class="chart-container">
-                    <canvas id="cpuChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Memory -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Memory Usage</div>
-                    <span class="status-dot status-connecting" id="memoryStatus"></span>
-                </div>
-                <div id="memoryUsage">Loading...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="memoryChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Disk -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Disk Usage</div>
-                    <span class="status-dot status-connecting" id="diskStatus"></span>
-                </div>
-                <div id="diskUsage">Loading...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
-                </div>
-            </div>
-            
-            <!-- Database -->
-            <div class="metric-card">
-              <div class="metric-header">
-                <div class="metric-title">Database</div>
-                <span class="status-dot status-connecting" id="dbStatus"></span>
-              </div>
-              <div id="databaseStatus">Loading...</div>
-            </div>
-            
-            <!-- System Info -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">System Info</div>
-                </div>
-                <div id="systemInfo">Loading...</div>
-            </div>
-            
-            <!-- Health Status -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Health Status</div>
-                    <span class="status-dot status-connecting" id="healthStatus"></span>
-                </div>
-                <div id="healthInfo">Coming soon...</div>
-            </div>
+    <div class="card-group mt-2">
+      
+      <!-- CPU -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-memory') }}"></use>
+            </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting" id="cpuStatus"></span>
+            CPU Load
+          </div>
+          <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
+          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+            <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
+          </div>
         </div>
       </div>
+      <!-- /. CPU -->
+      
+      <!-- Memory -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="memoryStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
+          <div class="progress-group">
+            <div class="progress-group-header">
+              <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
+              <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
+            </div>
+            <div class="progress-group-bars">
+              <div class="progress progress-thin">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
+              </div>
+            </div>
+          </div>
+          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+            <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. Memory -->
+      
+      <!-- Disk -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
+            </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
+            Disk Usage
+          </div>
+          <div class="progress-group">
+            <div class="progress-group-header">
+              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
+              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
+            </div>
+            <div class="progress-group-bars">
+              <div class="progress progress-thin">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /. Disk -->
+      
+      <!-- Database -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-layers') }}"></use>
+            </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting" id="dbStatus"></span>
+            Database
+          </div>
+          <div id="databaseStatus">Loading...</div>
+        </div>
+      </div>
+      <!-- /. Database -->
+      
+      <!-- System Info -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-lan') }}"></use>
+            </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">System Info</div>
+          <div id="systemInfo">Loading...</div>
+        </div>
+      </div>
+      <!-- /. System Info -->
+      
+      <!-- Health Status -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="healthStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Health Status</div>
+          <div id="healthInfo">Coming soon...</div>
+        </div>
+      </div>
+      <!-- /. Health Status -->
     </div>
   </div>
 </div>
@@ -115,7 +162,7 @@
       this.metrics = {};
       this.cpuHistory = [];
       this.memoryHistory = [];
-      this.maxHistory = 15;
+      this.maxHistory = 30;
       
       this.updateInterval = 5;
       this.isPaused = false;
@@ -135,40 +182,35 @@
 
     initCharts() {
       // CPU Chart - simplified
-      const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-      this.charts.cpu = new Chart(cpuCtx, {
+      this.charts.cpu = new Chart(document.getElementById('cpuChart'), {
         type: 'line',
         data: {
           labels: [],
           datasets: [{
             data: [],
-            borderColor: 'rgba(54, 162, 235, 1)',
+            borderColor: coreui.Utils.getStyle('--cui-info'),
             backgroundColor: 'transparent',
-            tension: 0.4,
-            fill: true,
-            borderWidth: 1
+            borderWidth: 2
           }]
         },
         options: {
-          responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              display: false,
-              beginAtZero: true,
-              max: 10
+          elements: {
+            line: {
+              tension: 0.4
+            },
+            point: {
+              radius: 0
             }
           },
           plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+            legend: {
+              display: false
+            }
           },
-          elements: {
-            point: { radius: 0 }
-          },
-          animation: {
-            duration: 0 // Disable animation for performance
+          scales: {
+            x: { display: false },
+            y: { display: false }
           }
         }
       });
@@ -184,33 +226,27 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: '#2ecc71',
-            backgroundColor: 'rgba(46, 204, 113, 0.1)',
-            tension: 0.4,
-            fill: true,
+            borderColor: coreui.Utils.getStyle('--cui-primary'),
+            backgroundColor: 'transparent',
             borderWidth: 1
           }]
         },
         options: {
-          responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              display: false,
-              beginAtZero: true,
-              max: 100
+          elements: {
+            line: { tension: 0.4 },
+            point: {
+              radius: 0
             }
           },
           plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+            legend: {
+              display: false
+            }
           },
-          elements: {
-            point: { radius: 0 }
-          },
-          animation: {
-            duration: 0
+          scales: {
+            x: { display: false },
+            y: { display: false }
           }
         }
       });
@@ -289,9 +325,8 @@
       // Memory
       if (this.metrics.resources?.memory_percentage !== undefined) {
         const percent = this.metrics.resources.memory_percentage;
-        document.getElementById('memoryUsage').innerHTML = `
-          <div class="metric-value">${percent.toFixed(1)}%</div>
-          <div class="metric-subvalue">${this.metrics.resources.memory_usage || ''}</div>`;
+        document.getElementById('memoryUsage').innerText = this.metrics.resources.memory_usage || '';
+          document.getElementById("memoryUsagePercentage").innerHTML = `${percent.toFixed(1)}%`;
 
         const progress = document.getElementById('memoryProgress');
         progress.style.width = `${Math.min(percent, 100)}%`;
@@ -302,14 +337,13 @@
 
       // Disk
       if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
-        const percent = this.metrics.resources.disk_usage.percentage;
-        document.getElementById('diskUsage').innerHTML = `
-          <div class="metric-value">${percent.toFixed(1)}%</div>
-          <div class="metric-subvalue">Disk usage</div>`;
+        const disk = this.metrics.resources.disk_usage;
+        document.getElementById('diskUsage').innerText = `${disk.used}/${disk.total}`;
+          document.getElementById('diskUsagePercentage').innerHtml = `${disk.percentage.toFixed(1)}%`;
 
         const progress = document.getElementById('diskProgress');
-        progress.style.width = `${Math.min(percent, 100)}%`;
-        progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
+        progress.style.width = `${Math.min(disk.percentage, 100)}%`;
+        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (disk.percentage > 70 ? '#f39c12' : '#3498db');
 
         this.updateStatus('diskStatus', 'connected');
       }
@@ -346,7 +380,8 @@
         }
 
         this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.update('none');
+        this.charts.cpu.data.labels = Object.keys(this.cpuHistory);
+        this.charts.cpu.update();
       }
 
       // Update memory chart with latest data
@@ -358,6 +393,7 @@
         }
 
         this.charts.memory.data.datasets[0].data = this.memoryHistory;
+        this.charts.memory.data.labels = Object.keys(this.memoryHistory);
         this.charts.memory.update('none');
       }
     }

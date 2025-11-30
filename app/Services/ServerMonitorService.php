@@ -32,9 +32,9 @@ class ServerMonitorService
 					$memoryLimit > 0 ? round(($memoryUsage / $memoryLimit) * 100, 2) : 0,
 				"cpu_usage" => $this->getCpuUsage(),
 				"disk_usage" => [
-					"used" => $diskUsed,
-					"free" => $diskFree,
-					"total" => $diskTotal,
+					"used" => Number::fileSize($diskUsed),
+					"free" => Number::fileSize($diskFree),
+					"total" => Number::fileSize($diskTotal),
 					"percentage" =>
 						$diskTotal > 0 ? round(($diskUsed / $diskTotal) * 100, 2) : 0,
 				],

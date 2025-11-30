@@ -21,9 +21,9 @@ class PackagistService
 		$this->packagist = new PackagistClient($client, $generator);
 	}
 
-	public function getPackagesByVendor($vendor): array
+	public function getPackagesByVendor(string $vendor): array
 	{
-		$cacheKey = config("core.cache_key_prefix", "") . "_packagist";
+		$cacheKey = config("core.cache_key_prefix", "") . "_packagist_{$vendor}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$vendor
@@ -58,7 +58,7 @@ class PackagistService
 		});
 	}
 
-	public function getPackageVersionInfo(string $name)
+	public function getPackageVersionInfo(string $name): array
 	{
 		$packageData = $this->getPackage($name);
 		if (!$packageData) {
@@ -154,7 +154,7 @@ class PackagistService
 		return null;
 	}
 
-	private function getComposerInstalledVersion($packageName)
+	private function getComposerInstalledVersion(string $packageName): ?string
 	{
 		$composerLockPath = base_path("composer.lock");
 
@@ -188,7 +188,7 @@ class PackagistService
 		});
 	}
 
-	private function getLocalModuleVersion($packageName)
+	private function getLocalModuleVersion(string $packageName): ?string
 	{
 		$moduleName = $this->extractModuleNameFromPackage($packageName);
 
@@ -213,7 +213,7 @@ class PackagistService
 		return null;
 	}
 
-	public function getVendorPackageWithVersionInfo($vendor)
+	public function getVendorPackageWithVersionInfo(string $vendor): array
 	{
 		$packageResult = $this->getPackagesByVendor($vendor);
 		$packagesInfo = [];
@@ -231,7 +231,7 @@ class PackagistService
 	/**
 	 * Extract module name from package name
 	 */
-	public function extractModuleNameFromPackage($packageName)
+	public function extractModuleNameFromPackage(string $packageName): string
 	{
 		$parts = explode("/", $packageName);
 		$name = end($parts);
@@ -243,7 +243,7 @@ class PackagistService
 	/**
 	 * Check if a package corresponds to a local module
 	 */
-	public function isLocalModule($packageName)
+	public function isLocalModule(string $packageName): bool
 	{
 		$moduleName = $this->extractModuleNameFromPackage($packageName);
 		return Module::has($moduleName);

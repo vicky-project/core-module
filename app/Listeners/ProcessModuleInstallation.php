@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Services\InstallationService;
+use Modules\Core\Services\NotificationService;
 use Modules\Core\Events\ModuleInstalled;
 use Modules\Core\Events\ModuleInstallationFailed;
 
