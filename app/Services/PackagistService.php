@@ -23,7 +23,7 @@ class PackagistService
 
 	public function getPackagesByVendor($vendor): array
 	{
-		$cacheKey = config("core.cache_key_prefix", "") . "_packagist";
+		$cacheKey = config("core.cache_key_prefix", "") . "_packagist_{$vendor}";
 
 		return Cache::remember($cacheKey, now()->addHours(24), function () use (
 			$vendor
