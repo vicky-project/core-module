@@ -322,7 +322,7 @@
           <div class="metric-value" style="color: ${database.status === 'connected' ? '#2ecc71' : '#e74c3c'}">
             ${database.status.toUpperCase()}
           </div>
-          <div>${database.connection} ● ${database.version}${tablesInfo}</div>`;
+          <div class="small text-muted mt-2">${database.connection} ● ${database.version}${tablesInfo}</div>`;
         this.updateStatus('dbStatus', database.status === 'connected' ? 'connected' : 'disconnected');
       }
 
