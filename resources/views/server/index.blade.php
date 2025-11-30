@@ -191,7 +191,10 @@
       });
 
       // Memory Chart - simplified
-      const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+      const memoryEl = document.getElementById('memoryChart');
+      if(!memoryEl) return;
+      
+      const memoryCtx = memoryEl.getContext('2d');
       this.charts.memory = new Chart(memoryCtx, {
         type: 'line',
         data: {
