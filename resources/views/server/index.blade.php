@@ -29,20 +29,25 @@
         </span>
       </div>
     </div>
-    <div class="row">
+    <div class="row g-4">
+      <!-- CPU -->
+      <div class="col-6 col-sm-4 col-xl-2">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-body-secondary text-end">
+              <span class="status-dot status-connecting" id="cpuStatus"></span>
+            </div>
+            <div class="text-body-secondary small text-uppercase fw-semibold">CPU Load</div>
+            <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
+            <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+              <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU -->
       <div class="col">
         <div class="metrics-grid">
-            <!-- CPU -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">CPU Load</div>
-                    <span class="status-dot status-connecting" id="cpuStatus"></span>
-                </div>
-                <div id="cpuLoad">Loading...</div>
-                <div class="chart-container">
-                    <canvas id="cpuChart"></canvas>
-                </div>
-            </div>
             
             <!-- Memory -->
             <div class="metric-card">

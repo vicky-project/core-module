@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Support\Number;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -129,7 +130,7 @@ class NotificationService
 		$data = [
 			"backup_path" => $backupPath,
 			"backup_size" => $backupSize,
-			"backup_size_formatted" => $this->formatBytes($backupSize),
+			"backup_size_formatted" => Number::fileSize($backupSize),
 			"created_at" => Carbon::now(),
 			"module_name" => $moduleName,
 			"retention_period" => config("modules.backup.retention_days", 30),
@@ -541,10 +542,7 @@ class NotificationService
 
 		// For emergency failures, also include additional contacts
 		if ($type === "emergency_failure") {
-			$emergencyContacts = config(
-				"modules.notification.emergency_contacts",
-				[]
-			);
+			$emergencyContacts = config("core.notification.emergency_contacts", []);
 			$recipients = array_merge($recipients, $emergencyContacts);
 		}
 
@@ -556,11 +554,48 @@ class NotificationService
 	 */
 	protected function getNotifiableUsers()
 	{
-		// This depends on your User model and how you determine who should get notifications
-		// Example: return User::where('role', 'admin')->get();
+		$userClass = config("auth.providers.users.model");
+		if (!class_exists($userClass)) {
+			return collect([]);
+		}
 
-		// For now, return empty collection - implement based on your user management
-		return collect([]);
+		$users = config("core.notification.users");
+		$notifiableUsers = collect([]);
+		foreach ($users as $user) {
+			if (is_integer($user)) {
+				$userFound = $userClass::find($user);
+				if (!$userFound->exists()) {
+					return collect([]);
+				}
+			} elseif (is_string($user)) {
+				$userFound = $userClass
+					::where("name", $user)
+					->orWhere("email", $user)
+					->first();
+				if (!$userFound->exists()) {
+					$roleModel = \Spatie\Permission\Models\Role::class;
+					if (!class_exists($roleModel)) {
+						return collect([]);
+					}
+
+					$roles = $role::where("name", $user)->first();
+					if (!$roles) {
+						return collect([]);
+					}
+					$userFound = $userClass::role($roles)->get();
+				}
+			} else {
+				$userFound = collect([]);
+			}
+
+			if (isset($userFound) && count($userFound) > 0) {
+				foreach ($userFound as $found) {
+					$notifiableUsers->push($found);
+				}
+			}
+		}
+
+		return $notifiableUsers->unique()->toArray();
 	}
 
 	/**
@@ -572,9 +607,9 @@ class NotificationService
 			"name" => gethostname(),
 			"php_version" => PHP_VERSION,
 			"laravel_version" => app()->version(),
-			"memory_usage" => $this->formatBytes(memory_get_usage(true)),
-			"peak_memory_usage" => $this->formatBytes(memory_get_peak_usage(true)),
-			"disk_free_space" => $this->formatBytes(disk_free_space(base_path())),
+			"memory_usage" => Number::fileSize(memory_get_usage(true)),
+			"peak_memory_usage" => Number::fileSize(memory_get_peak_usage(true)),
+			"disk_free_space" => Number::fileSize(disk_free_space(base_path())),
 			"server_software" => $_SERVER["SERVER_SOFTWARE"] ?? "Unknown",
 		];
 	}
@@ -620,22 +655,6 @@ class NotificationService
 		$parts = explode("/", $packageName);
 		$moduleName = end($parts);
 		return str_replace(" ", "", ucwords(str_replace("-", " ", $moduleName)));
-	}
-
-	/**
-	 * Format bytes to human readable format
-	 */
-	protected function formatBytes($bytes, $precision = 2)
-	{
-		$units = ["B", "KB", "MB", "GB", "TB"];
-
-		$bytes = max($bytes, 0);
-		$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-		$pow = min($pow, count($units) - 1);
-
-		$bytes /= pow(1024, $pow);
-
-		return round($bytes, $precision) . " " . $units[$pow];
 	}
 
 	/**
@@ -733,7 +752,8 @@ class NotificationService
 	protected function getUpdateUrl($moduleName)
 	{
 		// This would typically point to your module repository or update server
-		return config("app.url") . "/admin/modules/{$moduleName}/update";
+		//return config("app.url") . "/admin/modules/{$moduleName}/update";
+		return route("cores.modules.index");
 	}
 
 	/**
