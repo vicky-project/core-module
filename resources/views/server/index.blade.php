@@ -367,7 +367,7 @@
         }
 
         this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.data.labels = Array.from(this.cpuHistory).keys();
+        this.charts.cpu.data.labels = Object.keys(this.cpuHistory);
         this.charts.cpu.update();
       }
 
