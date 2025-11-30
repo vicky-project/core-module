@@ -7,7 +7,6 @@ use Modules\Core\Events\ModuleInstallationFailed;
 use Modules\Core\Events\ModuleInstalled;
 use Symfony\Component\Process\Process;
 use Nwidart\Modules\Facades\Module;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Helpers\CoreHelper;
@@ -33,7 +32,7 @@ class ModuleManagerService
 		$backupPath = null;
 		try {
 			// 1. Pre-installation check
-			$this->preInstallationCheck($packageName, $version);
+			$this->preInstallationCheck($packageName, $version ?? "1.0.0");
 
 			// 2. Create backup
 			$backupPath = $this->backupService->createBackup(

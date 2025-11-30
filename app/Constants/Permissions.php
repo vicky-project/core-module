@@ -9,7 +9,7 @@ class Permissions
 	const MANAGE_MODULES = "cores.modules.manage";
 
 	// Systems Permissions
-	const VIEW_SYSTEMS = "cores.modules.view";
+	const VIEW_SYSTEMS = "cores.systems.view";
 
 	public static function all(): array
 	{

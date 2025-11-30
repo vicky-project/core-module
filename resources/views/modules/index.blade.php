@@ -12,27 +12,8 @@
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            @if(!$module["is_installed"])
-            <span class="badge text-bg-info">
-              <svg class="icon me-2">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
-              </svg>
-              Available: v{{$module["installed_version"] ?? "1.0.0" }}</span>
-            @elseif($module["update_available"])
-            <div>
-              <span class="badge text-bg-warning">Current: v{{$module["installed_version"]}}</span>
-              <span class="badge text-bg-success">Update: v{{$module["latest_version"]}}</span>
-            </div>
-            @else
-              <span class="badge text-bg-success">
-                <svg class="icon me-2">
-                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-check-alt') }}"></use>
-                </svg>
-                {{$module["installed_version"]}}
-              </span>
-              @if($module["latest_version"] && $module["installed_version"] === $module["latest_version"])
-              <small class="text-muted d-block mt-1">Latest version</small>
-              @endif
+            @if($module["is_installed"] && $module["latest_version"] && $module["installed_version"] === $module["latest_version"])
+            <small class="text-muted d-block mt-1">Latest version</small>
             @endif
           </div>
           <div>
@@ -41,7 +22,7 @@
         </div>
       </div>
       <div class="card-body">
-        <h5 class="card-title mb-2">{{$module["display_name"]}}</h5>
+        <h5 class="card-title mb-2">{{$module["display_name"]}}<span class="small ms-2 text-muted">{{$module["is_installed"] ? $module['installed_version'] : ($module["latest_version"] ?? "1.0.0")}}</span></h5>
         <p class="card-text text-muted small">{{ str($module["description"])->limit(120) }}</p>
         <small class="text-muted d-block mb-2">{{$module["name"]}}</small>
       </div>
@@ -61,11 +42,14 @@
           <form action="{{ route('cores.modules.update-package') }}" method="POST" class="d-inline">
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
-            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
-              <svg class="icon me-2">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
-              </svg>
-              Update to {{ $module["latest_version"] }}
+            <button type="submit" class="btn btn-primary position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
+              {{ $module["installed_version"] }}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
+                <svg class="icon">
+                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
+                </svg>{{$module["latest_version"]}}
+                <span class="visually-hidden">Update available</span>
+              </span>
             </button>
           </form>
           @else

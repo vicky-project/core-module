@@ -26,16 +26,16 @@ class InstallationService
 			Log::info("Module enabled: {$moduleName}");
 
 			// Run pre-installation hooks from module
-			$this->runModulePreInstallation($module);
+			//$this->runModulePreInstallation($module);
 
 			// Publish assets
-			$this->publishAssets($module);
+			// $this->publishAssets($module);
 
 			// Run migrations
-			$this->runMigrations($module);
+			// $this->runMigrations($module);
 
 			// Run seeders
-			$this->runSeeders($module);
+			// $this->runSeeders($module);
 
 			// Run post-installation hooks
 			$this->runModulePostInstallation($module);
@@ -53,12 +53,12 @@ class InstallationService
 	}
 
 	/**
-	 * Modules\{ModuleName}\Installation\PreInstallation::class
+	 * Modules\{ModuleName}\Installations\PreInstallation::class
 	 * nwthod handle()
 	 */
 	protected function runModulePreInstallation($module)
 	{
-		$preInstallationClass = "Modules\\{$module->getName()}\\Installation\\PreInstallation";
+		$preInstallationClass = "Modules\\{$module->getName()}\\Installations\\PreInstallation";
 
 		if (class_exists($preInstallationClass)) {
 			Log::info("Running pre-installation for: {$module->getName()}");
@@ -68,17 +68,17 @@ class InstallationService
 	}
 
 	/**
-	 * Modules\{ModuleName}\Installation\PostInstallation::class
-	 * method handle()
+	 * Modules\{ModuleName}\Installations\PostInstallation::class
+	 * method handle($moduleName)
 	 */
 	protected function runModulePostInstallation($module)
 	{
-		$postInstallationClass = "Modules\\{$module->getName()}\\Installation\\PostInstallation";
+		$postInstallationClass = "Modules\\{$module->getName()}\\Installations\\PostInstallation";
 
 		if (class_exists($postInstallationClass)) {
 			Log::info("Running post-installation for: {$module->getName()}");
 			$postInstallation = app($postInstallationClass);
-			$postInstallation->handle();
+			$postInstallation->handle($module->getName());
 		}
 	}
 
