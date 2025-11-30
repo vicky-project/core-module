@@ -14,23 +14,19 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="controls">
-      <div class="row">
-        <div class="col-auto">
-          <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
-          <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
-          <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
-          <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
-          <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-auto">
-          <span style="margin-left: auto; font-size: 12px; color: #666;">
+    <div class="controls d-flex justify-content-between align-items-center">
+      <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
+      <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
+      <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
+      <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
+      <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <span style="margin-left: auto; font-size: 12px; color: #666;">
           Update: <span id="currentInterval">5</span>s | 
           Last: <span id="lastUpdate">--:--:--</span>
-          </span>
-        </div>
+        </span>
       </div>
     </div>
     <div class="row">
