@@ -94,7 +94,7 @@
                     <div class="metric-title">Health Status</div>
                     <span class="status-dot status-connecting" id="healthStatus"></span>
                 </div>
-                <div id="healthInfo">Checking...</div>
+                <div id="healthInfo">Coming soon...</div>
             </div>
         </div>
       </div>
