@@ -476,6 +476,7 @@
             padding: 10px 25px;
             background: #f8f9fa;
             border-bottom: 1px solid #dee2e6;
+            overflow-x: scroll;
         }
         
         .btn {
