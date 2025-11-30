@@ -80,7 +80,7 @@
             </svg>
           </div>
           <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting" id="diskStatus"></span>
+            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
             Disk Usage
           </div>
           <div class="progress-group">
@@ -367,7 +367,7 @@
         }
 
         this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.data.labels = this.cpuHistory.keys();
+        this.charts.cpu.data.labels = Array.from(this.cpuHistory).keys();
         this.charts.cpu.update();
       }
 
