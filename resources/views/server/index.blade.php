@@ -226,10 +226,8 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: '#2ecc71',
-            backgroundColor: 'rgba(46, 204, 113, 0.1)',
-            tension: 0.4,
-            fill: true,
+            borderColor: coreui.Utils.getStyle('--cui-primary'),
+            backgroundColor: 'transparent',
             borderWidth: 1
           }]
         },
