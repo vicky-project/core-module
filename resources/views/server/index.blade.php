@@ -433,7 +433,7 @@
 
   // Initialize monitor when page loads
   document.addEventListener('DOMContentLoaded', function() {
-    window.optimizedMonitor = new OptimizedServerMonitor();
+    window.optimizedMonitor = new LaravelEventStreamMonitor();
 
     window.addEventListener('beforeunload', function() {
       window.optimizedMonitor.disconnect();
