@@ -26,7 +26,7 @@ class ServerMonitorService
 			"timestamp" => now()->toISOString(),
 			"system" => $this->getSystemInfo(),
 			"resources" => [
-				"memory_usage" => $memoryUsage,
+				"memory_usage" => Number::fileSize($memoryUsage),
 				"memory_limit" => $memoryLimit,
 				"memory_percentage" =>
 					$memoryLimit > 0 ? round(($memoryUsage / $memoryLimit) * 100, 2) : 0,
