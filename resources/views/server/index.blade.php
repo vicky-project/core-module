@@ -142,8 +142,8 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: '#3498db',
-            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'transparent',
             tension: 0.4,
             fill: true,
             borderWidth: 1

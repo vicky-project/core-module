@@ -40,7 +40,7 @@ class ServerMonitorService
 				],
 			],
 			"application" => $this->getApplicationStatus(),
-			//"database" => $this->getDatabaseStatus(),
+			"database" => $this->getDatabaseStatus(),
 		];
 
 		// Cache metrics untuk akses cepat
