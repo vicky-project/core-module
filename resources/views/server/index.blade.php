@@ -35,9 +35,14 @@
       <div class="card">
         <div class="card-body">
           <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="cpuStatus"></span>
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-memory') }}"></use>
+            </svg>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">CPU Load</div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting" id="cpuStatus"></span>
+            CPU Load
+          </div>
           <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
           <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
             <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
@@ -102,9 +107,14 @@
       <div class="card">
         <div class="card-body">
           <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="dbStatus"></span>
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-layers') }}"></use>
+            </svg>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">Database</div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting" id="dbStatus"></span>
+            Database
+          </div>
           <div id="databaseStatus">Loading...</div>
         </div>
       </div>
@@ -113,6 +123,11 @@
       <!-- System Info -->
       <div class="card">
         <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-lan') }}"></use>
+            </svg>
+          </div>
           <div class="text-body-secondary small text-uppercase fw-semibold">System Info</div>
           <div id="systemInfo">Loading...</div>
         </div>
