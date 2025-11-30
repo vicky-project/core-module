@@ -29,93 +29,102 @@
         </span>
       </div>
     </div>
-    <div class="row g-4 mt-2">
+    <div class="card-group mt-2">
+      
       <!-- CPU -->
-      <div class="col-6 col-sm-4 col-xl-2">
-        <div class="card">
-          <div class="card-body">
-            <div class="text-body-secondary text-end">
-              <span class="status-dot status-connecting" id="cpuStatus"></span>
-            </div>
-            <div class="text-body-secondary small text-uppercase fw-semibold">CPU Load</div>
-            <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
-            <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-              <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
-            </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="cpuStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">CPU Load</div>
+          <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
+          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+            <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
           </div>
         </div>
       </div>
       <!-- /. CPU -->
       
       <!-- Memory -->
-      <div class="col-6 col-sm-4 col-xl-2">
-        <div class="card">
-          <div class="card-body">
-            <div class="text-body-secondary text-end">
-              <span class="status-dot status-connecting" id="memoryStatus"></span>
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="memoryStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
+          <div class="progress-group">
+            <div class="progress-group-header">
+              <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
+              <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
             </div>
-            <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
-            <div class="progress-group">
-              <div class="progress-group-header">
-                <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
-                <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
-              </div>
-              <div class="progress-group-bars">
-                <div class="progress progress-thin">
-                  <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
-                </div>
+            <div class="progress-group-bars">
+              <div class="progress progress-thin">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
               </div>
             </div>
-            <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-              <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
-            </div>
+          </div>
+          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+            <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
           </div>
         </div>
       </div>
       <!-- /. Memory -->
       
-      <div class="col">
-        <div class="metrics-grid">
-            
-            <!-- Disk -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Disk Usage</div>
-                    <span class="status-dot status-connecting" id="diskStatus"></span>
-                </div>
-                <div id="diskUsage">Loading...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
-                </div>
+      <!-- Disk -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="diskStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Disk Usage</div>
+          <div class="progress-group">
+            <div class="progress-group-header">
+              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
+              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
             </div>
-            
-            <!-- Database -->
-            <div class="metric-card">
-              <div class="metric-header">
-                <div class="metric-title">Database</div>
-                <span class="status-dot status-connecting" id="dbStatus"></span>
+            <div class="progress-group-bars">
+              <div class="progress progress-thin">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
               </div>
-              <div id="databaseStatus">Loading...</div>
             </div>
-            
-            <!-- System Info -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">System Info</div>
-                </div>
-                <div id="systemInfo">Loading...</div>
-            </div>
-            
-            <!-- Health Status -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Health Status</div>
-                    <span class="status-dot status-connecting" id="healthStatus"></span>
-                </div>
-                <div id="healthInfo">Coming soon...</div>
-            </div>
+          </div>
         </div>
       </div>
+      <!-- /. Disk -->
+      
+      <!-- Database -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="dbStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Database</div>
+          <div id="databaseStatus">Loading...</div>
+        </div>
+      </div>
+      <!-- /. Database -->
+      
+      <!-- System Info -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary small text-uppercase fw-semibold">System Info</div>
+          <div id="systemInfo">Loading...</div>
+        </div>
+      </div>
+      <!-- /. System Info -->
+      
+      <!-- Health Status -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <span class="status-dot status-connecting" id="healthStatus"></span>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">Health Status</div>
+          <div id="healthInfo">Coming soon...</div>
+        </div>
+      </div>
+      <!-- /. Health Status -->
     </div>
   </div>
 </div>
@@ -310,14 +319,13 @@
 
       // Disk
       if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
-        const percent = this.metrics.resources.disk_usage.percentage;
-        document.getElementById('diskUsage').innerHTML = `
-          <div class="metric-value">${percent.toFixed(1)}%</div>
-          <div class="metric-subvalue">Disk usage</div>`;
+        const disk = this.metrics.resources.disk_usage;
+        document.getElementById('diskUsage').innerText = `${disk.used}/${disk.total}`;
+          document.getElementById('diskUsagePercentage').innerHtml = `${disk.percentage.toFixed(1)}%`;
 
         const progress = document.getElementById('diskProgress');
-        progress.style.width = `${Math.min(percent, 100)}%`;
-        progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
+        progress.style.width = `${Math.min(disk.percentage, 100)}%`;
+        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
 
         this.updateStatus('diskStatus', 'connected');
       }
