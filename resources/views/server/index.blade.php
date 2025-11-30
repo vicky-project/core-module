@@ -140,11 +140,10 @@
 
     initCharts() {
       // CPU Chart - simplified
-      const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-      this.charts.cpu = new Chart(cpuCtx, {
+      this.charts.cpu = new Chart(document.getElementById('cpuChart'), {
         type: 'line',
         data: {
-          labels: [],
+          labels: ["1min"],
           datasets: [{
             data: [],
             borderColor: coreui.Utils.getStyle('--cui-info'),
@@ -193,25 +192,21 @@
           }]
         },
         options: {
-          responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              display: false,
-              beginAtZero: true,
-              max: 100
+          elements: {
+            line: { tension: 0.4 },
+            point: {
+              radius: 0
             }
           },
           plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+            legend: {
+              display: false
+            }
           },
-          elements: {
-            point: { radius: 0 }
-          },
-          animation: {
-            duration: 0
+          scales: {
+            x: { display: false },
+            y: { display: false }
           }
         }
       });
@@ -347,7 +342,7 @@
         }
 
         this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.update('none');
+        this.charts.cpu.update();
       }
 
       // Update memory chart with latest data
