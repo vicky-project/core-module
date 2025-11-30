@@ -46,6 +46,30 @@
         </div>
       </div>
       <!-- /. CPU -->
+      <div class="col-6 col-sm-4 col-xl-2">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-body-secondary text-end">
+              <span class="status-dot status-connecting" id="memoryStatus"></span>
+            </div>
+            <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
+            <div class="progress-group">
+              <div class="progress-group-header">
+                <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
+                <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
+              </div>
+              <div class="progress-group-bars">
+                <div class="progress progress-thin">
+                  <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
+                </div>
+              </div>
+            </div>
+            <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
+              <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="col">
         <div class="metrics-grid">
             
@@ -285,9 +309,8 @@
       // Memory
       if (this.metrics.resources?.memory_percentage !== undefined) {
         const percent = this.metrics.resources.memory_percentage;
-        document.getElementById('memoryUsage').innerHTML = `
-          <div class="metric-value">${percent.toFixed(1)}%</div>
-          <div class="metric-subvalue">${this.metrics.resources.memory_usage || ''}</div>`;
+        document.getElementById('memoryUsage').innerText = this.metrics.resources.memory_usage || '';
+          document.getElementById("memoryUsagePercentage").innerHTML = `${percent.toFixed(1)}%`;
 
         const progress = document.getElementById('memoryProgress');
         progress.style.width = `${Math.min(percent, 100)}%`;
