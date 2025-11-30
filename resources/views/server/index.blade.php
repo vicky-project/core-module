@@ -46,6 +46,8 @@
         </div>
       </div>
       <!-- /. CPU -->
+      
+      <!-- Memory -->
       <div class="col-6 col-sm-4 col-xl-2">
         <div class="card">
           <div class="card-body">
@@ -70,23 +72,10 @@
           </div>
         </div>
       </div>
+      <!-- /. Memory -->
+      
       <div class="col">
         <div class="metrics-grid">
-            
-            <!-- Memory -->
-            <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Memory Usage</div>
-                    <span class="status-dot status-connecting" id="memoryStatus"></span>
-                </div>
-                <div id="memoryUsage">Loading...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="memoryChart"></canvas>
-                </div>
-            </div>
             
             <!-- Disk -->
             <div class="metric-card">
