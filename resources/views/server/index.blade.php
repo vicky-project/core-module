@@ -147,7 +147,7 @@
       this.metrics = {};
       this.cpuHistory = [];
       this.memoryHistory = [];
-      this.maxHistory = 15;
+      this.maxHistory = 30;
       
       this.updateInterval = 5;
       this.isPaused = false;
@@ -380,6 +380,7 @@
         }
 
         this.charts.memory.data.datasets[0].data = this.memoryHistory;
+        this.charts.memory.data.labels = Object.keys(this.memoryHistory);
         this.charts.memory.update('none');
       }
     }
