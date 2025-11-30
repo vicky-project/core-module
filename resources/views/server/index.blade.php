@@ -75,12 +75,12 @@
       <div class="card">
         <div class="card-body">
           <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="diskStatus"></span>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
             <svg class="icon icon-xxl">
               <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
             </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting" id="diskStatus"></span>
             Disk Usage
           </div>
           <div class="progress-group">
@@ -170,7 +170,7 @@
       this.charts.cpu = new Chart(document.getElementById('cpuChart'), {
         type: 'line',
         data: {
-          labels: ["1min"],
+          labels: [],
           datasets: [{
             data: [],
             borderColor: coreui.Utils.getStyle('--cui-info'),
@@ -367,6 +367,7 @@
         }
 
         this.charts.cpu.data.datasets[0].data = this.cpuHistory;
+        this.charts.cpu.data.labels = this.cpuHistory.keys();
         this.charts.cpu.update();
       }
 
