@@ -464,7 +464,7 @@
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--cui-primary);
         }
         
         .metric-header {
