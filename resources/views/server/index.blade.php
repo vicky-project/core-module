@@ -440,8 +440,6 @@
   }
         
         .monitor-header {
-            background: var(--dark);
-            color: white;
             padding: 15px 25px;
             display: flex;
             justify-content: space-between;
@@ -465,11 +463,6 @@
             font-size: 12px;
             font-weight: 600;
         }
-        
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
         
         .metrics-grid {
             display: grid;
