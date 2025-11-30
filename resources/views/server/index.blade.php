@@ -29,7 +29,7 @@
         </span>
       </div>
     </div>
-    <div class="row g-4">
+    <div class="row g-4 mt-2">
       <!-- CPU -->
       <div class="col-6 col-sm-4 col-xl-2">
         <div class="card">
@@ -147,33 +147,29 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: 'rgba(54, 162, 235, 1)',
+            borderColor: coreui.Utils.getStyle('--cui-info'),
             backgroundColor: 'transparent',
-            tension: 0.4,
-            fill: true,
-            borderWidth: 1
+            borderWidth: 2
           }]
         },
         options: {
-          responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            x: { display: false },
-            y: {
-              display: false,
-              beginAtZero: true,
-              max: 10
+          elements: {
+            line: {
+              tension: 0.4
+            },
+            point: {
+              radius: 0
             }
           },
           plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+            legend: {
+              display: false
+            }
           },
-          elements: {
-            point: { radius: 0 }
-          },
-          animation: {
-            duration: 0 // Disable animation for performance
+          scales: {
+            x: { display: false },
+            y: { display: false }
           }
         }
       });
