@@ -515,8 +515,8 @@
             display: inline-block;
         }
         
-        .status-connected { background: var(--success); }
-        .status-disconnected { background: var(--danger); }
-        .status-connecting { background: var(--warning); }
+        .status-connected { background: var(--cui-success); }
+        .status-disconnected { background: var(--cui-danger); }
+        .status-connecting { background: var(--cui-warning); }
 </style>
 @endsection
