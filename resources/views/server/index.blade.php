@@ -73,11 +73,11 @@
             
             <!-- Database -->
             <div class="metric-card">
-                <div class="metric-header">
-                    <div class="metric-title">Database</div>
-                    <span class="status-dot status-connecting" id="dbStatus"></span>
-                </div>
-                <div id="databaseStatus">Loading...</div>
+              <div class="metric-header">
+                <div class="metric-title">Database</div>
+                <span class="status-dot status-connecting" id="dbStatus"></span>
+              </div>
+              <div id="databaseStatus">Loading...</div>
             </div>
             
             <!-- System Info -->
@@ -316,12 +316,14 @@
 
       // Database
       if (this.metrics.database) {
-        const status = this.metrics.database.status;
+        const database = this.metrics.database;
+        const tablesInfo = database.tables ? ` ● ${database.tables} tables` : "";
         document.getElementById('databaseStatus').innerHTML = `
-          <div class="metric-value" style="color: ${status === 'connected' ? '#2ecc71' : '#e74c3c'}">
-            ${status.toUpperCase()}
-          </div>`;
-        this.updateStatus('dbStatus', status === 'connected' ? 'connected' : 'disconnected');
+          <div class="metric-value" style="color: ${database.status === 'connected' ? '#2ecc71' : '#e74c3c'}">
+            ${database.status.toUpperCase()}
+          </div>
+          <div>${database.connection} ● ${database.version}${tablesInfo}</div>`;
+        this.updateStatus('dbStatus', database.status === 'connected' ? 'connected' : 'disconnected');
       }
 
       // System Info
