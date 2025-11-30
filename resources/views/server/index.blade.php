@@ -14,17 +14,21 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="row">
-      <div class="col">
-        <div class="controls">
+    <div class="controls">
+      <div class="row">
+        <div class="col">
           <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
           <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
           <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
           <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
           <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
           <span style="margin-left: auto; font-size: 12px; color: #666;">
-                Update: <span id="currentInterval">5</span>s | 
-                Last: <span id="lastUpdate">--:--:--</span>
+          Update: <span id="currentInterval">5</span>s | 
+          Last: <span id="lastUpdate">--:--:--</span>
           </span>
         </div>
       </div>
@@ -433,7 +437,6 @@
   .monitor-container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
@@ -450,18 +453,8 @@
             display: flex;
             gap: 10px;
             padding: 10px 25px;
-            background: #f8f9fa;
             border-bottom: 1px solid #dee2e6;
             overflow-x: scroll;
-        }
-        
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
         }
         
         .metrics-grid {
@@ -472,7 +465,6 @@
         }
         
         .metric-card {
-            background: white;
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -488,19 +480,16 @@
         
         .metric-title {
             font-weight: 600;
-            color: var(--dark);
             font-size: 14px;
         }
         
         .metric-value {
             font-size: 20px;
             font-weight: 700;
-            color: var(--dark);
         }
         
         .metric-subvalue {
             font-size: 12px;
-            color: #666;
             margin-top: 3px;
         }
         
@@ -515,7 +504,6 @@
         
         .progress-fill {
             height: 100%;
-            background: var(--primary);
             transition: width 0.5s ease;
         }
         
