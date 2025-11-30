@@ -4,115 +4,98 @@
 
 @section('content')
 <div class="card">
-  <div class="card-header">
-    <h5 class="card-title">🚀 Server Monitor</h5>
+  <div class="card-header text-end">
+    <div class="float-start me-auto">
+      <h5 class="card-title">🚀 Server Monitor</h5>
+    </div>
+    <div>
+      <span class="status-dot status-connecting" id="connectionStatus"></span>
+      <span id="connectionStatusText">Connecting...</span>
+    </div>
   </div>
   <div class="card-body">
     <div class="row">
       <div class="col">
-        <div class="status-indicators">
-          <div class="status-indicator">
-            <div class="status-dot status-connected" id="connectionStatus"></div>
-            <span id="connectionText">Connecting...</span>
-          </div>
-          <div class="status-indicator">
-            <div class="status-dot" id="healthStatus"></div>
-            <span id="healthText">Checking health...</span>
-          </div>
-          <div class="status-indicator">
-            <span>Last update: </span>
-            <span id="lastUpdate">--:--:--</span>
-          </div>
+        <div class="controls">
+          <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
+          <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
+          <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
+          <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
+          <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
+          <span style="margin-left: auto; font-size: 12px; color: #666;">
+                Update: <span id="currentInterval">5</span>s | 
+                Last: <span id="lastUpdate">--:--:--</span>
+          </span>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col">
         <div class="metrics-grid">
-          <!-- System Information -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">System Information</div>
+            <!-- CPU -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">CPU Load</div>
+                    <span class="status-dot status-connecting" id="cpuStatus"></span>
+                </div>
+                <div id="cpuLoad">Loading...</div>
+                <div class="chart-container">
+                    <canvas id="cpuChart"></canvas>
+                </div>
             </div>
-            <div id="systemInfo">
-              <div>Loading system information...</div>
-            </div>
-          </div>
             
-          <!-- Resource Usage -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">Resource Usage</div>
+            <!-- Memory -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Memory Usage</div>
+                    <span class="status-dot status-connecting" id="memoryStatus"></span>
+                </div>
+                <div id="memoryUsage">Loading...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="memoryChart"></canvas>
+                </div>
             </div>
-            <div id="resourceUsage">
-              <div>Loading resource usage...</div>
-            </div>
-          </div>
             
-          <!-- CPU Load -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">CPU Load</div>
+            <!-- Disk -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Disk Usage</div>
+                    <span class="status-dot status-connecting" id="diskStatus"></span>
+                </div>
+                <div id="diskUsage">Loading...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
+                </div>
             </div>
-            <div id="cpuLoad">
-              <div>Loading CPU information...</div>
-            </div>
-            <canvas id="cpuChart" height="100"></canvas>
-          </div>
             
-          <!-- Memory Usage -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">Memory Usage</div>
+            <!-- Database -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Database</div>
+                    <span class="status-dot status-connecting" id="dbStatus"></span>
+                </div>
+                <div id="databaseStatus">Loading...</div>
             </div>
-            <div id="memoryUsage">
-              <div>Loading memory information...</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
-            </div>
-          </div>
             
-          <!-- Disk Usage -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">Disk Usage</div>
+            <!-- System Info -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">System Info</div>
+                </div>
+                <div id="systemInfo">Loading...</div>
             </div>
-            <div id="diskUsage">
-              <div>Loading disk information...</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="diskProgress" style="width: 0%"></div>
-            </div>
-          </div>
             
-          <!-- Database Status -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">Database</div>
+            <!-- Health Status -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-title">Health Status</div>
+                    <span class="status-dot status-connecting" id="healthStatus"></span>
+                </div>
+                <div id="healthInfo">Checking...</div>
             </div>
-            <div id="databaseStatus">
-              <div>Loading database information...</div>
-            </div>
-          </div>
-            
-          <!-- Application Health -->
-          <div class="metric-card">
-            <div class="metric-header">
-              <div class="metric-title">Application Health</div>
-            </div>
-            <div id="applicationHealth">
-              <div>Loading health information...</div>
-            </div>
-            <div class="connection-stats">
-              <div class="stat-item">
-                <div class="stat-value" id="activeConnections">0</div>
-                <div class="stat-label">Active Connections</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value" id="queueSize">0</div>
-                <div class="stat-label">Queue Size</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -447,170 +430,137 @@
 
 @section('styles')
 <style>
-    .monitor-container {
+:root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .monitor-container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         
         .monitor-header {
             background: var(--dark);
             color: white;
-            padding: 20px 30px;
+            padding: 15px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .status-indicators {
+        .controls {
             display: flex;
-            gap: 20px;
+            gap: 10px;
+            padding: 10px 25px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
         }
         
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
         }
         
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        .status-connected { background: var(--success); }
-        .status-disconnected { background: var(--danger); }
-        .status-warning { background: var(--warning); }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
         
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            padding: 20px;
         }
         
         .metric-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border-left: 4px solid var(--primary);
-        }
-        
-        .metric-card.critical {
-            border-left-color: var(--danger);
-            background: #ffeaea;
-        }
-        
-        .metric-card.warning {
-            border-left-color: var(--warning);
-            background: #fff8e6;
         }
         
         .metric-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .metric-title {
             font-weight: 600;
             color: var(--dark);
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .metric-value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--dark);
         }
         
         .metric-subvalue {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #eee;
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         
         .progress-fill {
             height: 100%;
             background: var(--primary);
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         
-        .progress-fill.warning { background: var(--warning); }
-        .progress-fill.danger { background: var(--danger); }
-        
-        .modules-list {
-            max-height: 300px;
-            overflow-y: auto;
+        .chart-container {
+            height: 80px;
+            margin-top: 10px;
         }
         
-        .module-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
         }
         
-        .module-status {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .status-enabled { background: #d4edda; color: #155724; }
-        .status-disabled { background: #f8d7da; color: #721c24; }
-        
-        .connection-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .stat-item {
-            text-align: center;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
+        .status-connected { background: var(--success); }
+        .status-disconnected { background: var(--danger); }
+        .status-connecting { background: var(--warning); }
 </style>
 @endsection
