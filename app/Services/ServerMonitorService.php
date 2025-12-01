@@ -17,7 +17,19 @@ class ServerMonitorService
 
 	public function getServerStatus()
 	{
-		$linfo = new Linfo();
+		$linfo = new Linfo([
+			"language" => "id",
+			"show" => ["webservice" => true, "phpversion" => true, "temps" => true],
+			"cpu_usage" => true,
+			"temps" => [
+				"thermal_zone" => true,
+				"hddtemp" => true,
+				"mbmon" => true,
+				"sensord" => true,
+			],
+			"temps_show0rpmfans" => true,
+			"show_errors" => false,
+		]);
 		$parser = $linfo->getParser();
 		dd($parser);
 		$memoryUsage = memory_get_usage(true);
