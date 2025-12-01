@@ -40,7 +40,7 @@ class ServerMonitorService
 	{
 		$linfo = new Linfo(config("core.monitors"));
 		$linfo->scan();
-		dd($linfo);
+		//dd($linfo);
 		$parser = $linfo->getParser();
 		dd([
 			"ram" => $parser->getRam(),
