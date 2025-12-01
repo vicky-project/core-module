@@ -18,22 +18,35 @@ class ServerMonitorService
 
 	public function __construct()
 	{
-		$this->linfo = (new Linfo(config("core.monitors")))->scan();
+		$linfo = new Linfo(config("core.monitors"));
+		$linfo->scan();
+		$this->linfo = $linfo->getParser();
 	}
 
 	public function getStaticData()
 	{
 		return [
-			"kernel" => $parser->getKernel(),
-			"hostname" => $parser->getHostName(),
-			"cpu" => $parser->getCPU(),
-			"model" => $parser->getModel(),
-			"distro" => $parser->getDistro(),
+			"kernel" => $this->linfo->getKernel(),
+			"hostname" => $this->linfo->getHostName(),
+			"cpu" => $this->linfo->getCPU(),
+			"model" => $this->linfo->getModel(),
+			"distro" => $this->linfo->getDistro(),
 		];
 	}
 
 	public function getDynamicData()
 	{
+		return [
+			"ram" => $this->linfo->getRam(),
+			"cpu_usage" => $this->linfo->getCPUUsage(),
+			"load" => $this->linfo->getLoad(),
+			"temps" => $this->linfo->getTemps(),
+			"network" => $this->linfo->getNet(),
+			"process_stats" => $this->linfo->getProcessStats(),
+			"hd" => $this->linfo->getHD(),
+			"uptime" => $this->linfo->getUpTime(),
+			"services" => $this->linfo->getServices(),
+		];
 	}
 
 	public function getServerStatus()

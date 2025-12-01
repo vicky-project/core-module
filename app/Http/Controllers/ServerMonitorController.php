@@ -23,7 +23,7 @@ class ServerMonitorController extends Controller
 
 	public function index(Request $request)
 	{
-		$this->serverMonitor->getServerStatus();
+		$this->serverMonitor->getDynamicData();
 		return view("core::server.index");
 	}
 
@@ -138,7 +138,7 @@ class ServerMonitorController extends Controller
 		}
 
 		$thresholds = [
-			"resources.memory_per centage" => 1,
+			"resources.memory_percentage" => 1,
 			"resources.disk_usage.percentage" => 1,
 			"resources.cpu_usage.load_1min" => 0.5,
 		];
