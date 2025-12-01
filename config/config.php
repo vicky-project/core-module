@@ -69,5 +69,9 @@ return [
 		"hddtemp" => [
 			"mode" => "daemon", // daemon or syslog
 		],
+		"services" => [
+			"pidFiles" => ["SSHd" => "/var/run/sshd.pid"],
+			"executables" => ["MySQLd" => "/usr/sbin/nysqld"],
+		],
 	],
 ];
