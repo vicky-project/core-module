@@ -31,7 +31,22 @@ class ServerMonitorService
 			"show_errors" => false,
 		]);
 		$parser = $linfo->getParser();
-		dd($parser);
+		dd([
+			"kernel" => $parser->getKernel(),
+			"hostname" => $parser->getHostName(),
+			"ram" => $parser->getRam(),
+			"cpu" => $parser->getCPU(),
+			"cpu_usage" => $parser->getCPUUsage(),
+			"model" => $parser->getModel(),
+			"uptime" => $parser->getUpTime(),
+			"hd" => $parser->getHD(),
+			"temps" => $parser->getTemps(),
+			"load" => $parser->getLoad(),
+			"net" => $parser->getNet(),
+			"process_stats" => $parser->getProcessStats(),
+			"services" => $parser->getServices(),
+			"distro" => $parser->getDistro(),
+		]);
 		$memoryUsage = memory_get_usage(true);
 		$memoryLimit = $this->convertToBytes(ini_get("memory_limit"));
 		$diskTotal = disk_total_space(base_path());
