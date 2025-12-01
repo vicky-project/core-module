@@ -29,4 +29,23 @@ return [
 		"retention_days" => 30,
 		"disk" => "local",
 	],
+
+	/*
+	| ========================================
+	| Server Monitoring Config
+	| ========================================
+	|
+	*/
+	"monitors" => [
+		"show" => ["webservice" => true, "phpversion" => true, "temps" => true],
+		"cpu_usage" => true,
+		"temps" => [
+			"thermal_zone" => true,
+			"hddtemp" => true,
+			"mbmon" => true,
+			"sensord" => true,
+		],
+		"temps_show0rpmfans" => true,
+		"show_errors" => false,
+	],
 ];

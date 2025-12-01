@@ -14,30 +14,37 @@ class ServerMonitorService
 	protected $cpuHistory = [];
 	protected $memoryHistory = [];
 	protected $maxHistory = 30;
+	protected $linfo;
+
+	public function __construct()
+	{
+		$this->linfo = (new Linfo(config("core.monitors")))->scan();
+	}
+
+	public function getStaticData()
+	{
+		return [
+			"kernel" => $parser->getKernel(),
+			"hostname" => $parser->getHostName(),
+			"cpu" => $parser->getCPU(),
+			"model" => $parser->getModel(),
+			"distro" => $parser->getDistro(),
+		];
+	}
+
+	public function getDynamicData()
+	{
+	}
 
 	public function getServerStatus()
 	{
-		$linfo = new Linfo([
-			"language" => "id",
-			"show" => ["webservice" => true, "phpversion" => true, "temps" => true],
-			"cpu_usage" => true,
-			"temps" => [
-				"thermal_zone" => true,
-				"hddtemp" => true,
-				"mbmon" => true,
-				"sensord" => true,
-			],
-			"temps_show0rpmfans" => true,
-			"show_errors" => false,
-		]);
+		$linfo = new Linfo();
+		$linfo->scan();
+		dd($linfo);
 		$parser = $linfo->getParser();
 		dd([
-			"kernel" => $parser->getKernel(),
-			"hostname" => $parser->getHostName(),
 			"ram" => $parser->getRam(),
-			"cpu" => $parser->getCPU(),
 			"cpu_usage" => $parser->getCPUUsage(),
-			"model" => $parser->getModel(),
 			"uptime" => $parser->getUpTime(),
 			"hd" => $parser->getHD(),
 			"temps" => $parser->getTemps(),
@@ -45,7 +52,6 @@ class ServerMonitorService
 			"net" => $parser->getNet(),
 			"process_stats" => $parser->getProcessStats(),
 			"services" => $parser->getServices(),
-			"distro" => $parser->getDistro(),
 		]);
 		$memoryUsage = memory_get_usage(true);
 		$memoryLimit = $this->convertToBytes(ini_get("memory_limit"));
