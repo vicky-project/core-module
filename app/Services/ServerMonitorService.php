@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Number;
 use Nwidart\Modules\Facades\Module;
+use Linfo\Linfo;
 
 class ServerMonitorService
 {
@@ -16,6 +17,9 @@ class ServerMonitorService
 
 	public function getServerStatus()
 	{
+		$linfo = new Linfo();
+		$parser = $linfo->getParser();
+		dd($parser);
 		$memoryUsage = memory_get_usage(true);
 		$memoryLimit = $this->convertToBytes(ini_get("memory_limit"));
 		$diskTotal = disk_total_space(base_path());
