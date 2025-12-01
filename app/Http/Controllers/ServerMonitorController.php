@@ -23,6 +23,7 @@ class ServerMonitorController extends Controller
 
 	public function index(Request $request)
 	{
+		$this->serverMonitor->getServerStatus();
 		return view("core::server.index");
 	}
 
