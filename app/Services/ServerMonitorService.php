@@ -38,7 +38,7 @@ class ServerMonitorService
 
 	public function getServerStatus()
 	{
-		$linfo = new Linfo();
+		$linfo = new Linfo(config("core.monitors"));
 		$linfo->scan();
 		dd($linfo);
 		$parser = $linfo->getParser();

@@ -37,7 +37,15 @@ return [
 	|
 	*/
 	"monitors" => [
-		"show" => ["webservice" => true, "phpversion" => true, "temps" => true],
+		"show" => [
+			"webservice" => true,
+			"phpversion" => true,
+			"temps" => true,
+			"load" => true,
+			"cpu" => true,
+			"process_stats" => true,
+			"ip" => true,
+		],
 		"cpu_usage" => true,
 		"temps" => [
 			"thermal_zone" => true,
