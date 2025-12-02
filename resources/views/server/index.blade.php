@@ -34,7 +34,7 @@
         </div>
         <div class="card-body">
           <div class="c-chart-wrapper">
-            <canvas id="chart-cpu"></canvas>
+            <canvas id="chart-cpu" height="200px"></canvas>
           </div>
         </div>
       </div>
@@ -202,8 +202,8 @@
           datasets: [{
             data: [],
             label: 'CPU Temp',
-            backgroundColor: 'rgba(151, 187, 205, 0.5)',
-            borderColor: 'rgba(151, 187, 205, 0.8)',
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgb(54, 162, 235)',
             highlightFill: 'rgba(151, 187, 205, 0.75)',
             highlightStroke: 'rgba(151, 187, 205, 1)',
           }]
@@ -367,7 +367,7 @@
         const used = this.metrics.ram.used;
         
         document.getElementById('memory-percentage').textContent = `${percent.toFixed(2)}%`;
-        document.getElementById('memory-total').textContent = total;
+        document.getElementById('memory-total').textContent = humanFileSize(total, false, 2);
 
         this.charts.memory.data.datasets[0].data = [used, free];
         this.charts.memory.update('none');
@@ -422,6 +422,35 @@
       if (this.healthEventSource) {
         this.healthEventSource.close();
       }
+    }
+    
+    /**
+     * Format bytes as human-readable text.
+     * 
+     * @param bytes Number of bytes.
+     * @param si True to use metric (SI) units, aka powers of 1000. False to use 
+     * binary (IEC), aka powers of 1024.
+     * @param dp Number of decimal places to display.
+     * 
+     * @return Formatted string.
+     */
+    humanFileSize(bytes, si=false, dp=1) {
+      const thresh = si ? 1000 : 1024;
+      
+      if (Math.abs(bytes) < thresh) {
+        return bytes + ' B';
+      }
+      
+      const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+      let u = -1;
+      const r = 10**dp;
+      
+      do {
+        bytes /= thresh;
+        ++u;
+      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+      
+      return bytes.toFixed(dp) + ' ' + units[u];
     }
   }
 
