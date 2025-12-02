@@ -27,22 +27,9 @@
         </div>
       </div>
       
-      <!-- Memory -->
       <div class="card">
-        <div class="card-header">
-          <strong>Memory</strong>
-          <span class="small ms-2" id="memory-percentage"></span>
-        </div>
-        <div class="card-body">
-          <div class="c-chart-wrapper">
-            <canvas id="chart-memory"></canvas>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="font-weight-bold fs-6">Total <span id="memory-total"></span></div>
-        </div>
+        <div class="card-body text-body-secondary small text-uppercase fw-semibold">Uptime: <span class="text-muted" id="uptime-text"></span></div>
       </div>
-      <!-- /. Memory -->
       
       <!-- Disk -->
       <div class="card">
@@ -142,6 +129,26 @@
       </div>
       <!-- /. CPU Temp -->
     </div>
+    
+    
+    <div class="card-group mt-2">
+      <!-- Memory -->
+      <div class="card">
+        <div class="card-header">
+          <strong>Memory</strong>
+          <span class="small ms-2" id="memory-percentage"></span>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-memory"></canvas>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="font-weight-bold fs-6">Total <span id="memory-total"></span></div>
+        </div>
+      </div>
+      <!-- /. Memory -->
+    </card-group>
   </div>
 </div>
 @endsection
@@ -301,8 +308,11 @@
     }
 
     updateEssentialDisplays() {
-      // CPU
-
+      // Uptime
+      if(this.metrics.uptime){
+        document.getElementById('uptime-text').textContent = this.metrics.uptime.text
+      }
+      
       // Memory
 
       // Disk
