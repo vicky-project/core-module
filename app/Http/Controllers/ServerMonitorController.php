@@ -73,7 +73,9 @@ class ServerMonitorController extends Controller
 						sleep($updateInterval);
 					}
 				} catch (\Exception $e) {
-					logger()->error("SSE metrices stream error: " . $e->getMessage());
+					logger()->error("SSE metrices stream error: " . $e->getMessage(), [
+						"trace" => $e->getTrace(),
+					]);
 					yield $this->formatEvent("error", [
 						"message" => "Metrics stream error",
 						"error" => $e->getMessage(),
@@ -186,7 +188,7 @@ class ServerMonitorController extends Controller
 		return $value;
 	}
 
-	private function isSignificantChange($old, $nee, $threshold): bool
+	private function isSignificantChange($old, $new, $threshold): bool
 	{
 		if ($old === null || $new === null) {
 			return true;
