@@ -185,7 +185,7 @@
         }
       });
       
-      this.Chart.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
+      this.charts.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
         type: 'bar',
         data: {
           labels: ['core 0', 'core 1'],
