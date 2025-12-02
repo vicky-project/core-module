@@ -321,7 +321,7 @@
         const datasets = [];
         for(let i in cpus){
           Array.from(datasets).push({
-            data: [cpu[i].usage_percentage],
+            data: [cpus[i].usage_percentage],
             label: i,
             backgroundColor: 'rgba(151, 187, 205, 0.5)',
             borderColor: 'rgba(151, 187, 205, 0.8)',
