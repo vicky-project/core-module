@@ -24,7 +24,7 @@ class ServerMonitorController extends Controller
 	public function index(Request $request)
 	{
 		$dataServer = $this->serverMonitor->getDynamicData();
-		dd($dataServer);
+
 		return view("core::server.index", compact("dataServer"));
 	}
 
