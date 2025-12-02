@@ -182,6 +182,7 @@
           labels: [],
           datasets: [{
             data: [],
+            label: "CPU",
             backgroundColor: 'rgba(151, 187, 205, 0.5)',
             borderColor: 'rgba(151, 187, 205, 0.8)',
             highlightFill: 'rgba(151, 187, 205, 0.75)',
@@ -329,7 +330,7 @@
         const cpus = this.metrics.cpu;
         
         this.charts.cpu.data.datasets[0].data = cpus.map(cpu => cpu.usage_percentage);
-        this.charts.cpu.labels = Object.keys(cpus).map(cpu => `Core ${cpu}`);
+        this.charts.cpu.data.labels = Object.keys(cpus).map(cpu => `Core ${cpu}`);
         
         this.charts.cpu.update('none');
       }
