@@ -179,7 +179,7 @@
       this.charts.cpu = new Chart(document.getElementById('chart-cpu'), {
         type: 'bar',
         data: {
-          labels: ['core 0', 'core 1'],
+          labels: [],
           datasets: []
         },
         options: {
@@ -326,7 +326,7 @@
         for(let i in cpus){
           Array.from(datasets).push({
             data: [cpus[i].usage_percentage],
-            label: i,
+            label: `Core ${i}`,
             backgroundColor: 'rgba(151, 187, 205, 0.5)',
             borderColor: 'rgba(151, 187, 205, 0.8)',
             highlightFill: 'rgba(151, 187, 205, 0.75)',
