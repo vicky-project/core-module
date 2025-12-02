@@ -18,12 +18,14 @@
       
       <div class="card">
         <div class="card-body">
-          <div class="text-body-secondary small text-uppercase fw-semibold">{{ $dataServer["distro"]["name"] }} <span class="text-muted">{{ $dataServer["distro"]["version"] }}</span></div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">{{ $dataServer["distro"]["name"] }} <span class="text-muted">{{ $dataServer["distro"]["version"] }}</span>
+          </div>
+          <div class="fs-6 fw-semibold py-3">{{ $dataServer["model"] }} <span class="text-muted">{{ $dataServer["kernel"] }}</span></div>
+          <div class="font-weight-bold text-muted">{{ $dataServer["cpu"][0]["Vendor"] }}</div>
+          <span class="text-muted small">{{ $dataServer["cpu"][0]["Model"] }}</span>
         </div>
-        <div class="fs-6 fw-semibold py-3">{{ $dataServer["model"] }} <span class="text-muted">{{ $dataServer["kernel"] }}</span></div>
-        <div class="font-weight-bold text-muted">{{ $dataServer["cpu"][0]["Vendor"] }}</div>
-        <span class="text-muted small">{{ $dataServer["cpu"][0]["Model"] }}</span>
       </div>
+      <!-- /. CPU -->
       
       <!-- CPU -->
       <div class="card">
@@ -37,6 +39,19 @@
         </div>
       </div>
       <!-- /. CPU -->
+      
+      <!-- CPU Temps -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU Temps</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu-temps"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU Temp -->
       
       <!-- Memory -->
       <div class="card">
@@ -172,13 +187,18 @@
         type: 'bar',
         data: {
           labels: ['core 0', 'core 1'],
-          datasets: [{
-            data: [],
-            backgroundColor: 'rgba(151, 187, 205, 0.5)',
-            borderColor: 'rgba(151, 187, 205, 0.8)',
-            highlightFill: 'rgba(151, 187, 205, 0.75)',
-            highlightStroke: 'rgba(151, 187, 205, 1)',
-          }]
+          datasets: []
+        },
+        options: {
+          responsive: true
+        }
+      });
+      
+      this.Chart.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
+        type: 'bar',
+        data: {
+          labels: ['core 0', 'core 1'],
+          datasets: []
         },
         options: {
           responsive: true
