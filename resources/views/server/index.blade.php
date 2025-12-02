@@ -103,7 +103,7 @@
     </div>
     
     <div class="card-group mt-2">
-            <!-- CPU -->
+      <!-- CPU -->
       <div class="card">
         <div class="card-header">
           <strong>CPU</strong>
@@ -130,7 +130,6 @@
       <!-- /. CPU Temp -->
     </div>
     
-    
     <div class="card-group mt-2">
       <!-- Memory -->
       <div class="card">
@@ -148,7 +147,20 @@
         </div>
       </div>
       <!-- /. Memory -->
-    </card-group>
+      
+      <!-- CPU USAGE -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu-usage"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU USAGE -->
+    </div>
   </div>
 </div>
 @endsection
@@ -163,7 +175,7 @@
       this.healthEventSource = null;
       
       this.metrics = {};
-      this.memoryHistory = [];
+      this.cpuUsageHistory = [];
       this.maxHistory = 30;
       
       this.updateInterval = 5;
@@ -175,7 +187,8 @@
       this.charts = {
         cpu: null,
         cpuTemps: null,
-        memory: null
+        memory: null,
+        cpuUsage: null
       };
 
       this.initCharts();
@@ -243,6 +256,29 @@
         },
         options: {
           responsive: true
+        }
+      });
+      
+      this.charts.cpuUsage = new Chart(document.getElementById('chart-cpu-usage'), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            data: [],
+            borderColor: coreui.Utils.getStyle('--cui-primary'),
+            backgroundColor: 'transparent',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          elements: {
+            line: { tension: 0.4 },
+            point: { radius: 0 }
+          },
+          plugins: {
+            legend: { display: false }
+          }
         }
       });
     }
@@ -383,6 +419,18 @@
 
         this.charts.memory.data.datasets[0].data = [used, free];
         this.charts.memory.update('none');
+      }
+      
+      if(this.metrics.cpu_usage){
+        const usage = this.metrics.cpu_usage;
+        this.cpuUsageHistory.push(usage);
+        if(this.cpuUsageHistory.length > this.maxHistory){
+          this.cpuUsageHistory.shift();
+        }
+        
+        this.charts.cpuUsage.data.datasets[0].data = this.cpuUsageHistory;
+        this.charts.cpuUsage.data.labels = Object.keys(this.cpuUsageHistory);
+        this.charts.cpuUsage.update();
       }
     }
 
