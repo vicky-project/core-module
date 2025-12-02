@@ -27,32 +27,6 @@
         </div>
       </div>
       
-      <!-- CPU -->
-      <div class="card">
-        <div class="card-header">
-          <strong>CPU</strong>
-        </div>
-        <div class="card-body">
-          <div class="c-chart-wrapper">
-            <canvas id="chart-cpu" height="200px"></canvas>
-          </div>
-        </div>
-      </div>
-      <!-- /. CPU -->
-      
-      <!-- CPU Temps -->
-      <div class="card">
-        <div class="card-header">
-          <strong>CPU Temps</strong>
-        </div>
-        <div class="card-body">
-          <div class="c-chart-wrapper">
-            <canvas id="chart-cpu-temps" height="300px"></canvas>
-          </div>
-        </div>
-      </div>
-      <!-- /. CPU Temp -->
-      
       <!-- Memory -->
       <div class="card">
         <div class="card-header">
@@ -139,6 +113,34 @@
         </div>
       </div>
       <!-- /. Health Status -->
+    </div>
+    
+    <div class="card-group mt-2">
+            <!-- CPU -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu" height="200px"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU -->
+      
+      <!-- CPU Temps -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU Temps</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu-temps" height="300px"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU Temp -->
     </div>
   </div>
 </div>
