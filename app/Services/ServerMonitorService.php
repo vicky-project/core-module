@@ -37,7 +37,7 @@ class ServerMonitorService
 	public function getDynamicData()
 	{
 		return [
-			"ram" => $this->linfo->getRam(),
+			"ram" => $this->getRam(),
 			"cpu_usage" => $this->linfo->getCPUUsage(),
 			"load" => $this->linfo->getLoad(),
 			"temps" => $this->linfo->getTemps(),
@@ -171,6 +171,18 @@ class ServerMonitorService
 		}
 
 		return "Unknown";
+	}
+
+	protected function getRam()
+	{
+		$ram = $this->linfo->getRam();
+		$ramPercentage = ($ram["total"] / ($ram["total"] - $ram["free"])) * 100;
+		return [
+			"total" => $ram["total"],
+			"free" => $ram["free"],
+			"used" => $ram["total"] - $ram["free"],
+			"percentage" => $ramPercentage,
+		];
 	}
 
 	protected function getCpuUsage()
