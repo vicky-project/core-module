@@ -55,7 +55,7 @@ class ServerMonitorController extends Controller
 							continue;
 						}
 
-						$metrics = $this->serverMonitor->getServerStatus();
+						$metrics = $this->serverMonitor->getDynamicData();
 						if ($this->metricsChanged($lastMetrics, $metrics)) {
 							yield $this->formatEvent("metrics", $metrics);
 							$lastMetrics = $metrics;
