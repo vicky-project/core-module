@@ -39,6 +39,7 @@ class ServerMonitorService
 		return [
 			"ram" => $this->getRam(),
 			"cpu_usage" => $this->linfo->getCPUUsage(),
+			"cpu" => $this->linfo->getCPU(),
 			"load" => $this->linfo->getLoad(),
 			"temps" => $this->linfo->getTemps(),
 			"network" => $this->linfo->getNet(),

@@ -14,38 +14,25 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="controls d-flex justify-content-between align-items-center">
-      <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
-      <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
-      <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
-      <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
-      <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
-    </div>
-    <div class="row">
-      <div class="col-auto">
-        <span style="margin-left: auto; font-size: 12px; color: #666;">
-          Update: <span id="currentInterval">5</span>s | 
-          Last: <span id="lastUpdate">--:--:--</span>
-        </span>
-      </div>
-    </div>
     <div class="card-group mt-2">
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary small text-uppercase fw-semibold">{{ $dataServer["distro"]["name"] }} <span class="text-muted">{{ $dataServer["distro"]["version"] }}</span></div>
+        </div>
+        <div class="fs-6 fw-semibold py-3">{{ $dataServer["model"] }} <span class="text-muted">{{ $dataServer["kernel"] }}</span></div>
+        <div class="font-weight-bold text-muted">{{ $dataServer["cpu"][0]["Vendor"] }}</div>
+        <span class="text-muted small">{{ $dataServer["cpu"][0]["Model"] }}</span>
+      </div>
       
       <!-- CPU -->
       <div class="card">
+        <div class="card-header">
+          <strong>CPU</strong>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-memory') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting" id="cpuStatus"></span>
-            CPU Load
-          </div>
-          <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
-          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-            <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu"></canvas>
           </div>
         </div>
       </div>
@@ -160,7 +147,6 @@
       this.healthEventSource = null;
       
       this.metrics = {};
-      this.cpuHistory = [];
       this.memoryHistory = [];
       this.maxHistory = 30;
       
@@ -182,36 +168,20 @@
 
     initCharts() {
       // CPU Chart - simplified
-      this.charts.cpu = new Chart(document.getElementById('cpuChart'), {
-        type: 'line',
+      this.charts.cpu = new Chart(document.getElementById('chart-cpu'), {
+        type: 'bar',
         data: {
-          labels: [],
+          labels: ['core 0', 'core 1'],
           datasets: [{
             data: [],
-            borderColor: coreui.Utils.getStyle('--cui-info'),
-            backgroundColor: 'transparent',
-            borderWidth: 2
+            backgroundColor: 'rgba(151, 187, 205, 0.5)',
+            borderColor: 'rgba(151, 187, 205, 0.8)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
           }]
         },
         options: {
-          maintainAspectRatio: false,
-          elements: {
-            line: {
-              tension: 0.4
-            },
-            point: {
-              radius: 0
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            x: { display: false },
-            y: { display: false }
-          }
+          responsive: true
         }
       });
 
@@ -314,8 +284,8 @@
 
     updateEssentialDisplays() {
       // CPU
-      if (this.metrics.load?.now) {
-        const load = this.metrics.load.now || 0;
+      if (this.metrics.cpu) {
+        const cpu = this.metrics.cpu;
         document.getElementById('cpuLoad').innerHTML = `
           <div class="metric-value">${load.toFixed(2)}</div>
           <div class="metric-subvalue">1min average</div>`;
@@ -372,15 +342,10 @@
 
     updateCharts() {
       // Update CPU chart with latest data
-      if (this.metrics.cpu_usage) {
-        const load = this.metrics.load.now || 0;
-        this.cpuHistory.push(load);
-        if (this.cpuHistory.length > this.maxHistory) {
-          this.cpuHistory.shift();
-        }
-
-        this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.data.labels = Object.keys(this.cpuHistory);
+      if (this.metrics.cpu) {
+        const cpus = this.metrics.cpu;
+        
+        this.charts.cpu.data.datasets[0].data = cpus.map(cpu => cpu.usage_percentage);
         this.charts.cpu.update();
       }
 
