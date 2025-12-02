@@ -345,7 +345,20 @@
       if (this.metrics.cpu) {
         const cpus = this.metrics.cpu;
         
-        this.charts.cpu.data.datasets[0].data = cpus.map(cpu => cpu.usage_percentage);
+        const datasets = [];
+        for(let i in cpu){
+          Array.from(datasets).push({
+            data: [cpu[i].usage_percentage],
+            label: i,
+            backgroundColor: 'rgba(151, 187, 205, 0.5)',
+            borderColor: 'rgba(151, 187, 205, 0.8)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
+          })
+        }
+        
+        this.charts.cpu.data.datasets = datasets;
+        
         this.charts.cpu.update();
       }
 
