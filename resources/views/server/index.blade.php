@@ -314,8 +314,8 @@
 
     updateEssentialDisplays() {
       // CPU
-      if (this.metrics.resources?.cpu_usage) {
-        const load = this.metrics.resources.cpu_usage.load_1min || 0;
+      if (this.metrics.load?.now) {
+        const load = this.metrics.load.now || 0;
         document.getElementById('cpuLoad').innerHTML = `
           <div class="metric-value">${load.toFixed(2)}</div>
           <div class="metric-subvalue">1min average</div>`;
@@ -323,9 +323,9 @@
       }
 
       // Memory
-      if (this.metrics.resources?.memory_percentage !== undefined) {
-        const percent = this.metrics.resources.memory_percentage;
-        document.getElementById('memoryUsage').innerText = this.metrics.resources.memory_usage || '';
+      if (this.metrics.ram !== undefined) {
+        const percent = this.metrics.ram.total / (this.metrics.ram.total - this.metrics.ram.free) * 100;
+        document.getElementById('memoryUsage').innerText = (this.metrics.ram.total - this.metrics.ram.free) || '';
           document.getElementById("memoryUsagePercentage").innerHTML = `${percent.toFixed(1)}%`;
 
         const progress = document.getElementById('memoryProgress');
@@ -372,8 +372,8 @@
 
     updateCharts() {
       // Update CPU chart with latest data
-      if (this.metrics.resources?.cpu_usage) {
-        const load = this.metrics.resources.cpu_usage.load_1min || 0;
+      if (this.metrics.cpu_usage) {
+        const load = this.metrics.load.now || 0;
         this.cpuHistory.push(load);
         if (this.cpuHistory.length > this.maxHistory) {
           this.cpuHistory.shift();
@@ -385,8 +385,8 @@
       }
 
       // Update memory chart with latest data
-      if (this.metrics.resources?.memory_percentage !== undefined) {
-        const percent = this.metrics.resources.memory_percentage;
+      if (this.metrics.ram !== undefined) {
+        const percent = this.metrics.ram.total / (this.metrics.ram.total - this.metrics.ram.free) * 100;
         this.memoryHistory.push(percent);
         if (this.memoryHistory.length > this.maxHistory) {
           this.memoryHistory.shift();
@@ -394,7 +394,7 @@
 
         this.charts.memory.data.datasets[0].data = this.memoryHistory;
         this.charts.memory.data.labels = Object.keys(this.memoryHistory);
-        this.charts.memory.update('none');
+        this.charts.memory.update();
       }
     }
 
