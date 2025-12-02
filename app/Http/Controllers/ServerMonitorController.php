@@ -139,9 +139,12 @@ class ServerMonitorController extends Controller
 		}
 
 		$thresholds = [
-			"resources.memory_percentage" => 1,
-			"resources.disk_usage.percentage" => 1,
-			"resources.cpu_usage.load_1min" => 0.5,
+			"ram.total" => 1,
+			"ram.free" => 1,
+			"cpu_usage" => 1,
+			"load.now" => 0.5,
+			"network.eth0.received.bytes" => 0,
+			"network.eth0.sent.bytes" => 0,
 		];
 
 		foreach ($thresholds as $path => $threshold) {
