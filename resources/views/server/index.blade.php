@@ -7,7 +7,7 @@
   <div class="card-header text-end">
     <div class="float-start me-auto">
       <h5 class="card-title">🚀 Server Monitor</h5>
-      <span class="small ms-2" id="lastUpdate"></span>
+      <span class="small">Last update: <span id="lastUpdate">--:--:--</span></span>
     </div>
     <div>
       <span class="status-dot status-connecting" id="connectionStatus"></span>
