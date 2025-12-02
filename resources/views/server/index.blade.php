@@ -319,7 +319,7 @@
         const cpus = this.metrics.cpu;
         
         const datasets = [];
-        for(let i in cpu){
+        for(let i in cpus){
           Array.from(datasets).push({
             data: [cpu[i].usage_percentage],
             label: i,
