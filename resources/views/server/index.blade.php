@@ -7,6 +7,7 @@
   <div class="card-header text-end">
     <div class="float-start me-auto">
       <h5 class="card-title">🚀 Server Monitor</h5>
+      <span class="small ms-2" id="lastUpdate"></span>
     </div>
     <div>
       <span class="status-dot status-connecting" id="connectionStatus"></span>
@@ -164,6 +165,7 @@
 
       this.charts = {
         cpu: null,
+        cpuTemps: null,
         memory: null
       };
 
@@ -363,18 +365,12 @@
         const free = this.metrics.ram.free;
         const used = this.metrics.ram.used;
         
-        document.getElementById('memory-percentage').innerText = `${percent.toFixed(2)}%`;
-        document.getElementById('memory-total').innerText = total;
+        document.getElementById('memory-percentage').textContent = `${percent.toFixed(2)}%`;
+        document.getElementById('memory-total').textContent = total;
 
         this.charts.memory.data.datasets[0].data = [used, free];
         this.charts.memory.update();
       }
-    }
-
-    setUpdateInterval(seconds) {
-      this.updateInterval = seconds;
-      document.getElementById('currentInterval').textContent = seconds;
-      this.connect();
     }
 
     pause() {
