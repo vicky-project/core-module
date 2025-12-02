@@ -334,7 +334,7 @@
         
         this.charts.cpu.data.datasets = datasets;
         
-        this.charts.cpu.update();
+        this.charts.cpu.update('none');
       }
       
       // Update CPU Temps chart
@@ -355,7 +355,7 @@
         
         this.charts.cpuTemps.data.datasets = datasets;
         
-        this.charts.cpuTemps.update();
+        this.charts.cpuTemps.update('none');
       }
 
       // Update memory chart with latest data
@@ -369,7 +369,7 @@
         document.getElementById('memory-total').textContent = total;
 
         this.charts.memory.data.datasets[0].data = [used, free];
-        this.charts.memory.update();
+        this.charts.memory.update('none');
       }
     }
 
