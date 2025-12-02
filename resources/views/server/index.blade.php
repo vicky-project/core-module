@@ -65,7 +65,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <div class="font-weight-bold fs-6" id="memory-total"></div>
+          <div class="font-weight-bold fs-6">Total <span id="memory-total"></span></div>
         </div>
       </div>
       <!-- /. Memory -->
@@ -183,7 +183,8 @@
           datasets: []
         },
         options: {
-          responsive: true
+          responsive: true,
+          beginAtZero: true
         }
       });
       
@@ -194,7 +195,8 @@
           datasets: []
         },
         options: {
-          responsive: true
+          responsive: true,
+          beginAtZero: true
         }
       });
 
