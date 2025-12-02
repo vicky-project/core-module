@@ -198,8 +198,15 @@
       this.charts.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
         type: 'bar',
         data: {
-          labels: ['core 0', 'core 1'],
-          datasets: []
+          labels: [],
+          datasets: [{
+            data: [],
+            label: 'CPU Temp',
+            backgroundColor: 'rgba(151, 187, 205, 0.5)',
+            borderColor: 'rgba(151, 187, 205, 0.8)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
+          }]
         },
         options: {
           responsive: true,
@@ -339,19 +346,8 @@
       if(this.metrics.temps){
         const temps = this.metrics.temps;
         
-        const datasets = [];
-        for(let i in temps){
-          Array.from(datasets).push({
-            data: [temps[i].temp],
-            label: temps[i].name,
-            backgroundColor: 'rgba(151, 187, 205, 0.5)',
-            borderColor: 'rgba(151, 187, 205, 0.8)',
-            highlightFill: 'rgba(151, 187, 205, 0.75)',
-            highlightStroke: 'rgba(151, 187, 205, 1)',
-          })
-        }
-        
-        this.charts.cpuTemps.data.datasets = datasets;
+        this.charts.cpuTemps.data.datasets[0].data = temps.map(cpu => cpu.temp);
+        this.charts.cpuTemps.data.labels = temps.map(cpu => cpu.name);
         
         this.charts.cpuTemps.update('none');
       }
