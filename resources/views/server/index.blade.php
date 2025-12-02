@@ -183,8 +183,8 @@
           datasets: [{
             data: [],
             label: "CPU",
-            backgroundColor: 'rgba(151, 187, 205, 0.5)',
-            borderColor: 'rgba(151, 187, 205, 0.8)',
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgb(54, 162, 235)',
             highlightFill: 'rgba(151, 187, 205, 0.75)',
             highlightStroke: 'rgba(151, 187, 205, 1)',
           }]
@@ -210,7 +210,14 @@
         },
         options: {
           responsive: true,
-          beginAtZero: true
+          beginAtZero: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              suggestedMax: 100,
+              max: 100
+            }
+          }
         }
       });
 
