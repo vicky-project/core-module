@@ -25,7 +25,6 @@
           <span class="text-muted small">{{ $dataServer["cpu"][0]["Model"] }}</span>
         </div>
       </div>
-      <!-- /. CPU -->
       
       <!-- CPU -->
       <div class="card">
@@ -55,25 +54,17 @@
       
       <!-- Memory -->
       <div class="card">
+        <div class="card-header">
+          <strong>Memory</strong>
+          <span class="small ms-2" id="memory-percentage"></span>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="memoryStatus"></span>
+          <div class="c-chart-wrapper">
+            <canvas id="chart-memory"></canvas>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
-          <div class="progress-group">
-            <div class="progress-group-header">
-              <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
-              <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
-            </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-thin">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
-              </div>
-            </div>
-          </div>
-          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-            <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
-          </div>
+        </div>
+        <div class="card-footer">
+          <div class="font-weight-bold fs-6" id="memory-total"></div>
         </div>
       </div>
       <!-- /. Memory -->
@@ -206,38 +197,18 @@
       });
 
       // Memory Chart - simplified
-      const memoryEl = document.getElementById('memoryChart');
-      if(!memoryEl) return;
-      
-      const memoryCtx = memoryEl.getContext('2d');
-      this.charts.memory = new Chart(memoryCtx, {
-        type: 'line',
+      this.charts.memory = new Chart(document.getElementById('chart-memory'), {
+        type: 'doughnut',
         data: {
-          labels: [],
+          labels: ['Used', 'Free'],
           datasets: [{
             data: [],
-            borderColor: coreui.Utils.getStyle('--cui-primary'),
-            backgroundColor: 'transparent',
-            borderWidth: 1
+            backgroundColor: ['#FF6384', '#36A2EB'],
+            hoverBackgroundColor: ['#FF6384', '#36A2EB']
           }]
         },
         options: {
-          maintainAspectRatio: false,
-          elements: {
-            line: { tension: 0.4 },
-            point: {
-              radius: 0
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            x: { display: false },
-            y: { display: false }
-          }
+          responsive: true
         }
       });
     }
@@ -304,26 +275,8 @@
 
     updateEssentialDisplays() {
       // CPU
-      if (this.metrics.cpu) {
-        const cpu = this.metrics.cpu;
-        document.getElementById('cpuLoad').innerHTML = `
-          <div class="metric-value">${load.toFixed(2)}</div>
-          <div class="metric-subvalue">1min average</div>`;
-        this.updateStatus('cpuStatus', 'connected');
-      }
 
       // Memory
-      if (this.metrics.ram !== undefined) {
-        const percent = this.metrics.ram.total / (this.metrics.ram.total - this.metrics.ram.free) * 100;
-        document.getElementById('memoryUsage').innerText = (this.metrics.ram.total - this.metrics.ram.free) || '';
-          document.getElementById("memoryUsagePercentage").innerHTML = `${percent.toFixed(1)}%`;
-
-        const progress = document.getElementById('memoryProgress');
-        progress.style.width = `${Math.min(percent, 100)}%`;
-        progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
-
-        this.updateStatus('memoryStatus', 'connected');
-      }
 
       // Disk
       if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
@@ -381,17 +334,39 @@
         
         this.charts.cpu.update();
       }
+      
+      // Update CPU Temps chart
+      if(this.metrics.temps){
+        const temps = this.metrics.temps;
+        
+        const datasets = [];
+        for(let i in temps){
+          Array.from(datasets).push({
+            data: [temps[i].temp],
+            label: temps[i].name,
+            backgroundColor: 'rgba(151, 187, 205, 0.5)',
+            borderColor: 'rgba(151, 187, 205, 0.8)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
+          })
+        }
+        
+        this.charts.cpuTemps.data.datasets = datasets;
+        
+        this.charts.cpuTemps.update();
+      }
 
       // Update memory chart with latest data
       if (this.metrics.ram !== undefined) {
-        const percent = this.metrics.ram.total / (this.metrics.ram.total - this.metrics.ram.free) * 100;
-        this.memoryHistory.push(percent);
-        if (this.memoryHistory.length > this.maxHistory) {
-          this.memoryHistory.shift();
-        }
+        const percent = this.metrics.ram.percentage;
+        const total = this.metrics.ram.total;
+        const free = this.metrics.ram.free;
+        const used = this.metrics.ram.used;
+        
+        document.getElementById('memory-percentage').innerText = `${percent.toFixed(2)}%`;
+        document.getElementById('memory-total').innerText = total;
 
-        this.charts.memory.data.datasets[0].data = this.memoryHistory;
-        this.charts.memory.data.labels = Object.keys(this.memoryHistory);
+        this.charts.memory.data.datasets[0].data = [used, free];
         this.charts.memory.update();
       }
     }
