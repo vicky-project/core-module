@@ -180,7 +180,13 @@
         type: 'bar',
         data: {
           labels: [],
-          datasets: []
+          datasets: [{
+            data: [],
+            backgroundColor: 'rgba(151, 187, 205, 0.5)',
+            borderColor: 'rgba(151, 187, 205, 0.8)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
+          }]
         },
         options: {
           responsive: true,
@@ -322,19 +328,8 @@
       if (this.metrics.cpu) {
         const cpus = this.metrics.cpu;
         
-        const datasets = [];
-        for(let i in cpus){
-          Array.from(datasets).push({
-            data: [cpus[i].usage_percentage],
-            label: `Core ${i}`,
-            backgroundColor: 'rgba(151, 187, 205, 0.5)',
-            borderColor: 'rgba(151, 187, 205, 0.8)',
-            highlightFill: 'rgba(151, 187, 205, 0.75)',
-            highlightStroke: 'rgba(151, 187, 205, 1)',
-          })
-        }
-        
-        this.charts.cpu.data.datasets = datasets;
+        this.charts.cpu.data.datasets[0].data = cpus.map(cpu => cpu.usage_percentage);
+        this.charts.cpu.labels = Object.keys(cpus).map(cpu => `Core ${cpu}`);
         
         this.charts.cpu.update('none');
       }
