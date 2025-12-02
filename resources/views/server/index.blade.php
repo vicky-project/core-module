@@ -45,9 +45,9 @@
         <div class="card-header">
           <strong>CPU Temps</strong>
         </div>
-        <div class="card-body" height="100">
+        <div class="card-body">
           <div class="c-chart-wrapper">
-            <canvas id="chart-cpu-temps"></canvas>
+            <canvas id="chart-cpu-temps" height="100"></canvas>
           </div>
         </div>
       </div>
