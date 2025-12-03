@@ -40,9 +40,7 @@ class ModuleInstall extends Command
 			return;
 		}
 
-		if (!$module->isEnabled) {
-			$module->enable();
-		}
+		$module->enable();
 
 		$postInstallationClass = "Modules\\{$module->getName()}\\Installations\\PostInstallation";
 
