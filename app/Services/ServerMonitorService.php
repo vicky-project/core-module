@@ -32,7 +32,6 @@ class ServerMonitorService
 			"model" => $this->linfo->getModel(),
 			"distro" => $this->linfo->getDistro(),
 			"raid" => $this->linfo->getRAID(),
-			"mounts" => $this->linfo->getMounts(),
 			"devs" => $this->linfo->getDevs(),
 		];
 	}
@@ -48,6 +47,7 @@ class ServerMonitorService
 			"network" => $this->linfo->getNet(),
 			"process_stats" => $this->linfo->getProcessStats(),
 			"hd" => $this->linfo->getHD(),
+			"mounts" => $this->linfo->getMounts(),
 			"uptime" => $this->linfo->getUpTime(),
 			"services" => $this->linfo->getServices(),
 		];

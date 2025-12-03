@@ -136,6 +136,29 @@
     </div>
     
     <div class="card-group mt-2">
+      
+      <!-- / Mounts -->
+      <div class="card">
+        <div class="card-header">
+          <div class="strong">Mounts</div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <th>Device</th>
+                <th>Mount</th>
+                <th>Size</th>
+                <th>Available</th>
+              </thead>
+              <tbody id="mount-table-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- /. Mounts -->
+      
+      <!-- / Hard Disk -->
       <div class="card">
         <div class="card-header">
           <div class="strong">Disk Usage</div>
@@ -154,35 +177,8 @@
           </div>
         </div>
       </div>
-    </div>
-    
-    <div class="card-group mt-2">
-            <!-- Disk -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
-            Disk Usage
-          </div>
-          <div class="progress-group">
-            <div class="progress-group-header">
-              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
-              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
-            </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-thin">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /. Disk -->
+      <!-- /. Hard Disk -->
+      
     </div>
   </div>
 </div>
@@ -371,11 +367,35 @@
 
     updateEssentialDisplays() {
       // Uptime
-      if(this.metrics.uptime){
+      if(this.metrics.uptime) {
         document.getElementById('uptime-text').textContent = this.metrics.uptime.text
       }
       
-      // Memory
+      // Mounts
+      if(this.metrics.mounts && this.metrics.mounts.length > 0) {
+        const mounts = this.metrics.mounts.filter(mount => mount.type === "zfs");
+        
+        let tbody = "";
+        for(const i in mounts) {
+          tbody += `<tr>`;
+          tbody += `<td>${mounts[i].device}</td><td>${mounts[i].mount}</td><td>${this.humanFileSize(mounts[i].size)}</td>`;
+          tbody += `<td>Free: <strong>${this.humanFileSize(mounts[i].free)}</strong>`;
+          tbody += `<div class="progress-group">
+          <div class="progress-group-header align-items-end">
+            <div>${mounts[i].mount}</div>
+            <div class="ms-auto font-weight-bold me-2">${this.humanFileSize(mounts[i].used)}</div>
+            <div class="text-muted small">(${mounts[i].used_percent}%)</div>
+          </div>
+          <div class="progress-group-bars">
+            <div class="progress progress-thin">
+              <div class="progress-bar bg-success" role="progressbar" style="width: ${mounts[i].used}%" aria-valuenow="${mounts[i].used}" aria-valuemin="0" aria-valuemax="${mounts[i].size}"></div>
+            </div>
+          </div>
+        </div>`;
+          tbody += `</td>`;
+          tbody += `</tr>`;
+        }
+      }
 
       // Disk
       if (this.metrics.hd !== undefined) {
@@ -387,7 +407,7 @@
           tbody += `<th scope="row" ${disk[i].partitions && disk[i].partitions.length > 0 ? `rowspan="${disk[i].partitions.length + 2}"` : ''}>${disk[i].name}</th><td>${disk[i].device}</td><td>${this.humanFileSize(disk[i].size)}</td>`;
           tbody += `</tr>`;
           if(disk[i].partitions && disk[i].partitions.length > 0) {
-            tbody += '<tr><th scope="row" colspan="2">Partitions</th></tr>';
+            tbody += '<tr><th scope="row" colspan="2" class="text-center">Partitions</th></tr>';
             for(let p in disk[i].partitions) {
               tbody += `<tr>`;
               tbody += `<td>${disk[i].partitions[p].number}</td><td>${this.humanFileSize(disk[i].partitions[p].size)}</td>`;
