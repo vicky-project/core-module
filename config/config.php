@@ -56,6 +56,7 @@ return [
 			"model" => true,
 			"services" => true,
 			"raid" => true,
+			"mounts" => true,
 		],
 		"cpu_usage" => true,
 		"temps" => [

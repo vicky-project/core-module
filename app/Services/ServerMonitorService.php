@@ -32,6 +32,8 @@ class ServerMonitorService
 			"model" => $this->linfo->getModel(),
 			"distro" => $this->linfo->getDistro(),
 			"raid" => $this->linfo->getRAID(),
+			"mounts" => $this->linfo->getMounts(),
+			"devs" => $this->linfo->getDevs(),
 		];
 	}
 
