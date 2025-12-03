@@ -124,7 +124,7 @@
       <!-- CPU USAGE -->
       <div class="card">
         <div class="card-header">
-          <strong>CPU</strong>
+          <strong>CPU Usage</strong>
         </div>
         <div class="card-body">
           <div class="c-chart-wrapper">
@@ -133,6 +133,27 @@
         </div>
       </div>
       <!-- /. CPU USAGE -->
+    </div>
+    
+    <div class="card-group mt-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="strong">Disk Usage</div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table id="disk-table" class="table table-bordered table-hover">
+              <thead>
+                <th scope="col">Name</th>
+                <th scope="col">Device</th>
+                <th scope="col">Size</th>
+              </thead>
+              <tbody class="table-group-divider">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="card-group mt-2">
@@ -357,16 +378,24 @@
       // Memory
 
       // Disk
-      if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
-        const disk = this.metrics.resources.disk_usage;
-        document.getElementById('diskUsage').innerText = `${disk.used}/${disk.total}`;
-          document.getElementById('diskUsagePercentage').innerHtml = `${disk.percentage.toFixed(1)}%`;
-
-        const progress = document.getElementById('diskProgress');
-        progress.style.width = `${Math.min(disk.percentage, 100)}%`;
-        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (disk.percentage > 70 ? '#f39c12' : '#3498db');
-
-        this.updateStatus('diskStatus', 'connected');
+      if (this.metrics.hd !== undefined) {
+        const disk = this.metrics.hd;
+        
+        let tbody = "";
+        for(let i in disk){
+          tbody += `<tr>`;
+          tbody += `<th scope="row" ${disk[i].partitions && disk[i].partitions.length > 0 ? 'rowspan="2"' : ''}>${disk[i].name}</th><td>${disk[i].device}</td><td>${this.humanFileSize(disk[i].size)}</td>`;
+          tbody += `</tr>`;
+          if(disk[i].partitions && disk[i].partitions.length > 0){
+            for(let p in disk[i].partitions){
+              tbody += `<tr class="table-active">`;
+              tbody += `<td>${disk[i].partitions[p].number}</td><td>${this.humanFileSize(disk[i].partitions[p].size)}</td>`;
+              tbody += `</tr>`;
+            }
+          }
+        }
+        
+        document.getElementById('disk-table').tbody.innerHTML = tbody;
       }
 
       // Database
