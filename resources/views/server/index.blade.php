@@ -393,7 +393,7 @@
               tbody += `<td>${disk[i].partitions[p].number}</td><td>${this.humanFileSize(disk[i].partitions[p].size)}</td>`;
               tbody += `</tr>`;
             }
-            tbody = "</tbody></table></tr>";
+            tbody += "</tbody></table></tr>";
           }
         }
         
