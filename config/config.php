@@ -29,4 +29,52 @@ return [
 		"retention_days" => 30,
 		"disk" => "local",
 	],
+
+	/*
+	| ========================================
+	| Server Monitoring Config
+	| ========================================
+	|
+	*/
+	"monitors" => [
+		"show" => [
+			"temps" => true,
+			"load" => true,
+			"ip" => true,
+			"kernel" => true,
+			"os" => true,
+			"ram" => true,
+			"hd" => true,
+			"webservice" => true,
+			"phpversion" => true,
+			"network" => true,
+			"uptime" => true,
+			"cpu" => true,
+			"process_stats" => true,
+			"hostname" => true,
+			"distro" => true,
+			"model" => true,
+			"services" => true,
+			"raid" => true,
+			"mounts" => true,
+		],
+		"cpu_usage" => true,
+		"temps" => [
+			"hwmon" => true,
+			"thermal_zone" => true,
+			"hddtemp" => true,
+			"mbmon" => true,
+			"sensord" => true,
+		],
+		"raid" => ["gmirror" => true, "mdadm" => true],
+		"temps_show0rpmfans" => true,
+		"show_errors" => false,
+		"hddtemp" => [
+			"mode" => "daemon", // daemon or syslog
+		],
+		"services" => [
+			"pidFiles" => ["SSHd" => "/var/run/sshd.pid"],
+			"executables" => ["MySQLd" => "/usr/sbin/nysqld"],
+		],
+	],
 ];

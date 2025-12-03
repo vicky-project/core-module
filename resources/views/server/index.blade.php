@@ -7,6 +7,7 @@
   <div class="card-header text-end">
     <div class="float-start me-auto">
       <h5 class="card-title">🚀 Server Monitor</h5>
+      <span class="small">Last update: <span id="lastUpdate">--:--:--</span></span>
     </div>
     <div>
       <span class="status-dot status-connecting" id="connectionStatus"></span>
@@ -14,137 +15,127 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="controls d-flex justify-content-between align-items-center">
-      <button class="btn btn-primary" onclick="optimizedMonitor.setUpdateInterval(3)">Fast (3s)</button>
-      <button class="btn btn-success" onclick="optimizedMonitor.setUpdateInterval(5)">Normal (5s)</button>
-      <button class="btn btn-warning" onclick="optimizedMonitor.setUpdateInterval(10)">Slow (10s)</button>
-      <button class="btn btn-danger" onclick="optimizedMonitor.pause()">Pause</button>
-      <button class="btn btn-primary" onclick="optimizedMonitor.resume()">Resume</button>
-    </div>
-    <div class="row">
-      <div class="col-auto">
-        <span style="margin-left: auto; font-size: 12px; color: #666;">
-          Update: <span id="currentInterval">5</span>s | 
-          Last: <span id="lastUpdate">--:--:--</span>
-        </span>
-      </div>
-    </div>
     <div class="card-group mt-2">
       
-      <!-- CPU -->
       <div class="card">
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-memory') }}"></use>
-            </svg>
+          <div class="text-body-secondary small text-uppercase fw-semibold">{{ $dataServer["distro"]["name"] }} <span class="text-muted">{{ $dataServer["distro"]["version"] }}</span>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting" id="cpuStatus"></span>
-            CPU Load
-          </div>
-          <div class="fs-6 fw-semibold py-3" id="cpuLoad">Loading...</div>
-          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-            <canvas class="chart chart-line" id="cpuChart" height="40" width="100"></canvas>
+          <div class="fs-6 fw-semibold py-3">{{ $dataServer["model"] }} <span class="text-muted">{{ $dataServer["kernel"] }}</span></div>
+          <div class="font-weight-bold text-muted">{{ $dataServer["cpu"][0]["Vendor"] }}</div>
+          <span class="text-muted small">{{ $dataServer["cpu"][0]["Model"] }}</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body text-body-secondary small text-uppercase fw-semibold">Uptime: <span class="text-muted" id="uptime-text"></span></div>
+      </div>
+    </div>
+    
+    <div class="card-group mt-2">
+      <!-- CPU -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu" height="300px"></canvas>
           </div>
         </div>
       </div>
       <!-- /. CPU -->
       
+      <!-- CPU Temps -->
+      <div class="card">
+        <div class="card-header">
+          <strong>CPU Temps</strong>
+        </div>
+        <div class="card-body">
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu-temps" height="300px"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- /. CPU Temp -->
+    </div>
+    
+    <div class="card-group mt-2">
       <!-- Memory -->
       <div class="card">
+        <div class="card-header">
+          <strong>Memory</strong>
+          <span class="small ms-2" id="memory-percentage"></span>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="memoryStatus"></span>
+          <div class="c-chart-wrapper">
+            <canvas id="chart-memory"></canvas>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">Memory Usage</div>
-          <div class="progress-group">
-            <div class="progress-group-header">
-              <div class="fs-6 fw-semibold py-3" id="memoryUsage">Loading...</div>
-              <div class="ms-auto font-weight-bold" id="memoryUsagePercentage">0%</div>
-            </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-thin">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="memoryProgress"></div>
-              </div>
-            </div>
-          </div>
-          <div class="c-chart-wrapper mx-auto" style="height:40px;width:80px">
-            <canvas class="chart chart-line" id="memoryChart" height="40" width="100"></canvas>
-          </div>
+        </div>
+        <div class="card-footer">
+          <div class="font-weight-bold fs-6">Total <span id="memory-total"></span></div>
         </div>
       </div>
       <!-- /. Memory -->
       
-      <!-- Disk -->
+      <!-- CPU USAGE -->
       <div class="card">
+        <div class="card-header">
+          <strong>CPU Usage</strong>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
-            Disk Usage
-          </div>
-          <div class="progress-group">
-            <div class="progress-group-header">
-              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
-              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
-            </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-thin">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
-              </div>
-            </div>
+          <div class="c-chart-wrapper">
+            <canvas id="chart-cpu-usage"></canvas>
           </div>
         </div>
       </div>
-      <!-- /. Disk -->
+      <!-- /. CPU USAGE -->
+    </div>
+    
+    <div class="card-group mt-2">
       
-      <!-- Database -->
+      <!-- / Mounts -->
       <div class="card">
+        <div class="card-header">
+          <div class="strong">Mounts</div>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-layers') }}"></use>
-            </svg>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <th>Device</th>
+                <th>Mount</th>
+                <th>Size</th>
+                <th>Available</th>
+              </thead>
+              <tbody id="mount-table-tbody"></tbody>
+            </table>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting" id="dbStatus"></span>
-            Database
-          </div>
-          <div id="databaseStatus">Loading...</div>
         </div>
       </div>
-      <!-- /. Database -->
+      <!-- /. Mounts -->
       
-      <!-- System Info -->
+      <!-- / Hard Disk -->
       <div class="card">
+        <div class="card-header">
+          <div class="strong">Disk Usage</div>
+        </div>
         <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-lan') }}"></use>
-            </svg>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <th scope="col">Name</th>
+                <th scope="col">Device</th>
+                <th scope="col">Size</th>
+              </thead>
+              <tbody class="table-group-divider" id="disk-table-tbody">
+              </tbody>
+            </table>
           </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">System Info</div>
-          <div id="systemInfo">Loading...</div>
         </div>
       </div>
-      <!-- /. System Info -->
+      <!-- /. Hard Disk -->
       
-      <!-- Health Status -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="healthStatus"></span>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">Health Status</div>
-          <div id="healthInfo">Coming soon...</div>
-        </div>
-      </div>
-      <!-- /. Health Status -->
     </div>
   </div>
 </div>
@@ -160,8 +151,7 @@
       this.healthEventSource = null;
       
       this.metrics = {};
-      this.cpuHistory = [];
-      this.memoryHistory = [];
+      this.cpuUsageHistory = [];
       this.maxHistory = 30;
       
       this.updateInterval = 5;
@@ -172,7 +162,9 @@
 
       this.charts = {
         cpu: null,
-        memory: null
+        cpuTemps: null,
+        memory: null,
+        cpuUsage: null
       };
 
       this.initCharts();
@@ -182,45 +174,68 @@
 
     initCharts() {
       // CPU Chart - simplified
-      this.charts.cpu = new Chart(document.getElementById('cpuChart'), {
-        type: 'line',
+      this.charts.cpu = new Chart(document.getElementById('chart-cpu'), {
+        type: 'bar',
         data: {
           labels: [],
           datasets: [{
             data: [],
-            borderColor: coreui.Utils.getStyle('--cui-info'),
-            backgroundColor: 'transparent',
-            borderWidth: 2
+            label: "CPU",
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgb(54, 162, 235)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
           }]
         },
         options: {
-          maintainAspectRatio: false,
-          elements: {
-            line: {
-              tension: 0.4
-            },
-            point: {
-              radius: 0
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
+          responsive: true,
+          beginAtZero: true
+        }
+      });
+      
+      this.charts.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            data: [],
+            label: 'CPU Temp',
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgb(54, 162, 235)',
+            highlightFill: 'rgba(151, 187, 205, 0.75)',
+            highlightStroke: 'rgba(151, 187, 205, 1)',
+          }]
+        },
+        options: {
+          responsive: true,
+          beginAtZero: true,
           scales: {
-            x: { display: false },
-            y: { display: false }
+            y: {
+              beginAtZero: true,
+              suggestedMax: 100,
+              max: 100
+            }
           }
         }
       });
 
       // Memory Chart - simplified
-      const memoryEl = document.getElementById('memoryChart');
-      if(!memoryEl) return;
+      this.charts.memory = new Chart(document.getElementById('chart-memory'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Used', 'Free'],
+          datasets: [{
+            data: [],
+            backgroundColor: ['#FF6384', '#36A2EB'],
+            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
       
-      const memoryCtx = memoryEl.getContext('2d');
-      this.charts.memory = new Chart(memoryCtx, {
+      this.charts.cpuUsage = new Chart(document.getElementById('chart-cpu-usage'), {
         type: 'line',
         data: {
           labels: [],
@@ -235,18 +250,13 @@
           maintainAspectRatio: false,
           elements: {
             line: { tension: 0.4 },
-            point: {
-              radius: 0
-            }
+            point: { radius: 0 }
           },
           plugins: {
-            legend: {
-              display: false
-            }
+            legend: { display: false }
           },
           scales: {
-            x: { display: false },
-            y: { display: false }
+            y: { beginAtZero: true }
           }
         }
       });
@@ -313,95 +323,108 @@
     }
 
     updateEssentialDisplays() {
-      // CPU
-      if (this.metrics.resources?.cpu_usage) {
-        const load = this.metrics.resources.cpu_usage.load_1min || 0;
-        document.getElementById('cpuLoad').innerHTML = `
-          <div class="metric-value">${load.toFixed(2)}</div>
-          <div class="metric-subvalue">1min average</div>`;
-        this.updateStatus('cpuStatus', 'connected');
+      // Uptime
+      if(this.metrics.uptime) {
+        document.getElementById('uptime-text').textContent = this.metrics.uptime.text
       }
-
-      // Memory
-      if (this.metrics.resources?.memory_percentage !== undefined) {
-        const percent = this.metrics.resources.memory_percentage;
-        document.getElementById('memoryUsage').innerText = this.metrics.resources.memory_usage || '';
-          document.getElementById("memoryUsagePercentage").innerHTML = `${percent.toFixed(1)}%`;
-
-        const progress = document.getElementById('memoryProgress');
-        progress.style.width = `${Math.min(percent, 100)}%`;
-        progress.style.background = percent > 90 ? '#e74c3c' : (percent > 70 ? '#f39c12' : '#3498db');
-
-        this.updateStatus('memoryStatus', 'connected');
+      
+      // Mounts
+      if(this.metrics.mounts && this.metrics.mounts.length > 0) {
+        const mounts = this.metrics.mounts.filter(mount => mount.type === "zfs");
+        
+        let tbody = "";
+        for(const i in mounts) {
+          tbody += `<tr>`;
+          tbody += `<td>${mounts[i].device}</td><td>${mounts[i].mount}</td><td>${this.humanFileSize(mounts[i].size)}</td>`;
+          tbody += `<td>Free: <strong>${this.humanFileSize(mounts[i].free)}</strong>`;
+          tbody += `<div class="progress-group">
+          <div class="progress-group-header align-items-end">
+            <div>${mounts[i].mount}</div>
+            <div class="ms-auto font-weight-bold me-2">${this.humanFileSize(mounts[i].used)}</div>
+            <div class="text-muted small">(${mounts[i].used_percent}%)</div>
+          </div>
+          <div class="progress-group-bars">
+            <div class="progress progress-thin">
+              <div class="progress-bar bg-success" role="progressbar" style="width: ${mounts[i].used}%" aria-valuenow="${mounts[i].used}" aria-valuemin="0" aria-valuemax="${mounts[i].size}"></div>
+            </div>
+          </div>
+        </div>`;
+          tbody += `</td>`;
+          tbody += `</tr>`;
+        }
+        
+        document.getElementById('mount-table-tbody').innerHTML = tbody;
       }
 
       // Disk
-      if (this.metrics.resources?.disk_usage?.percentage !== undefined) {
-        const disk = this.metrics.resources.disk_usage;
-        document.getElementById('diskUsage').innerText = `${disk.used}/${disk.total}`;
-          document.getElementById('diskUsagePercentage').innerHtml = `${disk.percentage.toFixed(1)}%`;
-
-        const progress = document.getElementById('diskProgress');
-        progress.style.width = `${Math.min(disk.percentage, 100)}%`;
-        progress.style.background = disk.percentage > 90 ? '#e74c3c' : (disk.percentage > 70 ? '#f39c12' : '#3498db');
-
-        this.updateStatus('diskStatus', 'connected');
-      }
-
-      // Database
-      if (this.metrics.database) {
-        const database = this.metrics.database;
-        const tablesInfo = database.tables ? ` ● ${database.tables} tables` : "";
-        document.getElementById('databaseStatus').innerHTML = `
-          <div class="metric-value" style="color: ${database.status === 'connected' ? '#2ecc71' : '#e74c3c'}">
-            ${database.status.toUpperCase()}
-          </div>
-          <div class="small text-muted mt-2">${database.connection} ● ${database.version}${tablesInfo}</div>`;
-        this.updateStatus('dbStatus', database.status === 'connected' ? 'connected' : 'disconnected');
-      }
-
-      // System Info
-      if (this.metrics.system) {
-      document.getElementById('systemInfo').innerHTML = `
-        <div class="metric-value">${this.metrics.system.hostname}</div>
-        <div class="metric-subvalue">
-          ${this.metrics.system.environment} • Uptime: ${this.metrics.system.uptime}
-        </div>`;
+      if (this.metrics.hd !== undefined) {
+        const disk = this.metrics.hd;
+        
+        let tbody = "";
+        for(let i in disk) {
+          tbody += `<tr>`;
+          tbody += `<th scope="row" ${disk[i].partitions && disk[i].partitions.length > 0 ? `rowspan="${disk[i].partitions.length + 2}"` : ''}>${disk[i].name}</th><td>${disk[i].device}</td><td>${this.humanFileSize(disk[i].size)}</td>`;
+          tbody += `</tr>`;
+          if(disk[i].partitions && disk[i].partitions.length > 0) {
+            tbody += '<tr><th scope="row" colspan="2" class="text-center">Partitions</th></tr>';
+            for(let p in disk[i].partitions) {
+              tbody += `<tr>`;
+              tbody += `<td>${disk[i].partitions[p].number}</td><td>${this.humanFileSize(disk[i].partitions[p].size)}</td>`;
+              tbody += `</tr>`;
+            }
+          }
+        }
+        
+        document.getElementById('disk-table-tbody').innerHTML = tbody;
       }
     }
 
     updateCharts() {
       // Update CPU chart with latest data
-      if (this.metrics.resources?.cpu_usage) {
-        const load = this.metrics.resources.cpu_usage.load_1min || 0;
-        this.cpuHistory.push(load);
-        if (this.cpuHistory.length > this.maxHistory) {
-          this.cpuHistory.shift();
-        }
-
-        this.charts.cpu.data.datasets[0].data = this.cpuHistory;
-        this.charts.cpu.data.labels = Object.keys(this.cpuHistory);
-        this.charts.cpu.update();
+      if (this.metrics.cpu) {
+        const cpus = this.metrics.cpu;
+        
+        this.charts.cpu.data.datasets[0].data = cpus.map(cpu => cpu.usage_percentage);
+        this.charts.cpu.data.labels = Object.keys(cpus).map(cpu => `Core ${cpu}`);
+        
+        this.charts.cpu.update('none');
+      }
+      
+      // Update CPU Temps chart
+      if(this.metrics.temps){
+        const temps = this.metrics.temps;
+        
+        this.charts.cpuTemps.data.datasets[0].data = temps.map(cpu => cpu.temp);
+        this.charts.cpuTemps.data.labels = temps.map(cpu => cpu.name);
+        
+        this.charts.cpuTemps.update('none');
       }
 
       // Update memory chart with latest data
-      if (this.metrics.resources?.memory_percentage !== undefined) {
-        const percent = this.metrics.resources.memory_percentage;
-        this.memoryHistory.push(percent);
-        if (this.memoryHistory.length > this.maxHistory) {
-          this.memoryHistory.shift();
-        }
+      if (this.metrics.ram !== undefined) {
+        const percent = this.metrics.ram.percentage;
+        const total = this.metrics.ram.total;
+        const free = this.metrics.ram.free;
+        const used = this.metrics.ram.used;
+        
+        document.getElementById('memory-percentage').textContent = `${percent.toFixed(2)}%`;
+        document.getElementById('memory-total').textContent = this.humanFileSize(total, false, 2);
 
-        this.charts.memory.data.datasets[0].data = this.memoryHistory;
-        this.charts.memory.data.labels = Object.keys(this.memoryHistory);
+        this.charts.memory.data.datasets[0].data = [used, free];
         this.charts.memory.update('none');
       }
-    }
-
-    setUpdateInterval(seconds) {
-      this.updateInterval = seconds;
-      document.getElementById('currentInterval').textContent = seconds;
-      this.connect();
+      
+      if(this.metrics.cpu_usage){
+        const usage = this.metrics.cpu_usage;
+        this.cpuUsageHistory.push(usage);
+        if(this.cpuUsageHistory.length > this.maxHistory){
+          this.cpuUsageHistory.shift();
+        }
+        
+        this.charts.cpuUsage.data.datasets[0].data = this.cpuUsageHistory;
+        this.charts.cpuUsage.data.labels = Object.keys(this.cpuUsageHistory);
+        this.charts.cpuUsage.update();
+      }
     }
 
     pause() {
@@ -452,6 +475,35 @@
       if (this.healthEventSource) {
         this.healthEventSource.close();
       }
+    }
+    
+    /**
+     * Format bytes as human-readable text.
+     * 
+     * @param bytes Number of bytes.
+     * @param si True to use metric (SI) units, aka powers of 1000. False to use 
+     * binary (IEC), aka powers of 1024.
+     * @param dp Number of decimal places to display.
+     * 
+     * @return Formatted string.
+     */
+    humanFileSize(bytes, si=false, dp=1) {
+      const thresh = si ? 1000 : 1024;
+      
+      if (Math.abs(bytes) < thresh) {
+        return bytes + ' B';
+      }
+      
+      const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+      let u = -1;
+      const r = 10**dp;
+      
+      do {
+        bytes /= thresh;
+        ++u;
+      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+      
+      return bytes.toFixed(dp) + ' ' + units[u];
     }
   }
 

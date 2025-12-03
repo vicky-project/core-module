@@ -39,4 +39,6 @@ Route::middleware(["auth"])
 						);
 					});
 			});
+
+		Route::get("test", [ServerMonitorController::class, "test"]);
 	});

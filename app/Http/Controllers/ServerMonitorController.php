@@ -23,7 +23,16 @@ class ServerMonitorController extends Controller
 
 	public function index(Request $request)
 	{
-		return view("core::server.index");
+		$dataServer = $this->serverMonitor->getStaticData();
+
+		return view("core::server.index", compact("dataServer"));
+	}
+
+	public function test()
+	{
+		$dataServer = $this->serverMonitor->getStaticData();
+		$dynamic = $this->serverMonitor->getDynamicData();
+		dd($dataServer, $dynamic);
 	}
 
 	public function streamMetrics(Request $request)
@@ -53,7 +62,8 @@ class ServerMonitorController extends Controller
 							continue;
 						}
 
-						$metrics = $this->serverMonitor->getServerStatus();
+						$metrics = $this->serverMonitor->getDynamicData();
+						logger()->debug($metrics);
 						if ($this->metricsChanged($lastMetrics, $metrics)) {
 							yield $this->formatEvent("metrics", $metrics);
 							$lastMetrics = $metrics;
@@ -70,7 +80,9 @@ class ServerMonitorController extends Controller
 						sleep($updateInterval);
 					}
 				} catch (\Exception $e) {
-					logger()->error("SSE metrices stream error: " . $e->getMessage());
+					logger()->error("SSE metrices stream error: " . $e->getMessage(), [
+						"trace" => $e->getTrace(),
+					]);
 					yield $this->formatEvent("error", [
 						"message" => "Metrics stream error",
 						"error" => $e->getMessage(),
@@ -137,9 +149,12 @@ class ServerMonitorController extends Controller
 		}
 
 		$thresholds = [
-			"resources.memory_per centage" => 1,
-			"resources.disk_usage.percentage" => 1,
-			"resources.cpu_usage.load_1min" => 0.5,
+			"ram.total" => 1,
+			"ram.free" => 1,
+			"cpu_usage" => 1,
+			"load.now" => 0.5,
+			"network.eth0.received.bytes" => 0,
+			"network.eth0.sent.bytes" => 0,
 		];
 
 		foreach ($thresholds as $path => $threshold) {
@@ -180,7 +195,7 @@ class ServerMonitorController extends Controller
 		return $value;
 	}
 
-	private function isSignificantChange($old, $nee, $threshold): bool
+	private function isSignificantChange($old, $new, $threshold): bool
 	{
 		if ($old === null || $new === null) {
 			return true;

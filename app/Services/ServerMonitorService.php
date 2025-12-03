@@ -7,15 +7,69 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Number;
 use Nwidart\Modules\Facades\Module;
+use Linfo\Linfo;
 
 class ServerMonitorService
 {
 	protected $cpuHistory = [];
 	protected $memoryHistory = [];
 	protected $maxHistory = 30;
+	protected $linfo;
+
+	public function __construct()
+	{
+		$linfo = new Linfo(config("core.monitors"));
+		$linfo->scan();
+		$this->linfo = $linfo->getParser();
+	}
+
+	public function getStaticData()
+	{
+		return [
+			"kernel" => $this->linfo->getKernel(),
+			"hostname" => $this->linfo->getHostName(),
+			"cpu" => $this->linfo->getCPU(),
+			"model" => $this->linfo->getModel(),
+			"distro" => $this->linfo->getDistro(),
+			"raid" => $this->linfo->getRAID(),
+			"devs" => $this->linfo->getDevs(),
+		];
+	}
+
+	public function getDynamicData()
+	{
+		return [
+			"ram" => $this->getRam(),
+			"cpu_usage" => $this->linfo->getCPUUsage(),
+			"cpu" => $this->linfo->getCPU(),
+			"load" => $this->linfo->getLoad(),
+			"temps" => $this->linfo->getTemps(),
+			"network" => $this->linfo->getNet(),
+			"process_stats" => $this->linfo->getProcessStats(),
+			"hd" => $this->linfo->getHD(),
+			"mounts" => $this->linfo->getMounts(),
+			"uptime" => $this->linfo->getUpTime(),
+			"services" => $this->linfo->getServices(),
+		];
+	}
 
 	public function getServerStatus()
 	{
+		$linfo = new Linfo(config("core.monitors"));
+		$linfo->scan();
+		//dd($linfo);
+		$parser = $linfo->getParser();
+		dd([
+			"ram" => $parser->getRam(),
+			"cpu_usage" => $parser->getCPUUsage(),
+			"uptime" => $parser->getUpTime(),
+			"hd" => $parser->getHD(),
+			"temps" => $parser->getTemps(),
+			"load" => $parser->getLoad(),
+			"net" => $parser->getNet(),
+			"process_stats" => $parser->getProcessStats(),
+			"services" => $parser->getServices(),
+		]);
 		$memoryUsage = memory_get_usage(true);
 		$memoryLimit = $this->convertToBytes(ini_get("memory_limit"));
 		$diskTotal = disk_total_space(base_path());
@@ -121,6 +175,18 @@ class ServerMonitorService
 		}
 
 		return "Unknown";
+	}
+
+	protected function getRam()
+	{
+		$ram = $this->linfo->getRam();
+		$ramPercentage = ($ram["total"] / ($ram["total"] - $ram["free"])) * 100;
+		return [
+			"total" => $ram["total"],
+			"free" => $ram["free"],
+			"used" => $ram["total"] - $ram["free"],
+			"percentage" => $ramPercentage,
+		];
 	}
 
 	protected function getCpuUsage()
