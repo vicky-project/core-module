@@ -142,13 +142,13 @@
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <table id="disk-table" class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover">
               <thead>
                 <th scope="col">Name</th>
                 <th scope="col">Device</th>
                 <th scope="col">Size</th>
               </thead>
-              <tbody class="table-group-divider">
+              <tbody class="table-group-divider" id="disk-table-tbody">
               </tbody>
             </table>
           </div>
@@ -395,7 +395,7 @@
           }
         }
         
-        document.getElementById('disk-table').tbody.innerHTML = tbody;
+        document.getElementById('disk-table-tbody').innerHTML = tbody;
       }
 
       // Database
