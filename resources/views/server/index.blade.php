@@ -395,6 +395,8 @@
           tbody += `</td>`;
           tbody += `</tr>`;
         }
+        
+        document.getElementById('mount-table-tbody').innerHTML = tbody;
       }
 
       // Disk
