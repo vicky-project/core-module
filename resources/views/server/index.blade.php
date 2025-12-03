@@ -384,16 +384,15 @@
         let tbody = "";
         for(let i in disk){
           tbody += `<tr>`;
-          tbody += `<th scope="row" ${disk[i].partitions && disk[i].partitions.length > 0 ? 'rowspan="2"' : ''}>${disk[i].name}</th><td>${disk[i].device}</td><td>${this.humanFileSize(disk[i].size)}</td>`;
+          tbody += `<th scope="row" ${disk[i].partitions && disk[i].partitions.length > 0 ? 'rowspan="'+ (disk[i].partitions.length + 1) +'"' : ''}>${disk[i].name}</th><td>${disk[i].device}</td><td>${this.humanFileSize(disk[i].size)}</td>`;
           tbody += `</tr>`;
           if(disk[i].partitions && disk[i].partitions.length > 0){
-            tbody += '<tr><table class="table table-bordered"><tbody>';
+            tbody += '<tr><th colspan="2">Partitions</th></tr>';
             for(let p in disk[i].partitions){
               tbody += `<tr class="table-active">`;
               tbody += `<td>${disk[i].partitions[p].number}</td><td>${this.humanFileSize(disk[i].partitions[p].size)}</td>`;
               tbody += `</tr>`;
             }
-            tbody += "</tbody></table></tr>";
           }
         }
         
