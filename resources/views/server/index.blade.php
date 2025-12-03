@@ -30,49 +30,6 @@
       <div class="card">
         <div class="card-body text-body-secondary small text-uppercase fw-semibold">Uptime: <span class="text-muted" id="uptime-text"></span></div>
       </div>
-      
-      <!-- Database -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-layers') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting" id="dbStatus"></span>
-            Database
-          </div>
-          <div id="databaseStatus">Loading...</div>
-        </div>
-      </div>
-      <!-- /. Database -->
-      
-      <!-- System Info -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-lan') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">System Info</div>
-          <div id="systemInfo">Loading...</div>
-        </div>
-      </div>
-      <!-- /. System Info -->
-      
-      <!-- Health Status -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <span class="status-dot status-connecting" id="healthStatus"></span>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">Health Status</div>
-          <div id="healthInfo">Coming soon...</div>
-        </div>
-      </div>
-      <!-- /. Health Status -->
     </div>
     
     <div class="card-group mt-2">
@@ -419,27 +376,6 @@
         }
         
         document.getElementById('disk-table-tbody').innerHTML = tbody;
-      }
-
-      // Database
-      if (this.metrics.database) {
-        const database = this.metrics.database;
-        const tablesInfo = database.tables ? ` ● ${database.tables} tables` : "";
-        document.getElementById('databaseStatus').innerHTML = `
-          <div class="metric-value" style="color: ${database.status === 'connected' ? '#2ecc71' : '#e74c3c'}">
-            ${database.status.toUpperCase()}
-          </div>
-          <div class="small text-muted mt-2">${database.connection} ● ${database.version}${tablesInfo}</div>`;
-        this.updateStatus('dbStatus', database.status === 'connected' ? 'connected' : 'disconnected');
-      }
-
-      // System Info
-      if (this.metrics.system) {
-      document.getElementById('systemInfo').innerHTML = `
-        <div class="metric-value">${this.metrics.system.hostname}</div>
-        <div class="metric-subvalue">
-          ${this.metrics.system.environment} • Uptime: ${this.metrics.system.uptime}
-        </div>`;
       }
     }
 
