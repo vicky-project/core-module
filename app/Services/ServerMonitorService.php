@@ -31,6 +31,7 @@ class ServerMonitorService
 			"cpu" => $this->linfo->getCPU(),
 			"model" => $this->linfo->getModel(),
 			"distro" => $this->linfo->getDistro(),
+			"raid" => $this->linfo->getRAID(),
 		];
 	}
 

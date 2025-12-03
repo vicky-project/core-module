@@ -55,6 +55,7 @@ return [
 			"distro" => true,
 			"model" => true,
 			"services" => true,
+			"raid" => true,
 		],
 		"cpu_usage" => true,
 		"temps" => [
@@ -64,6 +65,7 @@ return [
 			"mbmon" => true,
 			"sensord" => true,
 		],
+		"raid" => ["gmirror" => true, "mdadm" => true],
 		"temps_show0rpmfans" => true,
 		"show_errors" => false,
 		"hddtemp" => [

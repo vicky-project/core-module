@@ -31,33 +31,6 @@
         <div class="card-body text-body-secondary small text-uppercase fw-semibold">Uptime: <span class="text-muted" id="uptime-text"></span></div>
       </div>
       
-      <!-- Disk -->
-      <div class="card">
-        <div class="card-body">
-          <div class="text-body-secondary text-end">
-            <svg class="icon icon-xxl">
-              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
-            </svg>
-          </div>
-          <div class="text-body-secondary small text-uppercase fw-semibold">
-            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
-            Disk Usage
-          </div>
-          <div class="progress-group">
-            <div class="progress-group-header">
-              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
-              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
-            </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-thin">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /. Disk -->
-      
       <!-- Database -->
       <div class="card">
         <div class="card-body">
@@ -110,7 +83,7 @@
         </div>
         <div class="card-body">
           <div class="c-chart-wrapper">
-            <canvas id="chart-cpu" height="200px"></canvas>
+            <canvas id="chart-cpu" height="300px"></canvas>
           </div>
         </div>
       </div>
@@ -160,6 +133,35 @@
         </div>
       </div>
       <!-- /. CPU USAGE -->
+    </div>
+    
+    <div class="card-group mt-2">
+            <!-- Disk -->
+      <div class="card">
+        <div class="card-body">
+          <div class="text-body-secondary text-end">
+            <svg class="icon icon-xxl">
+              <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-storage') }}"></use>
+            </svg>
+          </div>
+          <div class="text-body-secondary small text-uppercase fw-semibold">
+            <span class="status-dot status-connecting me-2" id="diskStatus"></span>
+            Disk Usage
+          </div>
+          <div class="progress-group">
+            <div class="progress-group-header">
+              <div class="fs-6 fw-semibold py-3" id="diskUsage">Loading...</div>
+              <div class="ms-auto font-weight-bold" id="diskUsagePercentage">0%</div>
+            </div>
+            <div class="progress-group-bars">
+              <div class="progress progress-thin">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="diskProgress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /. Disk -->
     </div>
   </div>
 </div>
@@ -278,6 +280,9 @@
           },
           plugins: {
             legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
           }
         }
       });
