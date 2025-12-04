@@ -432,8 +432,6 @@
         document.getElementById('disk-table-tbody').innerHTML = tbody;
       }
       
-      if(this.metrics.network) {
-        const network = this.metrics.network;
     }
 
     updateCharts() {
