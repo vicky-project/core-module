@@ -476,13 +476,7 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = Array.from(this.metrics.network).filter((net, i) => i.startsWith('e')).map(net => {
-          return {
-            received: net.received.bytes,
-            sent: net.sent.bytes,
-            time: `${now.getHours()}:${now.getMinutes()}`
-          }
-        });
+        const network = Array.from(this.metrics.network).filter((net, i) => i.startsWith('e'));
         
         console.log(JSON.stringify(network));
         
