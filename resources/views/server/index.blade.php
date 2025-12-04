@@ -489,7 +489,7 @@
           this.networksHistory.shift();
         }
         
-        this.charts.networks.data.labels = this.networksHistory.time;
+        this.charts.networks.data.labels = this.networksHistory.map(time => time.time);
         
         const networkData = [{
           data: this.networksHistory.received,
