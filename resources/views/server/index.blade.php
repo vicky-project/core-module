@@ -431,6 +431,9 @@
         
         document.getElementById('disk-table-tbody').innerHTML = tbody;
       }
+      
+      if(this.metrics.network) {
+        const network = this.metrics.network;
     }
 
     updateCharts() {
@@ -486,6 +489,8 @@
         
         for(const i in network) {
           if(i.startsWith('e')) {
+            document.getElementById('network-received').textContent = `${this.humanFileSize(network[i].recieved.bytes)}`;
+            document.getElementById('network-sent').textContent = `${this.humanFileSize(network[i].sent.bytes)}`;
             this.networksHistory.push({
               recieved: network[i].recieved.bytes,
               sent: network[i].sent.bytes,
@@ -494,25 +499,24 @@
           }
         }
         
-        if(this.networksHistory.length > this.maxHistory) {
+        if(this.networksHistory.length > 50) {
           this.networksHistory.shift();
         }
         
-        console.log(JSON.stringify(this.networksHistory));
         this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
-          fill: true,
-          tension: 0.4
+          backgroundColor: 'transparent',
+          borderWidth: 1
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
-          fill: true,
-          tension: 0.4
+          backgroundColor: 'transparent',
+          borderWidth: 1
         }];
         
         this.charts.networks.data.datasets = networkData;
