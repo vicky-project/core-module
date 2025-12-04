@@ -484,7 +484,7 @@
             data.push({
               received: network[i].received.bytes,
               sent: network[i].sent.bytes,
-              time: `${now.getHours()}:${now.getMinutes()}`;
+              time: `${now.getHours()}:${now.getMinutes()}`
             });
           }
         }
