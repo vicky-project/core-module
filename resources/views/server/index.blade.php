@@ -494,7 +494,7 @@
         const networkData = [{
           data: this.networksHistory.received,
           label: 'received',
-          borderColor: corui.Utils.getStyle('--cui-primary'),
+          borderColor: coreui.Utils.getStyle('--cui-primary'),
           fill: true,
           tension: 0.4
         }, {
