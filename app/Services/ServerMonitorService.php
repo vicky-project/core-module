@@ -39,7 +39,7 @@ class ServerMonitorService
 	public function getDynamicData()
 	{
 		return [
-			"ram" => $this->getRam(),
+			"ram" => $this->linfo->getRam(),
 			"cpu_usage" => $this->linfo->getCPUUsage(),
 			"cpu" => $this->linfo->getCPU(),
 			"load" => $this->linfo->getLoad(),
