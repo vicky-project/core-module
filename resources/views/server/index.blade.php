@@ -455,7 +455,7 @@
         const free = this.metrics.ram.free;
         const used = this.metrics.ram.used;
         
-        document.getElementById('memory-percentage').textContent = percent.toFixed(2);
+        document.getElementById('memory-percentage').textContent = percent;
         document.getElementById('memory-total').textContent = this.humanFileSize(total, false, 2);
 
         this.charts.memory.data.datasets[0].data = [used, free];
