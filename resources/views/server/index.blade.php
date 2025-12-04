@@ -476,7 +476,7 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = Array.from(this.metrics.network).filter((net, i) => i.startsWith('e'));
+        const network = Array.from(this.metrics.network).filter(net => net.startsWith('e'));
         
         console.log(JSON.stringify(network));
         
