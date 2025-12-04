@@ -476,9 +476,15 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = Array.from(this.metrics.network).filter(net => console.log(net));
+        const network = this.metrics.network;
         
-        
+        const data = [];
+        for(const i in network) {
+          if(i.startsWith('e')) {
+            data.push(network[i]);
+          }
+        }
+        console.log(JSON.stringify(data));
         
         this.networksHistory.push(network);
         if(this.networksHistory.length > this.maxHistory) {
