@@ -476,7 +476,7 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = this.metrics.network.filter((net, i) => i.startsWith('e')).map(net => {
+        const network = Array.from(this.metrics.network).filter((net, i) => i.startsWith('e')).map(net => {
           return {
             received: net.received.bytes,
             sent: net.sent.bytes,
