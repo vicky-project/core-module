@@ -488,7 +488,6 @@
           }
         }
         
-        this.networksHistory.push(data);
         if(this.networksHistory.length > this.maxHistory) {
           this.networksHistory.shift();
         }
