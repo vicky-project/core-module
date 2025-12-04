@@ -489,8 +489,8 @@
         
         for(const i in network) {
           if(i.startsWith('e')) {
-            document.getElementById('network-received').textContent = `${this.humanFileSize(network[i].recieved.bytes)}`;
-            document.getElementById('network-sent').textContent = `${this.humanFileSize(network[i].sent.bytes)}`;
+            document.getElementById('network-received').textContent = this.humanFileSize(network[i].recieved.bytes);
+            document.getElementById('network-sent').textContent = this.humanFileSize(network[i].sent.bytes);
             this.networksHistory.push({
               recieved: network[i].recieved.bytes,
               sent: network[i].sent.bytes,
