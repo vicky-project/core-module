@@ -478,10 +478,9 @@
         const now = new Date();
         const network = this.metrics.network;
         
-        const data = [];
         for(const i in network) {
           if(i.startsWith('e')) {
-            data.push({
+            this.networksHistory({
               recieved: network[i].recieved.bytes,
               sent: network[i].sent.bytes,
               time: `${now.getHours()}:${now.getMinutes()}`
