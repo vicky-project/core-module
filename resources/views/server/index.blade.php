@@ -478,7 +478,7 @@
         const now = new Date();
         const network = Array.from(this.metrics.network).filter(net => console.log(net));
         
-        //console.log(JSON.stringify(this.metrics.network), JSON.stringify(network));
+        
         
         this.networksHistory.push(network);
         if(this.networksHistory.length > this.maxHistory) {
