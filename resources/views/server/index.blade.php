@@ -481,8 +481,11 @@
         const data = [];
         for(const i in network) {
           if(i.startsWith('e')) {
-            network[i].time = `${now.getHours()}:${now.getMinutes()}`;
-            data.push(network[i]);
+            data.push({
+              received: network[i].received.bytes,
+              sent: network[i].sent.bytes,
+              time: `${now.getHours()}:${now.getMinutes()}`;
+            });
           }
         }
         console.log(JSON.stringify(data));
@@ -492,16 +495,16 @@
           this.networksHistory.shift();
         }
         
-        this.charts.networks.data.labels = this.networksHistory.map(time => time.time);
+        this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
-          data: this.networksHistory.map(net => net.received),
+          data: this.networksHistory.map(net => net.received.bytes),
           label: 'received',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
           fill: true,
           tension: 0.4
         }, {
-          data: this.networksHistory.map(net => net.sent),
+          data: this.networksHistory.map(net => net.sent.bytes),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
           fill: true,
