@@ -146,7 +146,7 @@
         </div>
         <div class="card-body">
           <div class="row mb-2">
-            <div class="col-auto text-end">
+            <div class="col text-end">
               <div class="float-start me-auto">
                 Interface: <span id="network-interface" class="font-weight-bold"></span>
               </div>
@@ -155,7 +155,7 @@
             </div>
           </div>
           <div class="row mb-2">
-            <div class="col-auto">
+            <div class="col">
               <div class="c-chart-wrapper">
                 <canvas id="chart-network"></canvas>
               </div>
