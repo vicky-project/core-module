@@ -481,9 +481,8 @@
         const data = [];
         for(const i in network) {
           if(i.startsWith('e')) {
-            console.log(JSON.stringify(network[i]))
             data.push({
-              received: network[i].received.bytes,
+              recieved: network[i].recieved.bytes,
               sent: network[i].sent.bytes,
               time: `${now.getHours()}:${now.getMinutes()}`
             });
@@ -499,8 +498,8 @@
         this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
-          data: this.networksHistory.map(net => net.received.bytes),
-          label: 'received',
+          data: this.networksHistory.map(net => net.recieved.bytes),
+          label: 'recieved',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
           fill: true,
           tension: 0.4
