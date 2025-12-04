@@ -480,7 +480,7 @@
         
         for(const i in network) {
           if(i.startsWith('e')) {
-            this.networksHistory({
+            this.networksHistory.push({
               recieved: network[i].recieved.bytes,
               sent: network[i].sent.bytes,
               time: `${now.getHours()}:${now.getMinutes()}`
