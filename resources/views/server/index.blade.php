@@ -481,7 +481,7 @@
         const data = [];
         for(const i in network) {
           if(i.startsWith('e')) {
-            console.log(JSON.stringify(network[i].received))
+            console.log(JSON.stringify(network[i]))
             data.push({
               received: network[i].received.bytes,
               sent: network[i].sent.bytes,
