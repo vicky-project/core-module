@@ -38,8 +38,12 @@ class ServerMonitorService
 
 	public function getDynamicData()
 	{
+		$ram = $this->linfo->getRam();
+		$ram["percentage"] = Number::percentage(
+			($ram["free"] / $ram["total"]) * 100
+		);
 		return [
-			"ram" => $this->linfo->getRam(),
+			"ram" => $ram,
 			"cpu_usage" => $this->linfo->getCPUUsage(),
 			"cpu" => $this->linfo->getCPU(),
 			"load" => $this->linfo->getLoad(),
