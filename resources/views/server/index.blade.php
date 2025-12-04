@@ -137,6 +137,34 @@
       <!-- /. Hard Disk -->
       
     </div>
+    
+    <div class="card-group">
+      <!-- / Network -->
+      <div class="card">
+        <div class="card-header">
+          <strong>Network</strong>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-auto text-end">
+              <div class="float-start me-auto">
+                Interface: <span id="network-interface" class="font-weight-bold"></span>
+              </div>
+              <p class="fw-semibold">Sent: <span id="network-sent" class="text-bg-warning">0Kbps</span></p>
+              <p class="fw-semibold">Received: <span id="network-received" class="text-bg-primary">0kbps</span></p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-auto">
+              <div class="c-chart-wrapper">
+                <canvas id="chart-network"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /. Network -->
+    </div>
   </div>
 </div>
 @endsection
@@ -152,6 +180,7 @@
       
       this.metrics = {};
       this.cpuUsageHistory = [];
+      this.networksHistory = [];
       this.maxHistory = 30;
       
       this.updateInterval = 5;
@@ -164,7 +193,8 @@
         cpu: null,
         cpuTemps: null,
         memory: null,
-        cpuUsage: null
+        cpuUsage: null,
+        networks: null
       };
 
       this.initCharts();
@@ -193,6 +223,7 @@
         }
       });
       
+      // CPU Temps
       this.charts.cpuTemps = new Chart(document.getElementById('chart-cpu-temps'), {
         type: 'bar',
         data: {
@@ -235,6 +266,7 @@
         }
       });
       
+      // CPU Usage
       this.charts.cpuUsage = new Chart(document.getElementById('chart-cpu-usage'), {
         type: 'line',
         data: {
@@ -258,6 +290,22 @@
           scales: {
             y: { beginAtZero: true }
           }
+        }
+      });
+      
+      // Networks
+      this.charts.networks = new Chart(document.getElementById("chart-network"), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: []
+        },
+        options: {
+          maintainAspectRatio: false,
+          elements: {
+            line: { tension: 0.4 },
+            point: { radius: 0 }
+          },
         }
       });
     }
@@ -391,7 +439,7 @@
       }
       
       // Update CPU Temps chart
-      if(this.metrics.temps){
+      if(this.metrics.temps) {
         const temps = this.metrics.temps;
         
         this.charts.cpuTemps.data.datasets[0].data = temps.map(cpu => cpu.temp);
@@ -414,16 +462,45 @@
         this.charts.memory.update('none');
       }
       
-      if(this.metrics.cpu_usage){
+      if(this.metrics.cpu_usage) {
         const usage = this.metrics.cpu_usage;
         this.cpuUsageHistory.push(usage);
-        if(this.cpuUsageHistory.length > this.maxHistory){
+        if(this.cpuUsageHistory.length > this.maxHistory) {
           this.cpuUsageHistory.shift();
         }
         
         this.charts.cpuUsage.data.datasets[0].data = this.cpuUsageHistory;
         this.charts.cpuUsage.data.labels = Object.keys(this.cpuUsageHistory);
         this.charts.cpuUsage.update();
+      }
+      
+      if(this.metrics.network) {
+        const now = new Date();
+        const network = this.metrics.network.filter((net, i) => i.startsWith('e')).map(net => {received: net.received.bytes, sent: net.sent.bytes, time: `${now.getHours()}:${now.getMinutes()}`});
+        
+        this.networksHistory.push(network);
+        if(this.networksHistory.length > this.maxHistory) {
+          this.networksHistory.shift();
+        }
+        
+        this.charts.networks.data.labels = Object.keys(network);
+        
+        const networkData = [{
+          data: this.networksHistory.received,
+          label: 'received',
+          borderColor: corui.Utils.getStyle('--cui-primary'),
+          fill: true,
+          tension: 0.4
+        }, {
+          data: this.networksHistory.sent,
+          label: 'sent',
+          borderColor: coreui.Utils.getStyle('--cui-warning'),
+          fill: true,
+          tension: 0.4
+        }];
+        
+        this.charts.networks.data.datasets = networkData;
+        this.charts.networks.update();
       }
     }
 
