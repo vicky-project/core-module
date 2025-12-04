@@ -488,25 +488,27 @@
             });
           }
         }
-        console.log(JSON.stringify(data));
         
         this.networksHistory.push(data);
         if(this.networksHistory.length > this.maxHistory) {
           this.networksHistory.shift();
         }
         
+        console.log(JSON.stringify(this.networksHistory));
         this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
+          backgroundColor: 'transparent',
           fill: true,
           tension: 0.4
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
+          backgroundColor: 'transparent',
           fill: true,
           tension: 0.4
         }];
