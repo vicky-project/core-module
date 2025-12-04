@@ -498,13 +498,13 @@
         this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
-          data: this.networksHistory.map(net => net.recieved.bytes),
+          data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
           fill: true,
           tension: 0.4
         }, {
-          data: this.networksHistory.map(net => net.sent.bytes),
+          data: this.networksHistory.map(net => net.sent),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
           fill: true,
