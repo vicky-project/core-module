@@ -484,6 +484,8 @@
           }
         });
         
+        console.log(JSON.stringify(network));
+        
         this.networksHistory.push(network);
         if(this.networksHistory.length > this.maxHistory) {
           this.networksHistory.shift();
