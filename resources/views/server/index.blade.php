@@ -306,6 +306,12 @@
             line: { tension: 0.4 },
             point: { radius: 0 }
           },
+          scales: {
+            y: {
+              beginAtZero: true,
+              min: 0
+            }
+          }
         }
       });
     }
@@ -499,14 +505,12 @@
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
           borderColor: coreui.Utils.getStyle('--cui-primary'),
-          backgroundColor: 'transparent',
           fill: true,
           tension: 0.4
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
-          backgroundColor: 'transparent',
           fill: true,
           tension: 0.4
         }];
