@@ -481,12 +481,13 @@
         const data = [];
         for(const i in network) {
           if(i.startsWith('e')) {
+            network[i].time = `${now.getHours()}:${now.getMinutes()}`;
             data.push(network[i]);
           }
         }
         console.log(JSON.stringify(data));
         
-        this.networksHistory.push(network);
+        this.networksHistory.push(data);
         if(this.networksHistory.length > this.maxHistory) {
           this.networksHistory.shift();
         }
