@@ -476,7 +476,13 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = this.metrics.network.filter((net, i) => i.startsWith('e')).map(net => {received: net.received.bytes, sent: net.sent.bytes, time: `${now.getHours()}:${now.getMinutes()}`});
+        const network = this.metrics.network.filter((net, i) => i.startsWith('e')).map(net => {
+          return {
+            received: net.received.bytes,
+            sent: net.sent.bytes,
+            time: `${now.getHours()}:${now.getMinutes()}`
+          }
+        });
         
         this.networksHistory.push(network);
         if(this.networksHistory.length > this.maxHistory) {
