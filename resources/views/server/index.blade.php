@@ -146,16 +146,16 @@
         </div>
         <div class="card-body">
           <div class="row mb-2">
-            <div class="col-auto text-end">
+            <div class="col text-end">
               <div class="float-start me-auto">
                 Interface: <span id="network-interface" class="font-weight-bold"></span>
               </div>
-              <p class="fw-semibold">Sent: <span id="network-sent" class="text-bg-warning">0Kbps</span></p>
-              <p class="fw-semibold">Received: <span id="network-received" class="text-bg-primary">0kbps</span></p>
+              <p>Sent: <span id="network-sent" class="text-warning">0Kbps</span></p>
+              <p>Received: <span id="network-received" class="text-primary">0kbps</span></p>
             </div>
           </div>
           <div class="row mb-2">
-            <div class="col-auto">
+            <div class="col">
               <div class="c-chart-wrapper">
                 <canvas id="chart-network"></canvas>
               </div>
@@ -306,6 +306,12 @@
             line: { tension: 0.4 },
             point: { radius: 0 }
           },
+          scales: {
+            y: {
+              beginAtZero: true,
+              min: 0
+            }
+          }
         }
       });
     }
@@ -425,6 +431,7 @@
         
         document.getElementById('disk-table-tbody').innerHTML = tbody;
       }
+      
     }
 
     updateCharts() {
@@ -455,7 +462,7 @@
         const free = this.metrics.ram.free;
         const used = this.metrics.ram.used;
         
-        document.getElementById('memory-percentage').textContent = percent.toFixed(2);
+        document.getElementById('memory-percentage').textContent = percent;
         document.getElementById('memory-total').textContent = this.humanFileSize(total, false, 2);
 
         this.charts.memory.data.datasets[0].data = [used, free];
@@ -476,31 +483,43 @@
       
       if(this.metrics.network) {
         const now = new Date();
-        const network = this.metrics.network.filter((net, i) => i.startsWith('e')).map(net => {received: net.received.bytes, sent: net.sent.bytes, time: `${now.getHours()}:${now.getMinutes()}`});
+        const network = this.metrics.network;
         
-        this.networksHistory.push(network);
-        if(this.networksHistory.length > this.maxHistory) {
+        for(const i in network) {
+          if(i.startsWith('e')) {
+            document.getElementById('network-interface').textContent = i;
+            document.getElementById('network-received').textContent = this.humanFileSize(network[i].recieved.bytes);
+            document.getElementById('network-sent').textContent = this.humanFileSize(network[i].sent.bytes);
+            this.networksHistory.push({
+              recieved: network[i].recieved.bytes,
+              sent: network[i].sent.bytes,
+              time: `${now.getHours()}:${now.getMinutes()}`
+            });
+          }
+        }
+        
+        if(this.networksHistory.length > 50) {
           this.networksHistory.shift();
         }
         
-        this.charts.networks.data.labels = Object.keys(network);
+        this.charts.networks.data.labels = this.networksHistory.map(net => net.time);
         
         const networkData = [{
-          data: this.networksHistory.received,
-          label: 'received',
-          borderColor: corui.Utils.getStyle('--cui-primary'),
-          fill: true,
-          tension: 0.4
+          data: this.networksHistory.map(net => net.recieved),
+          label: 'recieved',
+          borderColor: coreui.Utils.getStyle('--cui-primary'),
+          backgroundColor: 'transparent',
+          borderWidth: 1
         }, {
-          data: this.networksHistory.sent,
+          data: this.networksHistory.map(net => net.sent),
           label: 'sent',
           borderColor: coreui.Utils.getStyle('--cui-warning'),
-          fill: true,
-          tension: 0.4
+          backgroundColor: 'transparent',
+          borderWidth: 1
         }];
         
         this.charts.networks.data.datasets = networkData;
-        this.charts.networks.update();
+        this.charts.networks.update("none");
       }
     }
 
