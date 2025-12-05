@@ -150,8 +150,8 @@
               <div class="float-start me-auto">
                 Interface: <span id="network-interface" class="font-weight-bold"></span>
               </div>
-              <p class="fw-semibold">Sent: <span id="network-sent" class="text-bg-warning rounded-pill p-2">0Kbps</span></p>
-              <p class="fw-semibold">Received: <span id="network-received" class="text-bg-primary rounded-pill p-2">0kbps</span></p>
+              <p>Sent: <span id="network-sent" class="text-bg-warning">0Kbps</span></p>
+              <p>Received: <span id="network-received" class="text-bg-primary">0kbps</span></p>
             </div>
           </div>
           <div class="row mb-2">
