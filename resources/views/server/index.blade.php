@@ -150,8 +150,8 @@
               <div class="float-start me-auto">
                 Interface: <span id="network-interface" class="font-weight-bold"></span>
               </div>
-              <p class="fw-semibold">Sent: <span id="network-sent" class="text-bg-warning">0Kbps</span></p>
-              <p class="fw-semibold">Received: <span id="network-received" class="text-bg-primary">0kbps</span></p>
+              <p class="fw-semibold">Sent: <span id="network-sent" class="text-bg-warning rounded-pill">0Kbps</span></p>
+              <p class="fw-semibold">Received: <span id="network-received" class="text-bg-primary rounded-pill">0kbps</span></p>
             </div>
           </div>
           <div class="row mb-2">
@@ -487,6 +487,7 @@
         
         for(const i in network) {
           if(i.startsWith('e')) {
+            document.getElementById('network-interface').textContent = i;
             document.getElementById('network-received').textContent = this.humanFileSize(network[i].recieved.bytes);
             document.getElementById('network-sent').textContent = this.humanFileSize(network[i].sent.bytes);
             this.networksHistory.push({
@@ -518,7 +519,7 @@
         }];
         
         this.charts.networks.data.datasets = networkData;
-        this.charts.networks.update();
+        this.charts.networks.update("none");
       }
     }
 
