@@ -491,8 +491,8 @@
             document.getElementById('network-received').textContent = this.humanFileSize(network[i].recieved.bytes);
             document.getElementById('network-sent').textContent = this.humanFileSize(network[i].sent.bytes);
             this.networksHistory.push({
-              recieved: this.humanFileSize(network[i].recieved.bytes),
-              sent: this.humanFileSize(network[i].sent.bytes),
+              recieved: network[i].recieved.bytes,
+              sent: network[i].sent.bytes,
               time: `${now.getHours()}:${now.getMinutes()}`
             });
           }
