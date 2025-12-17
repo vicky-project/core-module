@@ -17,7 +17,7 @@ class MenuProvider implements MenuProviderInterface
 				"id" => "core",
 				"name" => "Core",
 				"order" => -1,
-				"icon" => "layers",
+				"icon" => "server",
 				"role" => "super-admin",
 				"type" => "group",
 				"children" => [
@@ -25,7 +25,7 @@ class MenuProvider implements MenuProviderInterface
 						"id" => "modules",
 						"name" => "Modules",
 						"order" => 10,
-						"icon" => "input-power",
+						"icon" => "puzzle-piece",
 						"route" => "cores.modules.index",
 						"role" => "super-admin",
 						"permission" => Permissions::VIEW_MODULES,
