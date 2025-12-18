@@ -8,7 +8,7 @@
     <meta name="author" content="Vicky Rahman" />
     <title>@yield('title', config('viewmanager.title', 'Vicky Server')) - {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="https://raw.githubusercontent.com/StartBootstrap/startbootstrap-sb-admin/refs/heads/master/dist/css/styles.css" rel="stylesheet">
+    <link href="https://vickyserver.my.id/server/css/styles.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     
     @stack('styles')
