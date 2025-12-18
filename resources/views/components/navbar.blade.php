@@ -86,6 +86,7 @@
     }
     
     const getStoredTheme = () => localStorage.getItem('theme');
+    const setStoredTheme = theme => localStorage.setItem('theme', theme);
     
     const getPreferredTheme = () => {
       const storedTheme = getStoredTheme()
@@ -95,6 +96,26 @@
       
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     }
+    
+    const setTheme = theme => {
+      if (theme === 'auto') {
+        document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+      } else {
+        document.documentElement.setAttribute('data-bs-theme', theme)
+      }
+    };
+    
+    const setThemeToDb = theme => {
+      fetch("{{ route('api.v1.cores.theme.update') }}", {
+        method: 'POST',
+        data: {
+          theme: theme,
+          _token: '{{ csrf_token() }}'
+        }
+      }).then(res => res.json()).then(data => {
+        alert(data.message);
+      });
+    };
     
     const showActiveTheme = (theme, focus = false) => {
       const themeSwitcher = document.querySelector('#bd-theme');
@@ -126,6 +147,16 @@
     
     showActiveTheme(getPreferredTheme());
     
-    
+    document.querySelectorAll('[data-bs-theme-value]')
+      .forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const theme = toggle.getAttribute('data-bs-theme-value');
+          setStoredTheme(theme);
+          setTheme(theme);
+          showActiveTheme(theme, true);
+          setThemeToDb(theme);
+        })
+      })
+    });
   });
 </script>
