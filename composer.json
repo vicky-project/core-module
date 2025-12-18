@@ -15,8 +15,8 @@
 		"linfo/linfo": "^4.0",
 		"joshbrw/laravel-module-installer": "^1.0",
 		"spatie/laravel-backup": "^9.3",
-		"vicky-project/usermanagement-module": "dev-dev",
-		"vicky-project/menumanagement-module": "^1.0.2",
+		"vicky-project/usermanagement-module": "^1.0",
+		"vicky-project/menumanagement-module": "^1.0",
 		"viewmanager-module": "^1.0"
 	},
 	"extra": {
