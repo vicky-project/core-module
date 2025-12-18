@@ -19,7 +19,7 @@ class ThemeController extends Controller
 	/**
 	 * Show theme preferences page
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		$currentTheme = $this->themeService->getCurrentTheme();
 		$themes = $this->themeService->getAvailableThemes();

@@ -2,6 +2,7 @@
 
 return [
 	"name" => "Core",
+	"default_theme" => "light",
 	"cache_key_prefix" => "laravel_module",
 	"vendor_name" => "vicky-project",
 	"notification" => [

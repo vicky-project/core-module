@@ -39,6 +39,10 @@ class CoreServiceProvider extends ServiceProvider
 		Blade::component("core::components.footer", "core-footer");
 		Blade::component("core::components.breadcrumb", "core-breadcrumb");
 
+		Blade::directive("theme", function ($expression) {
+			return "<?php echo app('Modules\\Core\\Services\\ThemeService')->getCurrentTheme(); ?>";
+		});
+
 		View::composer("*", function ($view) {
 			$themeService = app(ThemeService::class);
 			$currentTheme = $themeService->getCurrentTheme();
@@ -50,6 +54,8 @@ class CoreServiceProvider extends ServiceProvider
 				"bodyClass" => $themeService->getBodyClass(),
 			]);
 		});
+
+		$this->cleanupExpiredGuestPreferences();
 	}
 
 	/**
@@ -225,5 +231,23 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		return $paths;
+	}
+
+	private function cleanupExpiredGuestPreferences()
+	{
+		if (app()->runningInConsole()) {
+			return;
+		}
+
+		if (rand(1, 100) === 1) {
+			try {
+				\Modules\Core\Models\GuestPreference::where(
+					"expired_at",
+					"<",
+					now()
+				)->delete();
+			} catch (\Exception $e) {
+			}
+		}
 	}
 }

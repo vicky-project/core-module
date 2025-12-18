@@ -2,10 +2,14 @@
 
 namespace Modules\Core\Providers;
 
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Modules\Core\Events\ModuleInstalled;
 use Modules\Core\Events\ModuleInstallationFailed;
 use Modules\Core\Listeners\ProcessModuleInstallation;
 use Modules\Core\Listeners\HandleInstallationFailure;
+use Modules\Core\Listeners\MigrateGuestThemeToUser;
+use Modules\Core\Listeners\CleanupGuestPreferences;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -18,6 +22,8 @@ class EventServiceProvider extends ServiceProvider
 	protected $listen = [
 		ModuleInstalled::class => [ProcessModuleInstallation::class],
 		ModuleInstallationFailed::class => [HandleInstallationFailure::class],
+		Login::class => [MigrateGuestThemeToUser::class],
+		Logout::class => [CleanupGuestPreferences::class],
 	];
 
 	/**
