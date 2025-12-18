@@ -34,6 +34,11 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViews();
 		$this->loadMigrationsFrom(module_path($this->name, "database/migrations"));
 
+		Blade::component("core::components.sidebar", "core-sidebar");
+		Blade::component("core::components.navbar", "core-navbar");
+		Blade::component("core::components.footer", "core-footer");
+		Blade::component("core::components.breadcrumb", "core-breadcrumb");
+
 		View::composer("*", function ($view) {
 			$themeService = app(ThemeService::class);
 			$currentTheme = $themeService->getCurrentTheme();
