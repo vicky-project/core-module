@@ -13,7 +13,7 @@
   <!-- Navbar-->
   <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
     <li class="nav-item dropdown bd-mode-toggle">
-      <a class="nav-link dropdown-toggle" id="bd-theme" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <a class="nav-link dropdown-toggle theme-icon-active" id="bd-theme" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fas fa-fw fa-circle-half-stroke"></i>
         <span class="visually-hidden" id="bd-theme-text">Auto</span>
       </a>
@@ -83,6 +83,36 @@
         document.body.classList.toggle('sb-sidenav-toggled');
         localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
       });
+    }
+    
+    showActiveTheme(getPreferredTheme());
+    
+    const showActiveTheme = (theme, focus = false) => {
+      const themeSwitcher = document.querySelector('#bd-theme');
+
+      if (!themeSwitcher) {
+        return;
+      }
+
+      const themeSwitcherText = document.querySelector('#bd-theme-text')
+      const activeThemeIcon = document.querySelector('.theme-icon-active i')
+      const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+      const iconOfActiveBtn = btnToActive.querySelector('i').className;
+
+      document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+        element.classList.remove('active')
+        element.setAttribute('aria-pressed', 'false')
+      });
+
+      btnToActive.classList.add('active');
+      btnToActive.setAttribute('aria-pressed', 'true')
+      activeThemeIcon.className =  iconOfActiveBtn;
+      const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+      themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+      if (focus) {
+        themeSwitcher.focus()
+      }
     }
   });
 </script>
