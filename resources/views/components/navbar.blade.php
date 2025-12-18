@@ -85,7 +85,16 @@
       });
     }
     
-    showActiveTheme(getPreferredTheme());
+    const getStoredTheme = () => localStorage.getItem('theme');
+    
+    const getPreferredTheme = () => {
+      const storedTheme = getStoredTheme()
+      if (storedTheme) {
+        return storedTheme;
+      }
+      
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
     
     const showActiveTheme = (theme, focus = false) => {
       const themeSwitcher = document.querySelector('#bd-theme');
@@ -114,5 +123,9 @@
         themeSwitcher.focus()
       }
     }
+    
+    showActiveTheme(getPreferredTheme());
+    
+    
   });
 </script>
