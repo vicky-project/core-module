@@ -4,6 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Modules\Core\Http\Controllers\CoreController;
 use Modules\Core\Http\Controllers\ServerMonitorController;
 
+Route::middleware(["auth"])->group(function () {
+	Route::get("dashboard", [DashboardController::class, "index"])->name(
+		"cores.dashboard"
+	);
+});
+
 Route::middleware(["auth"])
 	->prefix("admin")
 	->group(function () {

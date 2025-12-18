@@ -3,13 +3,15 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Core\Service\BackupService;
-use Modules\Core\Service\ComposerService;
-use Modules\Core\Service\ModuleManagerService;
+use Modules\Core\Services\ThemeService;
+use Modules\Core\Services\BackupService;
+use Modules\Core\Services\ComposerService;
+use Modules\Core\Services\ModuleManagerService;
 use Modules\Core\Service\NotificationService;
 
 class CoreServiceProvider extends ServiceProvider
@@ -31,6 +33,18 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerViews();
 		$this->loadMigrationsFrom(module_path($this->name, "database/migrations"));
+
+		View::composer("*", function ($view) {
+			$themeService = app(ThemeService::class);
+			$currentTheme = $themeService->getCurrentTheme();
+			$themeConfig = $themeService->getThemeConfig($currentTheme);
+
+			$view->with([
+				"currentTheme" => $currentTheme,
+				"themeConfig" => $themeConfig,
+				"bodyClass" => $themeService->getBodyClass(),
+			]);
+		});
 	}
 
 	/**
@@ -53,6 +67,10 @@ class CoreServiceProvider extends ServiceProvider
 		});
 
 		$this->app->singleton(BackupService::class);
+
+		$this->app->singleton(ThemeService::class, function ($app) {
+			return new ThemeService();
+		});
 	}
 
 	/**
