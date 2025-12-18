@@ -8,10 +8,10 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Core\Service\ThemeService;
-use Modules\Core\Service\BackupService;
-use Modules\Core\Service\ComposerService;
-use Modules\Core\Service\ModuleManagerService;
+use Modules\Core\Services\ThemeService;
+use Modules\Core\Services\BackupService;
+use Modules\Core\Services\ComposerService;
+use Modules\Core\Services\ModuleManagerService;
 use Modules\Core\Service\NotificationService;
 
 class CoreServiceProvider extends ServiceProvider
