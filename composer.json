@@ -17,7 +17,7 @@
 		"spatie/laravel-backup": "^9.3",
 		"vicky-project/usermanagement-module": "dev-dev",
 		"vicky-project/menumanagement-module": "^1.0.2",
-		"viewmanager-module": "^1.0.9"
+		"viewmanager-module": "^1.0"
 	},
 	"extra": {
 		"laravel": {
