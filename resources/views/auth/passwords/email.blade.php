@@ -11,7 +11,6 @@
             <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
             <form method="POST" action="{{ route('password.update') }}">
               @csrf
-              <input type="hidden" name="token" value="{{ $token }}">
               <div class="form-floating mb-3">
                 <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" value="{{ $email ?? old('email') }}" autofocus />
                 <label for="inputEmail">Email address</label>
