@@ -24,7 +24,7 @@
           <li>
             <form method="POST" action="{{ route('logout') }}" id="logout-form">
               @csrf
-              <a class="dropdown-item" href="#" onclick="this.preventDefault();return logout();"><i class="fas fa-fw fa-sign-out"></i> Logout</a>
+              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="fas fa-sign-out"></i> Logout</button>
             </form>
           </li>
         @endif
@@ -34,12 +34,6 @@
 </nav>
 
 <script>
-  function logout(){
-    if(!confirm('Are you sure to log out this session ?')) return;
-    
-    document.getElementById('logout-form').submit();
-  }
-  
 window.addEventListener("DOMContentLoaded", event => {
 	// Toggle the side navigation
 	const sidebarToggle = document.body.querySelector("#sidebarToggle");
