@@ -17,7 +17,7 @@
               </div>
               <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                 <a class="small" href="{{ route('login') }}">Return to login</a>
-                <button type="button" class="btn btn-primary" href="login.html">Reset Password</button>
+                <button type="submit" class="btn btn-primary" href="login.html">Reset Password</button>
               </div>
             </form>
           </div>
