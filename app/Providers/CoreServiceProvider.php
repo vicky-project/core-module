@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Core\Services\ThemeService;
 use Modules\Core\Services\BackupService;
 use Modules\Core\Services\ComposerService;
 use Modules\Core\Services\ModuleManagerService;
@@ -38,24 +37,6 @@ class CoreServiceProvider extends ServiceProvider
 		Blade::component("core::components.navbar", "core-navbar");
 		Blade::component("core::components.footer", "core-footer");
 		Blade::component("core::components.breadcrumb", "core-breadcrumb");
-
-		Blade::directive("theme", function ($expression) {
-			return "<?php echo app('Modules\\Core\\Services\\ThemeService')->getCurrentTheme(); ?>";
-		});
-
-		View::composer("*", function ($view) {
-			$themeService = app(ThemeService::class);
-			$currentTheme = $themeService->getCurrentTheme();
-			$themeConfig = $themeService->getThemeConfig($currentTheme);
-
-			$view->with([
-				"currentTheme" => $currentTheme,
-				"themeConfig" => $themeConfig,
-				"bodyClass" => $themeService->getBodyClass(),
-			]);
-		});
-
-		$this->cleanupExpiredGuestPreferences();
 	}
 
 	/**
@@ -78,10 +59,6 @@ class CoreServiceProvider extends ServiceProvider
 		});
 
 		$this->app->singleton(BackupService::class);
-
-		$this->app->singleton(ThemeService::class, function ($app) {
-			return new ThemeService();
-		});
 	}
 
 	/**
@@ -231,23 +208,5 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		return $paths;
-	}
-
-	private function cleanupExpiredGuestPreferences()
-	{
-		if (app()->runningInConsole()) {
-			return;
-		}
-
-		if (rand(1, 100) === 1) {
-			try {
-				\Modules\Core\Models\GuestPreference::where(
-					"expired_at",
-					"<",
-					now()
-				)->delete();
-			} catch (\Exception $e) {
-			}
-		}
 	}
 }
