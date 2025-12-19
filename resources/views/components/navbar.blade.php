@@ -22,21 +22,18 @@
           <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
             <i class="fas fa-fw fa-sun me-2"></i>
             Light
-            <i class="fas fa-fw fa-check ms-auto"></i>
           </button>
         </li>
         <li>
           <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
             <i class="fas fa-fw fa-moon me-2"></i>
             Dark
-            <i class="fas fa-fw fa-check ms-auto"></i>
           </button>
         </li>
         <li>
           <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
             <i class="fas fa-fw fa-circle-half-stroke me-2"></i>
             Auto
-            <i class="fas fa-fw fa-check ms-auto"></i>
           </button>
         </li>
       </ul>
@@ -140,7 +137,7 @@ window.addEventListener("DOMContentLoaded", event => {
 		const btnToActive = document.querySelector(
 			`[data-bs-theme-value="${theme}"]`
 		);
-		const iconOfActiveBtn = btnToActive.querySelector("i").classList;
+		const iconOfActiveBtn = btnToActive.querySelector("i.fas").classList;
 
 		document.querySelectorAll("[data-bs-theme-value]").forEach(element => {
 			element.classList.remove("active");
