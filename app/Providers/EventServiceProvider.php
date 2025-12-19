@@ -2,8 +2,6 @@
 
 namespace Modules\Core\Providers;
 
-use Illuminate\Auth\Events\Login;
-use Illuminate\Auth\Events\Logout;
 use Modules\Core\Events\ModuleInstalled;
 use Modules\Core\Events\ModuleInstallationFailed;
 use Modules\Core\Listeners\ProcessModuleInstallation;

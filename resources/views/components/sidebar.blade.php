@@ -5,7 +5,7 @@
         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>Dashboard
       </a>
       @if(Module::has('MenuManagement') && Module::isEnabled('MenuManagement'))
-        @include('menumanagement::menu')
+        @include('menumanagement::partials.sidebar')
       @endif
     </div>
   </div>
