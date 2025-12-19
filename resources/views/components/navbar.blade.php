@@ -140,7 +140,7 @@ window.addEventListener("DOMContentLoaded", event => {
 		const btnToActive = document.querySelector(
 			`[data-bs-theme-value="${theme}"]`
 		);
-		const iconOfActiveBtn = btnToActive.querySelector("i").className;
+		const iconOfActiveBtn = btnToActive.querySelector("i").classList;
 
 		document.querySelectorAll("[data-bs-theme-value]").forEach(element => {
 			element.classList.remove("active");
