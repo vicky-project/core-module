@@ -10,6 +10,7 @@
 		}
 	],
 	"require": {
+		"laravel/ui": "^4.6",
 		"spatie/packagist-api": "^2.1",
 		"predis/predis": "^3.2",
 		"linfo/linfo": "^4.0",
