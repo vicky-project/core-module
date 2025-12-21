@@ -1,3 +1,8 @@
+@php
+$sidebarServerMenus = $sidebarServerMenus ?? null;
+$sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
