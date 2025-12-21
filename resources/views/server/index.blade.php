@@ -608,6 +608,7 @@
   // Initialize monitor when page loads
   document.addEventListener('DOMContentLoaded', function() {
     window.optimizedMonitor = new LaravelEventStreamMonitor();
+    console.log("memulai stream");
 
     window.addEventListener('beforeunload', function() {
       window.optimizedMonitor.disconnect();
