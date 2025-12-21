@@ -375,11 +375,12 @@
         
         let tbody = "";
         for(const i in mounts) {
+          const valuePercent = mounts[i].used / mounts[i].size * 100;
           tbody += `<tr>`;
           tbody += `<td>${mounts[i].device}</td><td>${mounts[i].mount}</td><td>${this.humanFileSize(mounts[i].size)}</td>`;
           tbody += `<td>Free: <strong>${this.humanFileSize(mounts[i].free)}</strong>`;
-          tbody += `<div class="progress" role="progressbar" aria-valuenow="${mounts[i].used}" aria-valuemin="0" aria-valuemax="${mounts[i].size}">
-            <div class="progress-bar text-bg-success" style="width: ${mounts[i].used}%">${mounts[i].used}%</div>
+          tbody += `<div class="progress" role="progressbar" aria-valuenow="${valuePercent}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar text-bg-success" style="width: ${valuePercent}%">${valuePercent}%</div>
         </div>`;
           tbody += `</td>`;
           tbody += `</tr>`;
