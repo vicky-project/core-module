@@ -13,6 +13,17 @@
   <body class="bg-primary">
     <div id="layoutAuthentication">
       <div id="layoutAuthentication_content">
+        @if($errors->any())
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+          <i class="fas fa-fw fa-exclamation-triangle flex-shrink-0 me-2"></i>
+          @foreach($errors->all() as $error)
+          <div>
+            {{ $error }}
+          </div>
+          @endforeach
+        </div>
+        @endif
+        
         @yield('content')
       </div>
       <div id="layoutAuthentication_footer">

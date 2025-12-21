@@ -11,7 +11,7 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Dashboard Applucation" />
     <meta name="author" content="Vicky Rahman" />
-    <title>@yield('title', config('viewmanager.title', 'Vicky Server')) - {{ config('app.name') }}</title>
+    <title>@yield('title', config('core.title', 'Vicky Server')) - {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="https://vickyserver.my.id/server/css/styles.css" rel="stylesheet">
     <link href="https://vickyserver.my.id/server/css/app.css" rel="stylesheet">
