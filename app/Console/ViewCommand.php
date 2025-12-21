@@ -25,6 +25,7 @@ class ViewCommand extends Command
 	 */
 	protected $views = [
 		"app.stub" => "layouts/app.blade.php",
+		"home.stub" => "home.blade.php",
 		"login.stub" => "auth/login.blade.php",
 		"register.stub" => "auth/register.blade.php",
 		"verify.stub" => "auth/verify.blade.php",
