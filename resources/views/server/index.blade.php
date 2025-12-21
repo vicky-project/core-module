@@ -1,6 +1,6 @@
 @extends('core::layouts.app')
 
-@section('page-title', 'Server Monitor')
+@section('title', 'Server Monitor')
 
 @section('content')
 <div class="card">

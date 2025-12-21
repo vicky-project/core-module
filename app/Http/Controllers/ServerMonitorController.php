@@ -29,13 +29,6 @@ class ServerMonitorController extends BaseController
 		return view("core::server.index", compact("dataServer"));
 	}
 
-	public function test()
-	{
-		$dataServer = $this->serverMonitor->getStaticData();
-		$dynamic = $this->serverMonitor->getDynamicData();
-		dd($dataServer, $dynamic);
-	}
-
 	public function streamMetrics(Request $request)
 	{
 		$updateInterval = max(1, min(10, (int) $request->get("interval", 5)));
