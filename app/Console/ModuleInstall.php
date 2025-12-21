@@ -49,8 +49,19 @@ class ModuleInstall extends Command
 		if (class_exists($postInstallationClass)) {
 			$this->info("Found installer. Running process...");
 			$postInstallation = app($postInstallationClass);
-			$postInstallation->handle($module->getName());
-			$thi->info("Process completed.");
+			try {
+				$postInstallation->handle($module->getName());
+			} catch (\Exception $e) {
+				logger()->error("Failed install module", [
+					"error" => $e->getMessage(),
+					"trace" => $e->getTraceAsString(),
+				]);
+
+				$this->error($e->getMessage());
+				return;
+			}
+
+			$this->info("Process completed.");
 		}
 
 		$this->info("Installation successful");
