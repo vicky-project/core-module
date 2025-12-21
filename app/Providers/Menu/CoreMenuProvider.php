@@ -30,7 +30,7 @@ class CoreMenuProvider extends BaseMenuProvider
 		return [
 			// System Server group
 			$this->item([
-				"title" => "System",
+				"title" => "Server",
 				"icon" => "fas fa-server",
 				"type" => "dropdown",
 				"order" => 100,

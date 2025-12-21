@@ -43,7 +43,7 @@
             <button type="submit" class="btn btn-primary position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               {{ $module["installed_version"] }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
-                <i class="fas fa-fw-fa-download"></i>
+                <i class="fas fa-fw fa-download"></i>
                 {{$module["latest_version"]}}
                 <span class="visually-hidden">Update available</span>
               </span>

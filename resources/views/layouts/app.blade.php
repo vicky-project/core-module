@@ -1,6 +1,8 @@
 @php
 $sidebarServerMenus = $sidebarServerMenus ?? null;
 $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
+
+dd($sidebarApplicationMenus,$sidebarServerMenus);
 @endphp
 
 <!DOCTYPE html>
