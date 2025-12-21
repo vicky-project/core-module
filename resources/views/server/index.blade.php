@@ -375,7 +375,7 @@
         
         let tbody = "";
         for(const i in mounts) {
-          const valuePercent = mounts[i].used / mounts[i].size * 100;
+          const valuePercent = (mounts[i].used / mounts[i].size) * 100;
           tbody += `<tr>`;
           tbody += `<td>${mounts[i].device}</td><td>${mounts[i].mount}</td><td>${this.humanFileSize(mounts[i].size)}</td>`;
           tbody += `<td>Free: <strong>${this.humanFileSize(mounts[i].free)}</strong>`;
@@ -609,27 +609,27 @@
     justify-content: space-between;
     align-items: center;
   }
-        
-        .controls {
-            display: flex;
-            gap: 10px;
-            padding: 10px 25px;
-            border-bottom: 1px solid #dee2e6;
-            overflow-x: scroll;
-        }
-        
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            padding: 20px;
-        }
+  
+  .controls {
+    display: flex;
+    gap: 10px;
+    padding: 10px 25px;
+    border-bottom: 1px solid #dee2e6;
+    overflow-x: scroll;
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 20px;
+  }
         
         .metric-card {
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--cui-primary);
+            border-left: 4px solid var(--primary);
         }
         
         .metric-header {
@@ -654,20 +654,6 @@
             margin-top: 3px;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-        
         .chart-container {
             height: 80px;
             margin-top: 10px;
@@ -680,8 +666,8 @@
             display: inline-block;
         }
         
-        .status-connected { background: var(--cui-success); }
-        .status-disconnected { background: var(--cui-danger); }
-        .status-connecting { background: var(--cui-warning); }
+        .status-connected { background: var(--success); }
+        .status-disconnected { background: var(--danger); }
+        .status-connecting { background: var(--warning); }
 </style>
 @endpush
