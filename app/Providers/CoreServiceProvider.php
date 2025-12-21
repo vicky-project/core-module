@@ -66,7 +66,10 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerCommands(): void
 	{
-		$this->commands([\Modules\Core\Console\ModuleInstall::class]);
+		$this->commands([
+			\Modules\Core\Console\ModuleInstall::class,
+			\Modules\Core\Console\ViewCommand::class,
+		]);
 	}
 
 	/**
