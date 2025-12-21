@@ -4,10 +4,11 @@ namespace Modules\Core\Console;
 
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ModuleInstall extends Command
+class ModuleInstall extends Command implements PromptsForMissingInput
 {
 	/**
 	 * The name and signature of the console command.
