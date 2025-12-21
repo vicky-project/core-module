@@ -12,9 +12,8 @@ class PostInstallation
 			$module = Module::find($moduleName);
 			$module->enable();
 
-			Artisan::call("ui", [
+			Artisan::call("ui:auth", [
 				"type" => "bootstrap",
-				"--auth" => true,
 				"--force" => true,
 			]);
 			Artisan::call("app:view-install", ["--force" => true]);
