@@ -276,10 +276,15 @@
           labels: [],
           datasets: [{
             data: [],
+            backgroundColor: "rgba(2,117,216,0.2)",
             borderColor: "rgba(2,117,216,1)",
-            backgroundColor: 'transparent',
-            borderWidth: 1,
-            lineTension: 0.4
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 50,
+            pointBorderWidth: 2,
           }]
         },
         options: {
@@ -511,15 +516,27 @@
         const networkData = [{
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
-          borderColor: '--primary',
-          backgroundColor: 'transparent',
-          borderWidth: 1
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(2,117,216,1)",
+          pointBorderColor: "rgba(255,255,255,0.8)",
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(2,117,216,1)",
+          pointHitRadius: 50,
+          pointBorderWidth: 2,
+          backgroundColor: "rgba(2,117,216,0.2)",
+          borderColor: "rgba(2,117,216,1)",
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
-          borderColor: '--primary',
-          backgroundColor: 'transparent',
-          borderWidth: 1
+          backgroundColor: "rgba(255,29,34,0.2)",
+          borderColor: "rgba(255, 29, 34, 1)",
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(2,117,216,1)",
+          pointBorderColor: "rgba(255,255,255,0.8)",
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(2,117,216,1)",
+          pointHitRadius: 50,
+          pointBorderWidth: 2,
         }];
         
         this.charts.networks.data.datasets = networkData;
