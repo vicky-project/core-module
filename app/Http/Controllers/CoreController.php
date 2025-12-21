@@ -3,14 +3,13 @@
 namespace Modules\Core\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 use Modules\Core\Services\PackagistService;
 use Modules\Core\Services\ModuleManagerService;
 use Modules\Core\Constants\Permissions;
 
-class CoreController extends Controller
+class CoreController extends BaseController
 {
 	protected $packagistService;
 	protected $moduleService;
@@ -22,15 +21,17 @@ class CoreController extends Controller
 		$this->packagistService = $packagistService;
 		$this->moduleService = $moduleService;
 
-		$this->middleware(["permission:" . Permissions::VIEW_MODULES])->only([
-			"index",
-		]);
-		$this->middleware(["permission:" . Permissions::MANAGE_MODULES])->only([
-			"installPackage",
-			"updatePackage",
-			"disableModule",
-			"enableModule",
-		]);
+		if ($this->isPermissionMiddlewareExists()) {
+			$this->middleware(["permission:" . Permissions::VIEW_MODULES])->only([
+				"index",
+			]);
+			$this->middleware(["permission:" . Permissions::MANAGE_MODULES])->only([
+				"installPackage",
+				"updatePackage",
+				"disableModule",
+				"enableModule",
+			]);
+		}
 	}
 
 	/**
