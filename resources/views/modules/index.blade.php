@@ -1,4 +1,4 @@
-@extends('viewmanager::layouts.app')
+@extends('core::layouts.app')
 
 @use('Modules\Core\Constants\Permissions')
 
