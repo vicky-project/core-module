@@ -169,7 +169,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   class LaravelEventStreamMonitor {
@@ -616,7 +616,7 @@
     });
   });
 </script>
-@endsection
+@endpush
 
 @section('styles')
 <style>
