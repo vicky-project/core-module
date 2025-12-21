@@ -26,7 +26,7 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         <x-core-sidebar :sidebarServerMenus=$sidebarServerMenus :sidebarApplicationMenus=$sidebarApplicationMenus />
       </div>
       <div id="layoutSidenav_content">
-        <main>
+        <main class="my-4">
           <div class="container-fluid px-4">
             <x-core-breadcrumb />
 

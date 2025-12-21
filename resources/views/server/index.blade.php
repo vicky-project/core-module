@@ -346,6 +346,7 @@
           const data = JSON.parse(event.data);
           this.handleMetricsUpdate(data);
           this.updateLastUpdate();
+          console.log('success update.');
         });
 
         this.eventSource.addEventListener('heartbeat', (event) => {
@@ -374,6 +375,7 @@
         this.updateCharts();
         this.lastChartUpdate = now;
       }
+      console.log('success metrics update');
     }
 
     updateEssentialDisplays() {
@@ -617,19 +619,19 @@
 @section('styles')
 <style>
   .monitor-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
   }
-        
-        .monitor-header {
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  
+  .monitor-header {
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
         
         .controls {
             display: flex;
