@@ -170,12 +170,8 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"></script>
 <script>
-  // Set new default font family and font color to mimic Bootstrap's default styling
-  Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-  Chart.defaults.global.defaultFontColor = '#292b2c';
-
   class LaravelEventStreamMonitor {
     constructor() {
       this.serverUrl = '{{ config("app.url") }}/api/v1/cores/metrics';
@@ -216,13 +212,16 @@
           datasets: [{
             data: [],
             label: "CPU",
-            backgroundColor: "rgba(2,117,216,1)",
-            borderColor: "rgba(2,117,216,1)"
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)"
           }]
         },
         options: {
-          responsive: true,
-          beginAtZero: true
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
         }
       });
       
@@ -234,15 +233,11 @@
           datasets: [{
             data: [],
             label: 'CPU Temp',
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgb(54, 162, 235)',
-            highlightFill: 'rgba(151, 187, 205, 0.75)',
-            highlightStroke: 'rgba(151, 187, 205, 1)',
           }]
         },
         options: {
-          responsive: true,
-          beginAtZero: true,
           scales: {
             y: {
               beginAtZero: true,
@@ -276,26 +271,13 @@
           labels: [],
           datasets: [{
             data: [],
-            backgroundColor: "rgba(2,117,216,0.2)",
-            borderColor: "rgba(2,117,216,1)",
-            pointRadius: 5,
-            pointBackgroundColor: "rgba(2,117,216,1)",
-            pointBorderColor: "rgba(255,255,255,0.8)",
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(2,117,216,1)",
-            pointHitRadius: 50,
-            pointBorderWidth: 2,
+            fill: false,
+            borderColor: "rgb(75, 192, 192)",
+            tension: 0.1
           }]
         },
         options: {
-          maintainAspectRatio: false,
-          elements: {
-            line: { tension: 0.4 },
-            point: { radius: 0 }
-          },
-          plugins: {
-            legend: { display: false }
-          },
+          legend: { display: false },
           scales: {
             y: { beginAtZero: true }
           }
@@ -312,24 +294,6 @@
         options: {
           maintainAspectRatio: false,
           scales: {
-            xAxes: [{
-              gridLines: {
-                display: false
-              },
-              ticks: {
-                maxTicksLimit: 7
-              }
-            }],
-            yAxes: [{
-              ticks: {
-                min: 0,
-                max: 40000,
-                maxTicksLimit: 5
-              },
-              gridLines: {
-                color: "rgba(0, 0, 0, .125)",
-              }
-            }],
             y: {
               beginAtZero: true,
               min: 0
@@ -530,27 +494,15 @@
         const networkData = [{
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
-          pointRadius: 5,
-          pointBackgroundColor: 'rgba(2,117,216,1)',
-          pointBorderColor: 'rgba(255,255,255,0.8)',
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(2,117,216,1)',
-          pointHitRadius: 50,
-          pointBorderWidth: 2,
-          backgroundColor: 'rgba(2,117,216,0.2)',
-          borderColor: 'rgba(2,117,216,1)',
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
-          backgroundColor: 'rgba(255,29,34,0.2)',
-          borderColor: 'rgba(255, 29, 34, 1)',
-          pointRadius: 5,
-          pointBackgroundColor: 'rgba(2,117,216,1)',
-          pointBorderColor: 'rgba(255,255,255,0.8)',
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(2,117,216,1)',
-          pointHitRadius: 50,
-          pointBorderWidth: 2,
+          fill: false,
+          borderColor: 'rgb(255, 99, 132)',
+          tension: 0.1
         }];
         
         this.charts.networks.data.datasets = networkData;
