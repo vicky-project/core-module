@@ -347,7 +347,6 @@
           const data = JSON.parse(event.data);
           this.handleMetricsUpdate(data);
           this.updateLastUpdate();
-          console.log('success update.');
         });
 
         this.eventSource.addEventListener('heartbeat', (event) => {
@@ -376,7 +375,6 @@
         this.updateCharts();
         this.lastChartUpdate = now;
       }
-      console.log('success metrics update');
     }
 
     updateEssentialDisplays() {
@@ -609,7 +607,6 @@
   // Initialize monitor when page loads
   document.addEventListener('DOMContentLoaded', function() {
     window.optimizedMonitor = new LaravelEventStreamMonitor();
-    console.log("memulai stream");
 
     window.addEventListener('beforeunload', function() {
       window.optimizedMonitor.disconnect();
