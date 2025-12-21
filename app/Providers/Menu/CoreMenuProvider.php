@@ -16,6 +16,12 @@ class CoreMenuProvider extends BaseMenuProvider
 		"permission" => null,
 	];
 
+	public function __construct()
+	{
+		$moduleName = "Core";
+		parent::__construct($moduleName);
+	}
+
 	/**
 	 * Get all menus
 	 */
