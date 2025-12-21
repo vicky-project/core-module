@@ -274,7 +274,7 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: coreui.Utils.getStyle('--cui-primary'),
+            borderColor: '--primary',
             backgroundColor: 'transparent',
             borderWidth: 1
           }]
@@ -510,13 +510,13 @@
         const networkData = [{
           data: this.networksHistory.map(net => net.recieved),
           label: 'recieved',
-          borderColor: coreui.Utils.getStyle('--cui-primary'),
+          borderColor: '--primary',
           backgroundColor: 'transparent',
           borderWidth: 1
         }, {
           data: this.networksHistory.map(net => net.sent),
           label: 'sent',
-          borderColor: coreui.Utils.getStyle('--cui-warning'),
+          borderColor: '--primary',
           backgroundColor: 'transparent',
           borderWidth: 1
         }];
@@ -618,7 +618,7 @@
 </script>
 @endpush
 
-@section('styles')
+@push('styles')
 <style>
   .monitor-container {
     max-width: 1400px;
@@ -709,4 +709,4 @@
         .status-disconnected { background: var(--cui-danger); }
         .status-connecting { background: var(--cui-warning); }
 </style>
-@endsection
+@endpush
