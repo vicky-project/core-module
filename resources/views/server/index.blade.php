@@ -217,7 +217,7 @@
             data: [],
             label: "CPU",
             backgroundColor: "rgba(2,117,216,1)",
-            borderColor: "rgba(2,117,216,1)",
+            borderColor: "rgba(2,117,216,1)"
           }]
         },
         options: {
@@ -279,8 +279,7 @@
             borderColor: "rgba(2,117,216,1)",
             backgroundColor: 'transparent',
             borderWidth: 1,
-            lineTension: 0.3,
-            lineTension: 0.3
+            lineTension: 0.4
           }]
         },
         options: {
