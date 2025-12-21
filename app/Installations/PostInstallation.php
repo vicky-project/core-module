@@ -12,7 +12,11 @@ class PostInstallation
 			$module = Module::find($moduleName);
 			$module->enable();
 
-			Artisan::call("ui", ["type" => "bootstrap", "--auth" => true]);
+			Artisan::call("ui", [
+				"type" => "bootstrap",
+				"--auth" => true,
+				"--force" => true,
+			]);
 			Artisan::call("app:view-install", ["--force" => true]);
 			Artisan::call("migrate", ["--force" => true]);
 		} catch (\Exception $e) {
