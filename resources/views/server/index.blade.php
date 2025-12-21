@@ -150,8 +150,8 @@
               <div class="float-start me-auto">
                 Interface: <span id="network-interface" class="font-weight-bold"></span>
               </div>
-              <p>Sent: <span id="network-sent" class="text-warning">0Kbps</span></p>
-              <p>Received: <span id="network-received" class="text-primary">0kbps</span></p>
+              <p>Sent: <span id="network-sent" class="text-danger">0Kbps</span></p>
+              <p>Received: <span id="network-received" class="text-info">0kbps</span></p>
             </div>
           </div>
           <div class="row mb-2">
@@ -212,7 +212,7 @@
           datasets: [{
             data: [],
             label: "CPU",
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            backgroundColor: "rgba(54, 162, 235, 0.8)",
             borderColor: "rgb(54, 162, 235)"
           }]
         },
@@ -233,7 +233,7 @@
           datasets: [{
             data: [],
             label: 'CPU Temp',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
             borderColor: 'rgb(54, 162, 235)',
           }]
         },
@@ -255,8 +255,8 @@
           labels: ['Used', 'Free'],
           datasets: [{
             data: [],
-            backgroundColor: ['#FF6384', '#36A2EB'],
-            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+            backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)'],
+            hoverOffset: 4
           }]
         },
         options: {
@@ -378,17 +378,8 @@
           tbody += `<tr>`;
           tbody += `<td>${mounts[i].device}</td><td>${mounts[i].mount}</td><td>${this.humanFileSize(mounts[i].size)}</td>`;
           tbody += `<td>Free: <strong>${this.humanFileSize(mounts[i].free)}</strong>`;
-          tbody += `<div class="progress-group">
-          <div class="progress-group-header align-items-end">
-            <div>${mounts[i].mount}</div>
-            <div class="ms-auto font-weight-bold me-2">${this.humanFileSize(mounts[i].used)}</div>
-            <div class="text-muted small">(${mounts[i].used_percent}%)</div>
-          </div>
-          <div class="progress-group-bars">
-            <div class="progress progress-thin">
-              <div class="progress-bar bg-success" role="progressbar" style="width: ${mounts[i].used}%" aria-valuenow="${mounts[i].used}" aria-valuemin="0" aria-valuemax="${mounts[i].size}"></div>
-            </div>
-          </div>
+          tbody += `<div class="progress" role="progressbar" aria-valuenow="${mounts[i].used}" aria-valuemin="0" aria-valuemax="${mounts[i].size}">
+            <div class="progress-bar text-bg-success" style="width: ${mounts[i].used}%">${mounts[i].used}%</div>
         </div>`;
           tbody += `</td>`;
           tbody += `</tr>`;
