@@ -316,6 +316,24 @@
             point: { radius: 0 }
           },
           scales: {
+            xAxes: [{
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 40000,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
             y: {
               beginAtZero: true,
               min: 0
