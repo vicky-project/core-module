@@ -172,6 +172,10 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // Set new default font family and font color to mimic Bootstrap's default styling
+  Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+  Chart.defaults.global.defaultFontColor = '#292b2c';
+
   class LaravelEventStreamMonitor {
     constructor() {
       this.serverUrl = '{{ config("app.url") }}/api/v1/cores/metrics';
@@ -212,10 +216,8 @@
           datasets: [{
             data: [],
             label: "CPU",
-            backgroundColor: 'rgba(54, 162, 235, 0.8)',
-            borderColor: 'rgb(54, 162, 235)',
-            highlightFill: 'rgba(151, 187, 205, 0.75)',
-            highlightStroke: 'rgba(151, 187, 205, 1)',
+            backgroundColor: "rgba(2,117,216,1)",
+            borderColor: "rgba(2,117,216,1)",
           }]
         },
         options: {
@@ -274,9 +276,11 @@
           labels: [],
           datasets: [{
             data: [],
-            borderColor: '--primary',
+            borderColor: "rgba(2,117,216,1)",
             backgroundColor: 'transparent',
-            borderWidth: 1
+            borderWidth: 1,
+            lineTension: 0.3,
+            lineTension: 0.3
           }]
         },
         options: {
