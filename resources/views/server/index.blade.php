@@ -174,6 +174,7 @@
 <script>
   class LaravelEventStreamMonitor {
     constructor() {
+      this.serverUrl = '{{ config("app.url") }}/api/v1/cores/metrics';
       this.eventSource = null;
       this.chartsEventSource = null;
       this.healthEventSource = null;
@@ -331,7 +332,7 @@
     connect() {
       this.disconnect();
       
-      const url = '{{ secure_url("https://vickyserver.my.id/server/api/v1/cores/metrics") }}' + `?interval=${this.updateInterval}`;
+      const url = this.serverUrl + `?interval=${this.updateInterval}`;
 
       try {
         this.eventSource = new EventSource(url);
