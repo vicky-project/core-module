@@ -4,10 +4,11 @@ namespace Modules\Core\Console;
 
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ModuleInstall extends Command
+class ModuleInstall extends Command implements PromptsForMissingInput
 {
 	/**
 	 * The name and signature of the console command.
@@ -40,13 +41,28 @@ class ModuleInstall extends Command
 			return;
 		}
 
+		$this->info("Installing module {$module->getName()}...");
+
 		$module->enable();
 
 		$postInstallationClass = "Modules\\{$module->getName()}\\Installations\\PostInstallation";
 
 		if (class_exists($postInstallationClass)) {
+			$this->info("Found installer. Running process...");
 			$postInstallation = app($postInstallationClass);
-			$postInstallation->handle($module->getName());
+			try {
+				$postInstallation->handle($module->getName());
+			} catch (\Exception $e) {
+				logger()->error("Failed install module", [
+					"error" => $e->getMessage(),
+					"trace" => $e->getTraceAsString(),
+				]);
+
+				$this->error($e->getMessage());
+				return;
+			}
+
+			$this->info("Process completed.");
 		}
 
 		$this->info("Installation successful");
@@ -58,5 +74,17 @@ class ModuleInstall extends Command
 	protected function getArguments(): array
 	{
 		return [["module", InputArgument::REQUIRED, "Module name to be install."]];
+	}
+
+	/**
+	 * Prompt for missing input arguments using the returned questions.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function promptForMissingArgumentsUsing(): array
+	{
+		return [
+			"module" => "Which module should be install?",
+		];
 	}
 }

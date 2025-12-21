@@ -1,8 +1,8 @@
-@extends('viewmanager::layouts.app')
+@extends('core::layouts.app')
 
 @use('Modules\Core\Constants\Permissions')
 
-@section('page-title', 'Module Available')
+@section('title', 'Module Available')
 
 @section('content')
 <div class="row g-3 pb-2 mb-4 border-bottom border-primary">
@@ -33,9 +33,7 @@
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
-              <svg class="icon me-2">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
-              </svg>
+              <i class="fas fa-fw fa-download"></i>
               Install v{{ $modul["latest_version"] ?? "1.0.0" }}</button>
           </form>
           @elseif($module['update_available'])
@@ -45,9 +43,8 @@
             <button type="submit" class="btn btn-primary position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               {{ $module["installed_version"] }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
-                <svg class="icon">
-                  <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
-                </svg>{{$module["latest_version"]}}
+                <i class="fas fa-fw fa-download"></i>
+                {{$module["latest_version"]}}
                 <span class="visually-hidden">Update available</span>
               </span>
             </button>
@@ -78,25 +75,19 @@
           <div class="meta-stats">
             @if($module["github_stars"] > 0)
             <small class="me-1">
-              <svg class="icon me-2 text-bg-warning">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-star') }}"></use>
-              </svg>
+              <i class="fas fa-fw fa-star text-warning"></i>
               {{ $module["github_stars"] }}
             </small>
             @endif
             @if($module["downloads"]["monthly"] > 0)
             <small class="me-2">
-              <svg class="icon me-2 text-primary">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cloud-download') }}"></use>
-              </svg>
+              <i class="fas fa-fw fa-download text-primary"></i>
               {{ number_format($module["downloads"]["monthly"]) }}/month
             </small>
             @endif
             @if($module["favers"] > 0)
             <small>
-              <svg class="icon me-2 text-bg-danger">
-                <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-heart') }}"></use>
-              </svg>
+              <i class="fas fa-fw fa-heart text-danger"></i>
               {{ $module["favers"] }}
             </small>
             @endif

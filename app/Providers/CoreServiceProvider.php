@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Modules\Core\Services\ThemeService;
 use Modules\Core\Services\BackupService;
 use Modules\Core\Services\ComposerService;
 use Modules\Core\Services\ModuleManagerService;
@@ -34,17 +33,10 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViews();
 		$this->loadMigrationsFrom(module_path($this->name, "database/migrations"));
 
-		View::composer("*", function ($view) {
-			$themeService = app(ThemeService::class);
-			$currentTheme = $themeService->getCurrentTheme();
-			$themeConfig = $themeService->getThemeConfig($currentTheme);
-
-			$view->with([
-				"currentTheme" => $currentTheme,
-				"themeConfig" => $themeConfig,
-				"bodyClass" => $themeService->getBodyClass(),
-			]);
-		});
+		Blade::component("core::components.sidebar", "core-sidebar");
+		Blade::component("core::components.navbar", "core-navbar");
+		Blade::component("core::components.footer", "core-footer");
+		Blade::component("core::components.breadcrumb", "core-breadcrumb");
 	}
 
 	/**
@@ -67,10 +59,6 @@ class CoreServiceProvider extends ServiceProvider
 		});
 
 		$this->app->singleton(BackupService::class);
-
-		$this->app->singleton(ThemeService::class, function ($app) {
-			return new ThemeService();
-		});
 	}
 
 	/**
@@ -78,7 +66,10 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerCommands(): void
 	{
-		$this->commands([\Modules\Core\Console\ModuleInstall::class]);
+		$this->commands([
+			\Modules\Core\Console\ModuleInstall::class,
+			\Modules\Core\Console\ViewCommand::class,
+		]);
 	}
 
 	/**

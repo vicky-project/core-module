@@ -1,5 +1,10 @@
+@php
+$sidebarServerMenus = $sidebarServerMenus ?? null;
+$sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
+@endphp
+
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="{{ $currentTheme ?? 'light' }}">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,7 +13,8 @@
     <meta name="author" content="Vicky Rahman" />
     <title>@yield('title', config('viewmanager.title', 'Vicky Server')) - {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://vickyserver.my.id/server/css/styles.css" rel="stylesheet">
+    <link href="https://vickyserver.my.id/server/css/app.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     
     @stack('styles')
@@ -17,10 +23,10 @@
     <x-core-navbar />
     <div id="layoutSidenav">
       <div id="layoutSidenav_nav">
-        <x-core-sidebar />
+        <x-core-sidebar :sidebarServerMenus=$sidebarServerMenus :sidebarApplicationMenus=$sidebarApplicationMenus />
       </div>
       <div id="layoutSidenav_content">
-        <main>
+        <main class="my-4">
           <div class="container-fluid px-4">
             <x-core-breadcrumb />
 
@@ -29,7 +35,6 @@
           </div>
         </main>
         <x-core-footer />
-        @include('viewmanager::partials.footer')
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

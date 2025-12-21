@@ -1,0 +1,1 @@
+@extends('core::auth.passwords.reset')
