@@ -1,1 +1,1 @@
-@extends('viewmanager::auth.passwords.reset')
+@extends('core::auth.passwords.reset')

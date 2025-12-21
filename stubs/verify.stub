@@ -1,2 +1,2 @@
-@extends('viewmanager::auth.verify')
+@extends('core::auth.verify')
 
