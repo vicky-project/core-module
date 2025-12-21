@@ -40,13 +40,17 @@ class ModuleInstall extends Command
 			return;
 		}
 
+		$this->info("Installing module {$module->getName()}...");
+
 		$module->enable();
 
 		$postInstallationClass = "Modules\\{$module->getName()}\\Installations\\PostInstallation";
 
 		if (class_exists($postInstallationClass)) {
+			$this->info("Found installer. Running process...");
 			$postInstallation = app($postInstallationClass);
 			$postInstallation->handle($module->getName());
+			$thi->info("Process completed.");
 		}
 
 		$this->info("Installation successful");
@@ -58,5 +62,17 @@ class ModuleInstall extends Command
 	protected function getArguments(): array
 	{
 		return [["module", InputArgument::REQUIRED, "Module name to be install."]];
+	}
+
+	/**
+	 * Prompt for missing input arguments using the returned questions.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function promptForMissingArgumentsUsing(): array
+	{
+		return [
+			"module" => "Which module should be install?",
+		];
 	}
 }
