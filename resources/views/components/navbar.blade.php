@@ -15,7 +15,7 @@
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
-        <img class="avatar-img rounded img-fluid" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
+        <img class="rounded-circle" width="32" height="32" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
         @else
         <i class="fas fa-user fa-fw"></i>
         @endif
