@@ -37,6 +37,7 @@ class CoreServiceProvider extends ServiceProvider
 		Blade::component("core::components.navbar", "core-navbar");
 		Blade::component("core::components.footer", "core-footer");
 		Blade::component("core::components.breadcrumb", "core-breadcrumb");
+		Blade::component("core::components.alert", "core-alert");
 	}
 
 	/**

@@ -29,6 +29,7 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         <main class="my-4">
           <div class="container-fluid px-4">
             <x-core-breadcrumb />
+            <x-core-alert />
 
             @yield('content')
             
