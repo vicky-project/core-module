@@ -9,7 +9,7 @@
         <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
               @csrf
           <div class="form-floating mb-3">
-            <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" autofocus autocomplete />
+            <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" value="{{ old('email') }}" autofocus autocomplete />
             <label for="inputEmail">Email address</label>
             @error('email')
               <div class="invalid-feedback">
@@ -18,12 +18,15 @@
             @enderror
           </div>
           <div class="form-floating mb-3">
-            <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Password" />
+            <input class="form-control @error('password') is-invalid @enderror" id="inputPassword" type="password" name="password" placeholder="Password" />
             <label for="inputPassword">Password</label>
+            @error('password')
+            <div class="invalid-feedback"> {{ $message }}</div>
+            @enderror
           </div>
           <div class="form-check mb-3">
-            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" value="" />
-            <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
+            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} value="{{ old('remember') ? '1' : '0'}}" />
+            <label class="form-check-label" for="inputRememberPassword">Remember Me</label>
           </div>
           <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
             @if(Route::has('password.request'))
