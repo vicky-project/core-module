@@ -63,6 +63,8 @@ class DashboardController extends BaseController
 
 	private function checkTelegramAuthorization($auth_data)
 	{
+		\Log::info("Get data from telegram.", ["data" => $auth_data]);
+
 		$bot_token = config("core.telegram.token");
 		$check_hash = $auth_data["hash"];
 		unset($auth_data["hash"]);
