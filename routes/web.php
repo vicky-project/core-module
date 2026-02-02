@@ -47,3 +47,5 @@ Route::middleware(["auth"])
 					});
 			});
 	});
+
+Route::get("telegram/callback", []);

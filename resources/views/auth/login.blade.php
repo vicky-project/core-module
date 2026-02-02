@@ -34,6 +34,9 @@
             @endif
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
+          <div class="d-flex justify-content-center align-items-center mt-4 pt-2 border-top border-primary">
+            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Vickyserver_bot" data-size="large" data-auth-url="https://vickyserver.my.id/server/dashboard" data-request-access="write"></script>
+          </div>
         </form>
       </div>
       <div class="card-footer text-center py-3">
@@ -47,5 +50,4 @@
 @endsection
 
 @push('scripts')
-<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Vickyserver_bot" data-size="large" data-auth-url="https://vickyserver.my.id/server/dashboard" data-request-access="write"></script>
 @endpush
