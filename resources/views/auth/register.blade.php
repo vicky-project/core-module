@@ -39,6 +39,11 @@
           <div class="mt-4 mb-0">
             <div class="d-grid"><button type="submit" class="btn btn-primary btn-block">Create Account</button></div>
           </div>
+          <div class="mt-4 mb-2 pt-2 border-top border-primary">
+            <div class="d-grid">
+              <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="{{ config('core.telegram.username') }}" data-size="large" data-auth-url="https://vickyserver.my.id/server/telegram/callback" data-request-access="write"></script>
+            </div>
+          </div>
         </form>
       </div>
       <div class="card-footer text-center py-3">
