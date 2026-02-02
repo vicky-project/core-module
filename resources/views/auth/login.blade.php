@@ -25,7 +25,7 @@
             @enderror
           </div>
           <div class="form-check mb-3">
-            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} value="{{ old('remember') ? '1' : '0'}}" />
+            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} value="1" @checked(old('remember')) />
             <label class="form-check-label" for="inputRememberPassword">Remember Me</label>
           </div>
           <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
@@ -35,7 +35,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
           <div class="d-flex justify-content-center align-items-center mt-4 pt-2 border-top border-primary">
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Vickyserver_bot" data-size="large" data-auth-url="https://vickyserver.my.id/server/telegram/callback" data-request-access="write"></script>
+            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="{{ config('core.telegram.username') }}" data-size="large" data-auth-url="https://vickyserver.my.id/server/telegram/callback" data-request-access="write"></script>
           </div>
         </form>
       </div>
