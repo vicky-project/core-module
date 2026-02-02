@@ -17,7 +17,7 @@ return new class extends Migration {
 				->change();
 			$table->unsignedBigInteger("telegram_id")->nullable();
 			$table->string("telegram_username")->nullable();
-			$table->timestamp("auth_date");
+			$table->timestamp("auth_date")->nullable();
 		});
 	}
 
