@@ -3,6 +3,7 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -26,6 +27,10 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		if (config("app.env") === "production") {
+			URL::forceScheme("https");
+		}
+
 		$this->registerCommands();
 		$this->registerCommandSchedules();
 		$this->registerTranslations();

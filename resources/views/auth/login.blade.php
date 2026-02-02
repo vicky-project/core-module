@@ -45,3 +45,7 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Vickyserver_bot" data-size="large" data-auth-url="https://vickyserver.my.id/server/dashboard" data-request-access="write"></script>
+@endpush
