@@ -25,7 +25,7 @@
             @enderror
           </div>
           <div class="form-check mb-3">
-            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} value="{{ old('remember') ? '1' : '0'}}" />
+            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} value="1" @checked(old('remember')) />
             <label class="form-check-label" for="inputRememberPassword">Remember Me</label>
           </div>
           <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
