@@ -35,7 +35,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
           <div class="d-flex justify-content-center align-items-center mt-4 pt-2 border-top border-primary">
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="{{ config('core.telegram.username') }}" data-size="large" data-auth-url="https://vickyserver.my.id/server/telegram/callback" data-request-access="write"></script>
+            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="{{ config('core.telegram.username') }}" data-size="large" data-auth-url="https://vickyserver.my.id/server/telegram/redirect" data-request-access="write"></script>
           </div>
         </form>
       </div>
