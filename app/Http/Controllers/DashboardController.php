@@ -18,7 +18,9 @@ class DashboardController extends BaseController
 	public function telegramCallback(Request $request)
 	{
 		try {
-			$auth_data = $this->checkTelegramAuthorization($request->all());
+			$auth_data = $this->checkTelegramAuthorization(
+				$request->only(["id", "first_name", "last_name", "auth_date", "hash"])
+			);
 
 			$user = User::mergeFillable([
 				"telegram_id",
