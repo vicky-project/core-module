@@ -13,4 +13,9 @@ class DashboardController extends BaseController
 			"breadcrumbs" => [["name" => "Dashboard", "active" => true]],
 		]);
 	}
+
+	public function telegramCallback(Request $request)
+	{
+		dd($request);
+	}
 }
