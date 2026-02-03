@@ -9,17 +9,7 @@ trait HasModuleTrait
 	 */
 	public static function bootHasModuleTrait()
 	{
-		static::booted(function ($model) {
-			$model->extendStaticFillable([
-				"telegram_id",
-				"telegram_username",
-				"auth_date",
-			]);
-
-			$model->extendStaticCasts([
-				"auth_date" => "timestamp",
-			]);
-
+		static::boot(function ($model) {
 			static::applyInstanceExtensions($model);
 		});
 	}
