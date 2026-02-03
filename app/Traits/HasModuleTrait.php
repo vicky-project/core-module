@@ -8,7 +8,7 @@ trait HasModuleTrait
 {
 	protected $mergeFillable = ["telegram_id", "telegram_username", "auth_date"];
 
-	public function boot()
+	public static function boot()
 	{
 		static::boot(function ($model) {
 			$model->mergeFillable($this->mergeFillable);
