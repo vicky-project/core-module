@@ -29,11 +29,7 @@ class DashboardController extends BaseController
 				])
 			);
 
-			$user = User::mergeFillable([
-				"telegram_id",
-				"telegram_username",
-				"auth_date",
-			])->firstOrCreate(
+			$user = User::firstOrCreate(
 				["telegram_id" => $auth_data["id"]],
 				[
 					"email" => $auth_data["username"] . "@telegram.com",

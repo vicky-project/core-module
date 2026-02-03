@@ -3,6 +3,7 @@ namespace Modules\Core\Installations;
 
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Artisan;
+use Modules\Core\Services\Generators\TraitInserter;
 
 class PostInstallation
 {
@@ -11,6 +12,9 @@ class PostInstallation
 		try {
 			$module = Module::find($moduleName);
 			$module->enable();
+
+			$result = $this->insertTraitToUserModel();
+			logger()->info($result["message"]);
 
 			Artisan::call("ui:auth", [
 				"type" => "bootstrap",
@@ -26,5 +30,10 @@ class PostInstallation
 
 			throw $e;
 		}
+	}
+
+	private function insertTraitToUserModel()
+	{
+		return TraitInserter::insertTrait("Modules\Core\Traits\HasModuleTrait");
 	}
 }
