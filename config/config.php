@@ -32,20 +32,6 @@ return [
 	],
 
 	/*
-	| ========================================
-	| Telegram Bot Settings
-	| ========================================
-	*/
-	"telegram" => [
-		"token" => env("TELEGRAM_BOT_TOKEN"),
-		"username" => env("TELEGRAM_BOT_USERNAME"),
-		"redirect_url" => env(
-			"TELEGRAM_AUTH_REDIRECT_URL",
-			url("/telegram/redirect")
-		),
-	],
-
-	/*
 	| =======================================
 	| Model Extensions Manipulation
 	| =======================================
