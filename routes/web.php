@@ -47,8 +47,3 @@ Route::middleware(["auth"])
 					});
 			});
 	});
-
-Route::get("telegram/redirect", [
-	DashboardController::class,
-	"telegramCallback",
-]);
