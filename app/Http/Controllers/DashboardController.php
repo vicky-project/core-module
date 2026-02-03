@@ -48,7 +48,7 @@ class DashboardController extends BaseController
 					return redirect()
 						->route("login")
 						->withErrors(
-							"User not found or user not connected to telegram yet. Please register using telegram"
+							"User not found or user not connected to telegram yet. Please register using telegram or login using another credential first to connect with telegram."
 						);
 				}
 			}
