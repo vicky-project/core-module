@@ -19,7 +19,7 @@ trait HasModuleTrait
 	 */
 	protected function extendStaticFillable(array $attributes)
 	{
-		\Log::info("Model {$this} adding attributes fillable", [
+		\Log::info("Model " . get_class($this) . " adding attributes fillable", [
 			"attributes" => $attributes,
 		]);
 		$this->mergeFillable($attributes);
@@ -30,7 +30,9 @@ trait HasModuleTrait
 	 */
 	protected function extendStaticCasts(array $casts)
 	{
-		\Log::info("Model {$this} adding casts", ["casts" => $casts]);
+		\Log::info("Model " . get_class($this) . "adding casts", [
+			"casts" => $casts,
+		]);
 		$this->mergeCasts($casts);
 	}
 
