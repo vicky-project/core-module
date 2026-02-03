@@ -29,13 +29,11 @@ trait HasModuleTrait
 	 */
 	protected static function extendStaticFillable(array $attributes)
 	{
-		if (!isset(static::$fillable)) {
-			static::$fillable = [];
+		if (!isset(self::$fillable)) {
+			self::$fillable = [];
 		}
 
-		static::$fillable = array_unique(
-			array_merge(static::$fillable, $attributes)
-		);
+		self::$fillable = array_unique(array_merge(self::$fillable, $attributes));
 	}
 
 	/**
@@ -43,11 +41,11 @@ trait HasModuleTrait
 	 */
 	protected static function extendStaticCasts(array $casts)
 	{
-		if (!isset(static::$casts)) {
-			static::$casts = [];
+		if (!isset(self::$casts)) {
+			self::$casts = [];
 		}
 
-		static::$casts = array_merge(static::$casts, $casts);
+		self::$casts = array_merge(self::$casts, $casts);
 	}
 
 	/**
