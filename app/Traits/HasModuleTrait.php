@@ -6,9 +6,9 @@ use Nwidart\Modules\Facades\Module;
 
 trait HasModuleTrait
 {
-	public static function boot()
+	public static function booted()
 	{
-		static::boot(function ($model) {
+		static::booted(function ($model) {
 			$model
 				->mergeFillable(["telegram_id", "telegram_username", "auth_date"])
 				->mergeCasts(["auth_date" => "timestamp"]);
