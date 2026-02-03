@@ -10,6 +10,6 @@ trait HasModuleTrait
 	{
 		static::boot(function ($model) {
 			$model->mergeFillable(["telegram_id", "telegram_username", "auth_date"]);
-		});
+		})->mergeCasts(["auth_date" => "timestamp"]);
 	}
 }
