@@ -2,69 +2,86 @@
 
 namespace Modules\Core\Traits;
 
-use Nwidart\Modules\Facades\Module;
-
 trait HasModuleTrait
 {
+	/**
+	 * Boot trait - dipanggil secara static
+	 */
 	public static function bootHasModuleTrait()
 	{
-		static::booted(function ($model) {
-			$model->mergeFillable(static::getModuleFillableAtributes());
-			$model->mergeCasts(static::getModuleCasts());
+		// Method ini static, gunakan approach static
 
-			static::setupModuleExtensions($model);
+		// 1. Extend fillable melalui static property
+		static::extendStaticFillable([
+			"telegram_id",
+			"telegram_username",
+			"auth_date",
+		]);
+
+		// 2. Extend casts melalui static property
+		static::extendStaticCasts([
+			"auth_date" => "timestamp",
+		]);
+
+		// 3. Setup event untuk instance-based extensions
+		static::booted(function ($model) {
+			// Instance-based extensions bisa dilakukan di sini
+			static::applyInstanceExtensions($model);
 		});
 	}
 
-	protected static function getModuleFillableAtributes()
+	/**
+	 * Extend fillable secara static
+	 */
+	protected static function extendStaticFillable(array $attributes)
 	{
-		$fillable = ["telegram_id", "telegram_username", "auth_date"];
-
-		try {
-			$modules = Module::allEnabled();
-
-			foreach ($modules as $module) {
-				$config = Module::config(
-					$module->getLowerName() . ".table_fields.fillable",
-					[]
-				);
-
-				$fillable = array_merge($fillable, $config);
-			}
-		} catch (\Exception $e) {
-			throw new \Exception(
-				"Failed to get Module fillabel attributes: " . $e->getMessage()
-			);
+		if (!isset(static::$fillable)) {
+			static::$fillable = [];
 		}
 
-		return array_unique($fillable);
+		static::$fillable = array_unique(
+			array_merge(static::$fillable, $attributes)
+		);
 	}
 
-	protected static function getModuleCasts()
+	/**
+	 * Extend casts secara static
+	 */
+	protected static function extendStaticCasts(array $casts)
 	{
-		$casts = ["auth_date" => "timestamp"];
-
-		try {
-			$modules = Module::allEnabled();
-
-			foreach ($modules as $module) {
-				$config = Module::config(
-					$module->getLowerName() . "table_fields.casts",
-					[]
-				);
-				$casts = array_merge($casts, $config);
-			}
-		} catch (\Exception $e) {
-			throw new \Exception(
-				"Failed to get Module casts attribute: " . $e->getMessage()
-			);
+		if (!isset(static::$casts)) {
+			static::$casts = [];
 		}
 
-		return $casts;
+		static::$casts = array_merge(static::$casts, $casts);
 	}
 
-	protected static function setupModuleExtensions()
+	/**
+	 * Apply instance-based extensions
+	 */
+	protected static function applyInstanceExtensions($model)
 	{
-		event(new \Modules\Core\Events\UserModelBooted());
+		// Di sini kita bisa panggil instance methods
+		// Contoh: tambahkan dynamic relations, scopes, dll
+
+		// Event untuk memberi tahu module lain
+		event(new \Modules\Core\Events\UserModelBooted($model));
+	}
+
+	/**
+	 * Helper method untuk module lain menambah fillable
+	 * Bisa dipanggil dari Service Provider module lain
+	 */
+	public static function addModuleFillable(array $attributes)
+	{
+		static::extendStaticFillable($attributes);
+	}
+
+	/**
+	 * Helper method untuk module lain menambah casts
+	 */
+	public static function addModuleCasts(array $casts)
+	{
+		static::extendStaticCasts($casts);
 	}
 }
