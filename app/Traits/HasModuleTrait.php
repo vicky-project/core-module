@@ -9,23 +9,17 @@ trait HasModuleTrait
 	 */
 	public static function bootHasModuleTrait()
 	{
-		// Method ini static, gunakan approach static
-
-		// 1. Extend fillable melalui static property
-		static::extendStaticFillable([
-			"telegram_id",
-			"telegram_username",
-			"auth_date",
-		]);
-
-		// 2. Extend casts melalui static property
-		static::extendStaticCasts([
-			"auth_date" => "timestamp",
-		]);
-
-		// 3. Setup event untuk instance-based extensions
 		static::booted(function ($model) {
-			// Instance-based extensions bisa dilakukan di sini
+			static::extendStaticFillable([
+				"telegram_id",
+				"telegram_username",
+				"auth_date",
+			]);
+
+			static::extendStaticCasts([
+				"auth_date" => "timestamp",
+			]);
+
 			static::applyInstanceExtensions($model);
 		});
 	}
@@ -72,16 +66,16 @@ trait HasModuleTrait
 	 * Helper method untuk module lain menambah fillable
 	 * Bisa dipanggil dari Service Provider module lain
 	 */
-	public static function addModuleFillable(array $attributes)
+	public function addModuleFillable(array $attributes)
 	{
-		static::extendStaticFillable($attributes);
+		self::extendStaticFillable($attributes);
 	}
 
 	/**
 	 * Helper method untuk module lain menambah casts
 	 */
-	public static function addModuleCasts(array $casts)
+	public function addModuleCasts(array $casts)
 	{
-		static::extendStaticCasts($casts);
+		self::extendStaticCasts($casts);
 	}
 }
