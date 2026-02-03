@@ -18,9 +18,7 @@ class DashboardController extends BaseController
 	public function telegramCallback(Request $request)
 	{
 		try {
-			$auth_data = $this->checkTelegramAuthorization(
-				$request->only(["id", "first_name", "last_name", "auth_date", "hash"])
-			);
+			$auth_data = $this->checkTelegramAuthorization($request->all());
 
 			$user = User::mergeFillable([
 				"telegram_id",
@@ -66,25 +64,38 @@ class DashboardController extends BaseController
 	private function checkTelegramAuthorization($auth_data)
 	{
 		\Log::info("Get data from telegram.", ["data" => $auth_data]);
+		$tele_data = collect($auth_data)
+			->only(["id", "first_name", "last_name", "auth_date", "hash"])
+			->toArray();
 
 		$bot_token = config("core.telegram.token");
-		$check_hash = $auth_data["hash"];
-		unset($auth_data["hash"]);
+		$check_hash = $tele_data["hash"];
+		unset($tele_data["hash"]);
 		$data_check_arr = [];
-		foreach ($auth_data as $key => $value) {
+		foreach ($tele_data as $key => $value) {
 			$data_check_arr[] = $key . "=" . $value;
 		}
 		sort($data_check_arr);
 		$data_check_string = implode("\n", $data_check_arr);
 		$secret_key = hash("sha256", $bot_token, true);
 		$hash = hash_hmac("sha256", $data_check_string, $secret_key);
-		dd($data_check_string, $data_check_arr, $hash);
+
+		dd(
+			$auth_data,
+			$tele_data,
+			$data_check_arr,
+			$data_check_string,
+			$hash,
+			$check_hash,
+			$secret_key,
+			strcmp($hash, $check_hash)
+		);
 		if (strcmp($hash, $check_hash) !== 0) {
 			throw new \Exception("Data is NOT from Telegram");
 		}
-		if (time() - $auth_data["auth_date"] > 86400) {
+		if (time() - $tele_data["auth_date"] > 86400) {
 			throw new \Exception("Data is outdated");
 		}
-		return $auth_data;
+		return $tele_data;
 	}
 }
