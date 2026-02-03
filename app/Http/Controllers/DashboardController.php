@@ -29,19 +29,29 @@ class DashboardController extends BaseController
 				])
 			);
 
-			$user = User::firstOrCreate(
-				["telegram_id" => $auth_data["id"]],
-				[
-					"email" => $auth_data["username"] . "@telegram.com",
-					"name" =>
-						$auth_data["first_name"] .
-						(isset($auth_data["last_name"])
-							? " " . $auth_data["last_name"]
-							: ""),
-					"telegram_username" => $auth_data["username"],
-					"auth_date" => $auth_data["auth_date"],
-				]
-			);
+			$user = User::where("telegram_id", $auth_data["id"])->first();
+
+			if (!$user || $user->isEmpty()) {
+				if ($request->routeIs("register")) {
+					$user = User::create([
+						"telegram_id" => $auth_data["id"],
+						"email" => $auth_data["username"] . "@telegram.com",
+						"name" =>
+							$auth_data["first_name"] .
+							(isset($auth_data["last_name"])
+								? " " . $auth_data["last_name"]
+								: ""),
+						"telegram_username" => $auth_data["username"],
+						"auth_date" => $auth_data["auth_date"],
+					]);
+				} else {
+					return redirect()
+						->route("login")
+						->withErrors(
+							"User not found or user not connected to telegram yet. Please register using telegram"
+						);
+				}
+			}
 
 			if ($user) {
 				\Auth::loginUsingId($user->id);
@@ -52,7 +62,7 @@ class DashboardController extends BaseController
 			return redirect()
 				->route("register")
 				->withErrors(
-					"User not found and we can not create new user for you. Please create user manual."
+					"Can not login or register using telegram. Please create user manual or login with another credential."
 				);
 		} catch (\Exception $e) {
 			\Log::error("Failed to login using telegram", [
