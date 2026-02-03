@@ -9,7 +9,7 @@ trait HasModuleTrait
 	 */
 	public static function bootHasModuleTrait()
 	{
-		static::boot(function ($model) {
+		static::booted(function ($model) {
 			static::applyInstanceExtensions($model);
 		});
 	}
