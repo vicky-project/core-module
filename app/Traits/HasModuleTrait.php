@@ -19,11 +19,10 @@ trait HasModuleTrait
 	 */
 	protected function extendStaticFillable(array $attributes)
 	{
-		if (!isset($this->fillable)) {
-			$this->fillable = [];
-		}
-
-		$this->fillable = array_unique(array_merge($this->fillable, $attributes));
+		\Log::info("Model {$this} adding attributes fillable", [
+			"attributes" => $attributes,
+		]);
+		$this->mergeFillable($attributes);
 	}
 
 	/**
@@ -31,11 +30,8 @@ trait HasModuleTrait
 	 */
 	protected function extendStaticCasts(array $casts)
 	{
-		if (!isset($this->casts)) {
-			$this->casts = [];
-		}
-
-		$this->casts = array_merge($this->casts, $casts);
+		\Log::info("Model {$this} adding casts", ["casts" => $casts]);
+		$this->mergeCasts($casts);
 	}
 
 	/**
