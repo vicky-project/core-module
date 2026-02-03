@@ -10,13 +10,13 @@ trait HasModuleTrait
 	public static function bootHasModuleTrait()
 	{
 		static::booted(function ($model) {
-			static::extendStaticFillable([
+			$model->extendStaticFillable([
 				"telegram_id",
 				"telegram_username",
 				"auth_date",
 			]);
 
-			static::extendStaticCasts([
+			$model->extendStaticCasts([
 				"auth_date" => "timestamp",
 			]);
 
@@ -27,25 +27,25 @@ trait HasModuleTrait
 	/**
 	 * Extend fillable secara static
 	 */
-	protected static function extendStaticFillable(array $attributes)
+	protected function extendStaticFillable(array $attributes)
 	{
-		if (!isset(self::$fillable)) {
-			self::$fillable = [];
+		if (!isset($this->fillable)) {
+			$this->fillable = [];
 		}
 
-		self::$fillable = array_unique(array_merge(self::$fillable, $attributes));
+		$this->fillable = array_unique(array_merge($this->fillable, $attributes));
 	}
 
 	/**
 	 * Extend casts secara static
 	 */
-	protected static function extendStaticCasts(array $casts)
+	protected function extendStaticCasts(array $casts)
 	{
-		if (!isset(self::$casts)) {
-			self::$casts = [];
+		if (!isset($this->casts)) {
+			$this->casts = [];
 		}
 
-		self::$casts = array_merge(self::$casts, $casts);
+		$this->casts = array_merge($this->casts, $casts);
 	}
 
 	/**
@@ -66,7 +66,7 @@ trait HasModuleTrait
 	 */
 	public function addModuleFillable(array $attributes)
 	{
-		self::extendStaticFillable($attributes);
+		$this->extendStaticFillable($attributes);
 	}
 
 	/**
@@ -74,6 +74,6 @@ trait HasModuleTrait
 	 */
 	public function addModuleCasts(array $casts)
 	{
-		self::extendStaticCasts($casts);
+		$this->extendStaticCasts($casts);
 	}
 }
