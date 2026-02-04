@@ -11,11 +11,139 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Dashboard Applucation" />
     <meta name="author" content="Vicky Rahman" />
+    
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/icons/laptop.svg">
     <title>@yield('title', config('core.title', 'Vicky Server')) - {{ config('app.name') }}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Simple DataTables CSS -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    
+    <!-- Custom CSS -->
     <link href="https://vickyserver.my.id/server/css/styles.css" rel="stylesheet">
     <link href="https://vickyserver.my.id/server/css/app.css" rel="stylesheet">
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    
+    <!-- Dark Mode CSS -->
+    <style>
+      :root {
+        --bs-body-bg: #f8f9fa;
+        --bs-body-color: #212529;
+        --bs-border-color: #dee2e6;
+        --bs-card-bg: #ffffff;
+        --bs-card-border-color: rgba(0,0,0,.125);
+        --bs-sidebar-bg: #212529;
+        --bs-sidebar-color: #adb5bd;
+        --bs-navbar-bg: #ffffff;
+        --bs-primary: #0d6efd;
+        --bs-primary-rgb: 13, 110, 253;
+      }
+      
+      [data-bs-theme="dark"] {
+        --bs-body-bg: #121416;
+        --bs-body-color: #e9ecef;
+        --bs-border-color: #495057;
+        --bs-card-bg: #1e2125;
+        --bs-card-border-color: #495057;
+        --bs-sidebar-bg: #1a1d20;
+        --bs-sidebar-color: #adb5bd;
+        --bs-navbar-bg: #1e2125;
+        --bs-primary: #6ea8fe;
+        --bs-primary-rgb: 110, 168, 254;
+      }
+      
+      body {
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      .card {
+        background-color: var(--bs-card-bg);
+        border-color: var(--bs-card-border-color);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+      
+      .navbar, .sb-topnav {
+        background-color: var(--bs-navbar-bg) !important;
+        border-bottom-color: var(--bs-border-color) !important;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+      
+      .sb-sidenav {
+        background-color: var(--bs-sidebar-bg);
+        color: var(--bs-sidebar-color);
+        transition: background-color 0.3s ease;
+      }
+      
+      .sb-sidenav .nav-link, .sb-sidenav .sb-sidenav-menu-heading {
+        color: var(--bs-sidebar-color);
+      }
+      
+      .sb-sidenav .nav-link:hover {
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .sb-sidenav .nav-link.active {
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      .form-control, .form-select {
+        background-color: var(--bs-card-bg);
+        border-color: var(--bs-border-color);
+        color: var(--bs-body-color);
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      }
+      
+      .form-control:focus, .form-select:focus {
+        background-color: var(--bs-card-bg);
+        border-color: var(--bs-primary);
+        color: var(--bs-body-color);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+      }
+      
+      .btn-outline-secondary {
+        color: var(--bs-body-color);
+        border-color: var(--bs-border-color);
+      }
+      
+      .btn-outline-secondary:hover {
+        background-color: var(--bs-border-color);
+        border-color: var(--bs-border-color);
+        color: var(--bs-body-bg);
+      }
+      
+      .toast {
+        background-color: var(--bs-card-bg);
+        border-color: var(--bs-border-color);
+      }
+      
+      .toast-header {
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+        border-bottom-color: var(--bs-border-color);
+        color: var(--bs-body-color);
+      }
+      
+      .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+      }
+      
+      .breadcrumb-item a {
+        color: var(--bs-primary);
+        text-decoration: none;
+      }
+      
+      .breadcrumb-item.active {
+        color: var(--bs-body-color);
+      }
+    </style>
     
     @stack('styles')
   </head>
@@ -38,7 +166,7 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         <x-core-footer />
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     
