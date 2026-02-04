@@ -65,7 +65,11 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
       .card {
         background-color: var(--bs-card-bg);
         border-color: var(--bs-card-border-color);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .card-header.bg-primary {
+        background: linear-gradient(135deg, var(--bs-primary), #0a58ca) !important;
       }
       
       .sb-sidenav {
