@@ -34,11 +34,6 @@
             @endif
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
-          @if(Module::has('Telegram') && Module::isEnabled('Telegram'))
-          <div class="d-flex justify-content-center align-items-center mt-4 pt-2 border-top border-primary">
-            @include('telegram::auth.button')
-          </div>
-          @endif
         </form>
       </div>
       <div class="card-footer text-center py-3">

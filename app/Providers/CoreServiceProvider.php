@@ -38,11 +38,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViews();
 		$this->loadMigrationsFrom(module_path($this->name, "database/migrations"));
 
-		Blade::component("core::components.sidebar", "core-sidebar");
-		Blade::component("core::components.navbar", "core-navbar");
-		Blade::component("core::components.footer", "core-footer");
-		Blade::component("core::components.breadcrumb", "core-breadcrumb");
-		Blade::component("core::components.alert", "core-alert");
+		$this->registerBlades();
 	}
 
 	/**
@@ -65,6 +61,27 @@ class CoreServiceProvider extends ServiceProvider
 		});
 
 		$this->app->singleton(BackupService::class);
+	}
+
+	protected function registerBlades(): void
+	{
+		Blade::component("core::components.sidebar", "core-sidebar");
+		Blade::component("core::components.navbar", "core-navbar");
+		Blade::component("core::components.footer", "core-footer");
+		Blade::component("core::components.breadcrumb", "core-breadcrumb");
+		Blade::component("core::components.alert", "core-alert");
+
+		Blade::directive("hook", function ($expression) {
+			return "<?php echo \Modules\Core\Service\HookService::render($expression); ?>";
+		});
+
+		Blade::directive("hasHook", function ($expression) {
+			return "<?php if(\Modules\Core\Service\HookService::has($expression)): ?>";
+		});
+
+		Blade::directive("endHasHook", function () {
+			return "<?php endif; ?>";
+		});
 	}
 
 	/**
