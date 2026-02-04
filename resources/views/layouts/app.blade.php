@@ -68,12 +68,6 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         transition: background-color 0.3s ease, border-color 0.3s ease;
       }
       
-      .navbar, .sb-topnav {
-        background-color: var(--bs-navbar-bg) !important;
-        border-bottom-color: var(--bs-border-color) !important;
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
-      
       .sb-sidenav {
         background-color: var(--bs-sidebar-bg);
         color: var(--bs-sidebar-color);

@@ -36,6 +36,11 @@
         @endif
       </ul>
     </li>
+    <li class="nav-item">
+      <button class="btn btn-primary btn-sm rounded-circle shadow-lg" id="themeToggle" style="width: 44px; height: 44px;">
+        <i class="bi bi-moon-stars" id="themeIcon"></i>
+      </button>
+    </li>
   </ul>
 </nav>
 
@@ -43,6 +48,10 @@
 window.addEventListener("DOMContentLoaded", event => {
 	// Toggle the side navigation
 	const sidebarToggle = document.body.querySelector("#sidebarToggle");
+	const themeToggle = document.body.querySelector("#themeToggle");
+	const themeIcon = document.body.querySelector("#themeIcon");
+	const htmlElement = document.documentElement;
+	
 	if (sidebarToggle) {
 		// Uncomment Below to persist sidebar toggle between refreshes
 		// if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
@@ -57,6 +66,41 @@ window.addEventListener("DOMContentLoaded", event => {
 			);
 		});
 	}
+	
+	const getPreferedTheme = () => {
+	  const storedTheme = localStorage.getItem('theme');
+	  if(storedTheme) {
+	    return storedTheme;
+	  }
+	  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	}
+	
+	const setTheme = (theme) => {
+	  htmlElement.setAttribute('data-bs-theme', theme);
+	  localStorage.setItem('theme', theme);
+	  
+	  if(theme === 'dark') {
+	    themeIcon.className = 'bi bi-sun';
+	    themeToggle.setAttribute('title', 'Switch to light mode');
+	  } else {
+	    themeIcon.className = 'bi bi-moon-stars';
+	    themeToggle.setAttribute('title', 'Switch to dark mode');
+	  }
+	}
+	
+	const currentTheme = getPreferedTheme();
+	setTheme(currentTheme);
+	
+	themeToggle.addEventListener('click', function() {
+	  const newTheme = htmlElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+	  setTheme(newTheme);
+	});
+	
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+	  if(!localStorage.getItem('theme')) {
+	    setTheme(e.matches ? 'dark' : 'light');
+	  }
+	});
 });
 
 </script>
