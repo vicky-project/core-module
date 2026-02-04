@@ -72,11 +72,11 @@ class CoreServiceProvider extends ServiceProvider
 		Blade::component("core::components.alert", "core-alert");
 
 		Blade::directive("hook", function ($expression) {
-			return "<?php echo \Modules\Core\Service\HookService::render($expression); ?>";
+			return "<?php echo \Modules\Core\Services\HookService::render($expression); ?>";
 		});
 
 		Blade::directive("hasHook", function ($expression) {
-			return "<?php if(\Modules\Core\Service\HookService::has($expression)): ?>";
+			return "<?php if(\Modules\Core\Services\HookService::has($expression)): ?>";
 		});
 
 		Blade::directive("endHasHook", function () {
