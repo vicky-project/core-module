@@ -35,6 +35,15 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
         </form>
+        @hasHook('auth.socials')
+        <div class="d-flex justify-content-center align-items-center pt-3 mt-4 border-top border-primary">
+          <div class="row">
+            <div class="col-md-12">
+              @hook('auth.socials')
+            </div>
+          </div>
+        </div>
+        @endHasHook
       </div>
       <div class="card-footer text-center py-3">
         @if(Route::has('register'))
