@@ -198,6 +198,9 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     
     <script>
+    // CSRF Token for AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+        
   const toastEl = document.getElementById('liveToast');
   const toast = bootstrap.Toast ? new bootstrap.Toast(toastEl) : null;
         
