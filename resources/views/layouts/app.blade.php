@@ -185,12 +185,10 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
 <div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 1055;">
   <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
     <div class="toast-header">
-      <div class="d-flex align-items-center">
-        <i id="toastIcon" class="bi bi-info-circle-fill me-2"></i>
-        <strong id="toastTitle" class="me-auto">Notification</strong>
-        <small id="toastTime" class="text-muted"></small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
+      <i id="toastIcon" class="bi bi-info-circle-fill me-2"></i>
+      <strong id="toastTitle" class="me-auto">Notification</strong>
+      <small id="toastTime" class="text-muted"></small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div id="toastMessage" class="toast-body"></div>
   </div>
