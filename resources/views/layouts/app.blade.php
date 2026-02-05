@@ -128,6 +128,23 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         color: var(--bs-body-color);
       }
       
+        .toast-header {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-bottom: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+  }
+  .toast-success .toast-header {
+    background-color: rgba(var(--bs-success-rgb), 0.1);
+    color: var(--bs-success);
+  }
+  .toast-error .toast-header {
+    background-color: rgba(vsr(--bs-danger-rgb), 0.1);
+    color: var(--bs-danger);
+  }
+  .toast-warning .toast-header {
+    background-color: rgba(var(--bs-warning-rgb), 0.1);
+    color: var(--bs-warning);
+  }
+      
       .breadcrumb {
         background-color: transparent;
         padding: 0;
@@ -181,6 +198,71 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+  const toastEl = document.getElementById('liveToast');
+  const toast = bootstrap.Toast ? new bootstrap.Toast(toastEl) : null;
+        
+  function showToast(title, message, type = 'info') {
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+    const toastTime = document.getElementById('toastTime');
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+            
+    // Set current time
+    const now = new Date();
+    toastTime.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    // Set icon and color based on type
+    let iconClass = 'bi-info-circle-fill';
+    let toastClass = 'toast-info';
+            
+    if (type === 'success') {
+      iconClass = 'bi-check-circle-fill';
+      toastClass = 'toast-success';
+    } else if (type === 'error') {
+      iconClass = 'bi-exclamation-circle-fill';
+      toastClass = 'toast-error';
+    } else if (type === 'warning') {
+      iconClass = 'bi-exclamation-triangle-fill';
+      toastClass = 'toast-warning';
+    }
+
+    toastIcon.className = `bi ${iconClass} me-2`;
+            
+    // Update toast header class
+    if(toastEl) {
+      toastEl.querySelector('.toast-header').className = 'toast-header ' + toastClass;
+            
+      if (toast) {
+        toast.show();
+      }
+    }
+  }
+  
+          // Utility function to disable buttons with spinner
+        function disableButton(button, text) {
+          if(!button) return;
+          
+            button.disabled = true;
+            button.innerHTML = `
+                <span class="spinner-container">
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    ${text}
+                </span>
+            `;
+        }
+        
+        // Utility function to enable buttons
+        function enableButton(button, html) {
+          if(!button) return;
+          
+            button.disabled = false;
+            button.innerHTML = html;
+        }
+</script>
     
     @stack('scripts')
   </body>
