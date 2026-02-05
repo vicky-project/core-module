@@ -188,9 +188,9 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
       <div class="d-flex align-items-center">
         <i id="toastIcon" class="bi bi-info-circle-fill me-2"></i>
         <strong id="toastTitle" class="me-auto">Notification</strong>
+        <small id="toastTime" class="text-muted"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <small id="toastTime" class="text-muted"></small>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div id="toastMessage" class="toast-body"></div>
   </div>
