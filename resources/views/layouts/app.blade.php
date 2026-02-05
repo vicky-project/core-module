@@ -65,7 +65,11 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
       .card {
         background-color: var(--bs-card-bg);
         border-color: var(--bs-card-border-color);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .card-header.bg-primary {
+        background: linear-gradient(135deg, var(--bs-primary), #0a58ca) !important;
       }
       
       .sb-sidenav {
@@ -160,6 +164,20 @@ $sidebarApplicationMenus = $sidebarApplicationMenus ?? null;
         <x-core-footer />
       </div>
     </div>
+    <!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 1055;">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="toast-header">
+      <div class="d-flex align-items-center">
+        <i id="toastIcon" class="bi bi-info-circle-fill me-2"></i>
+        <strong id="toastTitle" class="me-auto">Notification</strong>
+      </div>
+      <small id="toastTime" class="text-muted"></small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div id="toastMessage" class="toast-body"></div>
+  </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
