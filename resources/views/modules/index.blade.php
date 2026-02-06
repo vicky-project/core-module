@@ -33,7 +33,7 @@
             @csrf
             <input type="hidden" name="module" value="{{$module['name']}}">
             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Install {{ $module['name'] }}?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
-              <i class="fas fa-fw fa-download"></i>
+              <i class="bi bi-download me-2"></i>
               Install v{{ $modul["latest_version"] ?? "1.0.0" }}</button>
           </form>
           @elseif($module['update_available'])
@@ -43,7 +43,7 @@
             <button type="submit" class="btn btn-primary position-relative" onclick="return confirm('Update {{ $module['name'] }} from v{{ $module['installed_version'] }} to v{{ $module['latest_version'] }} ?')" @disabled(auth()->user()->canNot(Permissions::MANAGE_MODULES))>
               {{ $module["installed_version"] }}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning">
-                <i class="fas fa-fw fa-download"></i>
+                <i class="bi bi-download me-2"></i>
                 {{$module["latest_version"]}}
                 <span class="visually-hidden">Update available</span>
               </span>
@@ -75,13 +75,13 @@
           <div class="meta-stats">
             @if($module["github_stars"] > 0)
             <small class="me-1">
-              <i class="fas fa-fw fa-star text-warning"></i>
+              <i class="bi bi-star text-warning me-2"></i>
               {{ $module["github_stars"] }}
             </small>
             @endif
             @if($module["downloads"]["monthly"] > 0)
             <small class="me-2">
-              <i class="fas fa-fw fa-download text-primary"></i>
+              <i class="bi bi-download text-primary me-2"></i>
               {{ number_format($module["downloads"]["monthly"]) }}/month
             </small>
             @endif

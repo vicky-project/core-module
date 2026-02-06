@@ -32,6 +32,10 @@
             @if(Route::has('password.request'))
               <a class="small" href="{{ route('password.request') }}">Forgot Password?</a>
             @endif
+            <button type="button" class="btn btn-warning" onclick="showPassword()" id="btn-show-password">
+              <i class="bi bi-eye me-1"></i>
+              Show Password
+            </button>
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
         </form>
@@ -56,4 +60,14 @@
 @endsection
 
 @push('scripts')
+<script>
+  function showPassword() {
+    const btnShowPassword = document.getElementById('btn-show-password');
+    const inputPassword = document.getElementById('inputPassword');
+    const passwordType = inputPassword.getAttribute('type');
+    
+    inputPassword.setAttribute('type', passwordType == 'password' ? 'text' : 'password');
+    btnShowPassword.innerHTML = passwordType == 'password' ? '<i class="bi bi-eye"></i> Show Password' : '<i class="bi bi-eye-slash"></i> Hide Password';
+  }
+</script>
 @endpush
