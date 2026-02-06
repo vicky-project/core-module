@@ -11,7 +11,7 @@ class CoreMenuProvider extends BaseMenuProvider
 	protected array $config = [
 		"group" => "server",
 		"location" => "sidebar",
-		"icon" => "fas fa-server",
+		"icon" => "bi bi-server",
 		"order" => 1,
 		"permission" => null,
 	];
@@ -31,20 +31,20 @@ class CoreMenuProvider extends BaseMenuProvider
 			// System Server group
 			$this->item([
 				"title" => "Server",
-				"icon" => "fas fa-server",
+				"icon" => "bi bi-server",
 				"type" => "dropdown",
 				"order" => 100,
 				"children" => [
 					$this->item([
 						"title" => "Modules",
-						"icon" => "fas fa-puzzle-piece",
+						"icon" => "bi bi-puzzle",
 						"route" => "cores.modules.index",
 						"order" => 1,
 						"permission" => Permissions::VIEW_MODULES,
 					]),
 					$this->item([
 						"title" => "Systems",
-						"icon" => "fas fa-memory",
+						"icon" => "bi bi-cpu",
 						"route" => "cores.systems.index",
 						"order" => 2,
 						"permission" => Permissions::VIEW_SYSTEMS,
