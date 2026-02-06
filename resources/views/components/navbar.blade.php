@@ -2,12 +2,12 @@
   <!-- Navbar Brand-->
   <a class="navbar-brand ps-3" href="{{ config('app.url') }}">{{ config('app.name') }}</a>
   <!-- Sidebar Toggle-->
-  <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+  <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="bi bi-list"></i></button>
   <!-- Navbar Search-->
   <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
     <div class="input-group">
       <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-      <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+      <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="bi bi-search"></i></button>
     </div>
   </form>
   <!-- Navbar-->
@@ -17,20 +17,20 @@
         @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
         <img class="rounded-circle" width="32" height="32" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
         @else
-        <i class="fas fa-user fa-fw"></i>
+        <i class="bi bi-person"></i>
         @endif
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
         @if(Route::has("settings"))
-        <li><a class="dropdown-item" href="{{ route('settings') }}"><i class="fas fa-fw fa-cog"></i> Settings</a></li>
+        <li><a class="dropdown-item" href="{{ route('settings') }}"><i class="bi bi-gear"></i> Settings</a></li>
         @endif
         <li><hr class="dropdown-divider" /></li>
         @if(Route::has("logout"))
           <li>
             <form method="POST" action="{{ route('logout') }}" id="logout-form">
               @csrf
-              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="fas fa-sign-out"></i> Logout</button>
+              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="bi bi-box-arrow-right"></i> Logout</button>
             </form>
           </li>
         @endif
