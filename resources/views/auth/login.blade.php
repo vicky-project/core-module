@@ -19,9 +19,12 @@
               </div>
             @enderror
           </div>
-          <div class="form-floating mb-3">
-            <input class="form-control @error('password') is-invalid @enderror" id="inputPassword" type="password" name="password" placeholder="Password" />
-            <label for="inputPassword">Password</label>
+          <div class="input-group mb-3">
+            <div class="form-floating">
+              <input class="form-control @error('password') is-invalid @enderror" id="inputPassword" type="password" name="password" placeholder="Password" />
+              <label for="inputPassword">Password</label>
+            </div>
+            <span class="input-group-text" onclick="showPassword()" id="btn-show-password"><i class="bi bi-eye"></i></span>
             @error('password')
             <div class="invalid-feedback"> {{ $message }}</div>
             @enderror
@@ -34,10 +37,6 @@
             @if(Route::has('password.request'))
               <a class="small" href="{{ route('password.request') }}">Forgot Password?</a>
             @endif
-            <button type="button" class="btn btn-warning" onclick="showPassword()" id="btn-show-password">
-              <i class="bi bi-eye me-1"></i>
-              Show Password
-            </button>
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
         </form>
@@ -66,10 +65,10 @@
   function showPassword() {
     const btnShowPassword = document.getElementById('btn-show-password');
     const inputPassword = document.getElementById('inputPassword');
-    const passwordType = inputPassword.getAttribute('type');
+    const passwordType = inputPassword.getAttribute('type') != 'text';
     
-    btnShowPassword.innerHTML = passwordType === 'password' ? '<i class="bi bi-eye"></i> Show Password' : '<i class="bi bi-eye-slash"></i> Hide Password';
-    inputPassword.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+    btnShowPassword.innerHTML = passwordType ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+    inputPassword.setAttribute('type', passwordType ? 'text' : 'password');
   }
 </script>
 @endpush
