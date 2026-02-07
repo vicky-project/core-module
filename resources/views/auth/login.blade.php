@@ -1,5 +1,7 @@
 @extends('core::layouts.auth')
 
+@section('title', 'Login')
+
 @section('content')
 <div class="row justify-content-center">
   <div class="col-lg-5">
@@ -66,8 +68,8 @@
     const inputPassword = document.getElementById('inputPassword');
     const passwordType = inputPassword.getAttribute('type');
     
-    inputPassword.setAttribute('type', passwordType == 'password' ? 'text' : 'password');
-    btnShowPassword.innerHTML = passwordType == 'password' ? '<i class="bi bi-eye"></i> Show Password' : '<i class="bi bi-eye-slash"></i> Hide Password';
+    btnShowPassword.innerHTML = passwordType === 'password' ? '<i class="bi bi-eye"></i> Show Password' : '<i class="bi bi-eye-slash"></i> Hide Password';
+    inputPassword.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
   }
 </script>
 @endpush
