@@ -67,7 +67,7 @@
     const inputPassword = document.getElementById('inputPassword');
     const passwordType = inputPassword.getAttribute('type') != 'text';
     
-    btnShowPassword.innerHTML = passwordType ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+    btnShowPassword.innerHTML = passwordType ? '<i class="bi bi-eye-slahs"></i>' : '<i class="bi bi-eye"></i>';
     inputPassword.setAttribute('type', passwordType ? 'text' : 'password');
   }
 </script>
