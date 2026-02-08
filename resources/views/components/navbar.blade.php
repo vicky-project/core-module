@@ -22,8 +22,8 @@
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-        @if(Route::has("settings"))
-        <li><a class="dropdown-item" href="{{ route('settings') }}"><i class="bi bi-gear"></i> Settings</a></li>
+        @if(Route::has("settings.index"))
+        <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-gear"></i> Settings</a></li>
         @endif
         <li><hr class="dropdown-divider" /></li>
         @if(Route::has("logout"))
