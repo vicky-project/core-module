@@ -1,21 +1,22 @@
     <style>
         body {
-            background-color: var(--tg-theme-bg-color, #fff);
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
+        .main-container {
+            background-color: var(--tg-theme-bg-color, #fff);
+        }
+        .container {
+            background-color: var(--tg-theme-section-bg-color);
+        }
         .app-logo {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: var(--tg-theme-button-color, #40a7e3);
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px auto;
-            color: white;
             font-size: 3rem;
         }
         .app-name {
@@ -46,6 +47,4 @@
             font-size: 1rem;
             font-weight: 500;
         }
-        .container {
-            background-color: var(--tg-theme-section-bg-color);
     </style>
