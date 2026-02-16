@@ -27,7 +27,7 @@
         @hook('main-apps')
       @endHasHook
       <div class="col-4 col-md-2 mb-2">
-        <a href="{{ route('settings.index') }}" class="rounded-4 p-2">
+        <a href="{{ route('settings.index') }}" class="menu-item rounded-4 p-2">
           <i class="bi bi-gear"></i>
           <span>Pengaturan</span>
         </a>
