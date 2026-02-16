@@ -34,5 +34,14 @@
       </div>
     </div>
   </div>
+  <div class="row mt-4 fixed-bottom">
+    <div class="col-12">
+      @hasHook('main-footer')
+      <div class="d-inline gap-2">
+        @hook('main-footer')
+      </div>
+      @endHasHook
+    </div>
+  </div>
 </div>
 @endsection
