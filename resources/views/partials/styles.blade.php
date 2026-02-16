@@ -12,11 +12,6 @@
         .container {
             background-color: var(--tg-theme-section-bg-color);
         }
-        .app-logo {
-            width: 100px;
-            height: 100px;
-            font-size: 3rem;
-        }
         .app-name {
             color: var(--tg-theme-text-color, #000);
         }
