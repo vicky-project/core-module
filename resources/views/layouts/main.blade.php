@@ -78,10 +78,21 @@
 
             // Warna latar belakang sesuai tipe
             toastEl.classList.remove('bg-success', 'bg-danger', 'text-white');
-            if (type === 'success') {
+            
+            switch(type){
+              case 'success':
                 toastEl.classList.add('bg-success', 'text-white');
-            } else {
+                break;
+              case 'info':
+                toastEl.classList.add('bg-info', 'text-white');
+                break;
+              case 'warning':
+                toastEl.classList.add('bg-warning', 'text-white');
+                break;
+              case 'danger':
+              default:
                 toastEl.classList.add('bg-danger', 'text-white');
+                break;
             }
 
             const toast = new bootstrap.Toast(toastEl);
@@ -95,6 +106,31 @@
         tg.SettingsButton.show();
         tg.BackButton.isVisible = true;
         tg.BackButton.show();
+        
+        const user = tg.initData?.user;
+  const authButtonDiv = document.getElementById('auth-button');
+  
+  function handleProfileClick() {
+    window.location.href = '{{ route('settings.index') }}';
+  }
+  
+  function handleLoginClick() {
+    window.location.href = '{{ route('login') }}';
+  }
+  
+  if(user) {
+    if(user.photo_url) {
+      authButtonDiv.innerHTML = `<img src="${user.photo_url}" class="img-prfile img-fluid rounded-circle btn-user" onclick="handleProfileClick();">`;
+    } else {
+      authButtonDiv.innerHTML = `<button class="btn btn-sm rounded-circle btn-user" onclick="handleProfileClick();">
+        <i class="bi bi-person-circle"></i>
+      </button>`;
+    }
+  } else {
+    authButtonDiv.innerHTML = `<button class="btn btn-sm btn-user" onclick="handleLoginClick();">
+      <i class="bi bi-box-arrow-in-right"></i>
+    </button>`;
+  }
 
         // Beri tahu Telegram bahwa halaman sudah siap
         tg.ready();

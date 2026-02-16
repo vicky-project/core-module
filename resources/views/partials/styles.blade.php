@@ -40,4 +40,12 @@
             font-size: 1rem;
             font-weight: 500;
         }
+          .navbar {
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+  }
+  .btn-user {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+  }
     </style>
