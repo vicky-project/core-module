@@ -15,8 +15,6 @@
         .app-logo {
             width: 100px;
             height: 100px;
-            border-radius: 50%;
-            display: flex;
             font-size: 3rem;
         }
         .app-name {
