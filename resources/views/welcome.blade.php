@@ -1,10 +1,10 @@
 @extends('core::layouts.main')
 
 @section('content')
-<div class="main-container">
+<div class="main-container d-flex justify-content-center align-items-center my-4">
   
   <!-- Logo Lingkaran -->
-  <div class="app-logo mt-4 align-items-center justify-content-center">
+  <div class="app-logo rounded-circle">
     <img src="{{ config('core.logo_url') }}" alt="Logo Aplikasi" class="img-fluid rounded-circle">
   </div>
 
