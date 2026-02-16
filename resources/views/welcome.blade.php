@@ -36,8 +36,8 @@
   @endHasHook
   
   <nav class="navbar fixed-bottom bg-body-tertiary">
-    <div class="container">
-      <div class="navbar-brand float-end ms-auto" id="auth-button"></div>
+    <div class="container-fluid">
+      <div class="navbar-brand float-end ms-auto p-2" id="auth-button"></div>
     </div>
   </nav>
 </div>
