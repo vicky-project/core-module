@@ -22,11 +22,7 @@
 @hasHook('main-apps')
 <div class="container text-center mt-4 p-3">
   <div class="row">
-    @foreach(\Modules\Core\Services\HookService::hookCount('main-apps'))
-    <div class="col-4 col-md-2 mb-2">
-      @hook('main-apps')
-    </div>
-    @endforeach
+    @hook('main-apps')
     <div class="col-4 col-md-2 mb-2">
       <a onclick="handleMenuClick('pengaturan');" class="menu-item rounded-4 p-2">
         <i class="bi bi-gear"></i>
