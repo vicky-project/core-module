@@ -1,4 +1,3 @@
-<!-- Modules/Core/Resources/views/dashboard/index.blade.php -->
 @extends('core::layouts.app')
 
 @section('title', 'Dashboard')

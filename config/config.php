@@ -3,6 +3,7 @@
 return [
 	"name" => "Core",
 	"default_theme" => "light",
+	"logo_url" => env("LOGO_URL", "/homeserver.png"),
 	"cache_key_prefix" => "laravel_module",
 	"vendor_name" => "vicky-project",
 	"notification" => [
