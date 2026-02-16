@@ -60,6 +60,11 @@ class HookService
 		return !empty(self::$hooks[$position]);
 	}
 
+	public static function hookCount(string $position): int
+	{
+		return count(self::$hook[$position]);
+	}
+
 	/**
 	 * Get all registered positions
 	 */

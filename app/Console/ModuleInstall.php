@@ -37,7 +37,7 @@ class ModuleInstall extends Command implements PromptsForMissingInput
 		$module = Module::find($moduleName);
 
 		if (!$module) {
-			$this->error("Module {$moduleName} nit found.");
+			$this->error("Module {$moduleName} not found.");
 			return;
 		}
 

@@ -31,6 +31,7 @@ class ViewCommand extends Command
 		"verify.stub" => "auth/verify.blade.php",
 		"email.stub" => "auth/passwords/email.blade.php",
 		"reset.stub" => "auth/passwords/reset.blade.php",
+		"welcome.stub" => "welcome.blade.php",
 	];
 
 	/**
