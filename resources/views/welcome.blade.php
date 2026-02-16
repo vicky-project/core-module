@@ -21,24 +21,18 @@
   </div>
         
   <!-- Menu Utama -->
-  @hasHook('main-apps')
   <div class="container text-center mt-4 p-3">
     <div class="row">
-      @hook('main-apps')
+      @hasHook('main-apps')
+        @hook('main-apps')
+      @endHasHook
       <div class="col-4 col-md-2 mb-2">
-        <a onclick="handleMenuClick('pengaturan');" class="menu-item rounded-4 p-2">
+        <a href="{{ route('settings.index') }}" class="menu-item rounded-4 p-2">
           <i class="bi bi-gear"></i>
           <span>Pengaturan</span>
         </a>
       </div>
     </div>
   </div>
-  @endHasHook
-  
-  <nav class="navbar fixed-bottom bg-body-tertiary">
-    <div class="container-fluid">
-      <div class="navbar-brand float-end ms-auto p-2" id="auth-button"></div>
-    </div>
-  </nav>
 </div>
 @endsection
