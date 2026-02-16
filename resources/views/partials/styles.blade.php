@@ -10,7 +10,7 @@
             background-color: var(--tg-theme-bg-color, #fff);
         }
         .container {
-            background-color: var(--tg-theme-section-bg-color);
+            background-color: var(--tg-theme-section-bg-color, #f0f0f0);
         }
         .app-name {
             color: var(--tg-theme-text-color, #000);
@@ -19,7 +19,7 @@
             color: var(--tg-theme-hint-color, #999);
         }
         .menu-item {
-            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            background-color: var(--tg-theme-bg-color, #f0f0f0);
             cursor: pointer;
             transition: transform 0.2s, opacity 0.2s;
             color: var(--tg-theme-text-color, #000);
@@ -32,20 +32,12 @@
         }
         .menu-item i {
             font-size: 2.5rem;
-            color: var(--tg-theme-button-color, #40a7e3);
             margin-bottom: 10px;
             display: block;
         }
         .menu-item span {
-            font-size: 1rem;
+            font-size: 0.7rem;
             font-weight: 500;
+            color: var(--tg-theme-text-color, #000);
         }
-          .navbar {
-    background-color: var(--tg-theme-bg-color);
-    color: var(--tg-theme-text-color);
-  }
-  .btn-user {
-    background-color: var(--tg-theme-button-color);
-    color: var(--tg-theme-button-text-color);
-  }
     </style>
