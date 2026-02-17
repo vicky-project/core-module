@@ -3,7 +3,7 @@
 namespace Modules\Core\Console;
 
 use Illuminate\Console\Command;
-use App\Services\RedirectEditor;
+use Modules\Core\Services\Generators\RedirectEditor;
 
 class ModifyRedirectCommand extends Command
 {
