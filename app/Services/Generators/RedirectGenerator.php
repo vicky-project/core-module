@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Services;
+namespace Modules\Core\Services\Generators;
 
 use Illuminate\Support\Facades\File;
 
