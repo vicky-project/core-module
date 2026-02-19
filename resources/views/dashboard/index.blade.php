@@ -18,7 +18,7 @@
         <img src="{{ request()->get('photo_url') }}" class="user-avatar" alt="User">
       @else
         <div class="user-avatar-placeholder">
-          {{ $user ? strtoupper(substr($user['first_name'], 0, 1)) : 'U' }}
+          {{ \Auth::user()->name ? strtoupper(substr(\Auth::user()->name, 0, 1)) : 'U' }}
         </div>
       @endif
     </div>
