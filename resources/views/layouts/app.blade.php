@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Telegram Mini App</title>
+    <title>@yield('title', config('core.title', 'Vicky Server')) - config('app.name')</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -14,6 +14,7 @@
 </head>
 <body>
   @yield('content')
+  
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Telegram WebApp SDK -->
@@ -35,7 +36,7 @@
     // Fungsi navigasi sementara
     function navigateTo(page) {
       showToast('Fitur ' + page + ' sedang dikembangkan', 'info');
-            // Nanti bisa diganti dengan window.location.href
+      // Nanti bisa diganti dengan window.location.href
     }
 
     // Fungsi kembali
@@ -104,12 +105,12 @@
       }
 
       const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-      }
+      toast.show();
+    }
 
-      tg.ready();
-    </script>
+    tg.ready();
+  </script>
     
-    @stack('scripts')
+  @stack('scripts')
 </body>
 </html>
