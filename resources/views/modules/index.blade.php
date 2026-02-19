@@ -1,4 +1,4 @@
-@extends('core::layouts.app')
+@extends('core::layouts.admin')
 
 @use('Modules\Core\Constants\Permissions')
 
