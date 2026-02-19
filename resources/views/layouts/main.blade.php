@@ -39,7 +39,7 @@
         tg.SettingsButton.show();
         @endif
         tg.BackButton.isVisible = true;
-        tg.BackButton.onClick(() => window.location.href = '{{ back() }}');
+        tg.BackButton.onClick(() => window.location.href = '{{ url()->previous() }}');
         tg.BackButton.show();
         
         //tg.setHeaderColor()
@@ -114,8 +114,6 @@
           url.searchParams.set(key, value);
         });
         dashboard.href = url.toString();
-
-        // Tampilkan data user di console untuk debugging (opsional)
         
         // Beri tahu Telegram bahwa halaman sudah siap
         tg.ready();
