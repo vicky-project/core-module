@@ -34,8 +34,8 @@
         document.body.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color || '#f0f0f0');
         document.body.style.setProperty('--tg-theme-section-bg-color', theme.section_bg_color || '#f0f0f0');
         
-        tg.setHeaderColor()
-        tg.requestFullscreen(theme.secondary_bg_color);
+        //tg.setHeaderColor()
+        //tg.requestFullscreen(theme.secondary_bg_color);
 
         // Fungsi untuk menangani klik menu
         function handleMenuClick(menu) {
@@ -100,7 +100,7 @@
         }
 
         // Tampilkan data user di console untuk debugging (opsional)
-        console.log('User:', tg.initDataUnsafe?.user);
+        console.log('User unsafe: ', tg.initDataUnsafe?.user);
         
         tg.SettingsButton.isVisible = true;
         tg.SettingsButton.show();
@@ -108,6 +108,7 @@
         tg.BackButton.show();
         
         const user = tg.initData?.user;
+        console.log('user: ', user)
         const authButtonDiv = document.getElementById('auth-button');
   
         function handleProfileClick() {
