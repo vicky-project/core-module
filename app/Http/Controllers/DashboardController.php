@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends BaseController
 {
-	public function index()
+	public function index(Request $request)
 	{
 		return view("core::dashboard.index", [
 			"title" => "Dashboard",

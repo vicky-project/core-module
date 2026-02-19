@@ -33,9 +33,13 @@
         document.body.style.setProperty('--tg-theme-button-text-color', theme.button_text_color || '#ffffff');
         document.body.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color || '#f0f0f0');
         document.body.style.setProperty('--tg-theme-section-bg-color', theme.section_bg_color || '#f0f0f0');
+        tg.SettingsButton.isVisible = true;
+        tg.SettingsButton.show();
+        tg.BackButton.isVisible = true;
+        tg.BackButton.show();
         
-        tg.setHeaderColor()
-        tg.requestFullscreen(theme.secondary_bg_color);
+        //tg.setHeaderColor()
+        //tg.requestFullscreen(theme.secondary_bg_color);
 
         // Fungsi untuk menangani klik menu
         function handleMenuClick(menu) {
@@ -98,40 +102,17 @@
             const toast = new bootstrap.Toast(toastEl);
             toast.show();
         }
+        
+        const dashboard = document.getElementById('dashboard');
+        const url = new URL(dashboard.href);
+        const params = new URLSearchParams(tg.initData?.user);
+        params.forEach((value, key) => {
+          url.searchParams.set(key, value);
+        });
+        dashboard.href = url.toString();
 
         // Tampilkan data user di console untuk debugging (opsional)
-        console.log('User:', tg.initDataUnsafe?.user);
         
-        tg.SettingsButton.isVisible = true;
-        tg.SettingsButton.show();
-        tg.BackButton.isVisible = true;
-        tg.BackButton.show();
-        
-        const user = tg.initData?.user;
-        const authButtonDiv = document.getElementById('auth-button');
-  
-        function handleProfileClick() {
-          window.location.href = '{{ route('settings.index') }}';
-        }
-  
-        function handleLoginClick() {
-          window.location.href = '{{ route('login') }}';
-        }
-  
-        if(user) {
-          if(user.photo_url) {
-            authButtonDiv.innerHTML = `<img src="${user.photo_url}" class="img-prfile img-fluid rounded-circle btn-user" onclick="handleProfileClick();">`;
-          } else {
-            authButtonDiv.innerHTML = `<button class="btn btn-sm rounded-circle btn-user" onclick="handleProfileClick();">
-        <i class="bi bi-person-circle"></i>
-      </button>`;
-          }
-        } else {
-          authButtonDiv.innerHTML = `<button class="btn btn-sm btn-user" onclick="handleLoginClick();">
-      <i class="bi bi-box-arrow-in-right"></i>
-    </button>`;
-        }
-
         // Beri tahu Telegram bahwa halaman sudah siap
         tg.ready();
     </script>
