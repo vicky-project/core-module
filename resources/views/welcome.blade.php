@@ -23,13 +23,13 @@
   <!-- Menu Utama -->
   <div class="container text-center mt-4 p-3">
     <div class="row">
-      @hasHook('main-apps')
-        <div class="col-4 col-md-2 mb-2">
+      <div class="col-4 col-md-2 mb-2">
         <a href="{{ route('cores.dashboard') }}" class="menu-item rounded-4 p-2">
           <i class="bi bi-app"></i>
           <span>Application</span>
         </a>
       </div>
+      @hasHook('main-apps')
         @hook('main-apps')
       @endHasHook
     </div>
