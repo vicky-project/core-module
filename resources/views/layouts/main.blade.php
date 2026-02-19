@@ -104,7 +104,7 @@
         }
 
         // Tampilkan data user di console untuk debugging (opsional)
-        alert(tg);
+        alert(JSON.stringify(tg));
         console.log(tg);
         console.log('User unsafe: ', tg.initDataUnsafe?.user);
         
