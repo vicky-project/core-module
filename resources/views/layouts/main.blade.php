@@ -102,15 +102,16 @@
             const toast = new bootstrap.Toast(toastEl);
             toast.show();
         }
+        
+        const dashboard = document.getElementById('dashboard');
+        const url = new URL(dashboard.href);
+        const params = new URLSearchParams(tg.initData?.user);
+        params.forEach((value, key) => {
+          url.searchParams.set(key, value);
+        });
+        dashboard.href = url.toString();
 
         // Tampilkan data user di console untuk debugging (opsional)
-        alert(JSON.stringify(tg));
-        console.log(tg);
-        console.log('User unsafe: ', tg.initDataUnsafe?.user);
-        
-        
-        const user = tg.initData?.user;
-        console.log('user: ', user)
         
         // Beri tahu Telegram bahwa halaman sudah siap
         tg.ready();
