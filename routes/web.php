@@ -6,7 +6,10 @@ use Modules\Core\Http\Controllers\ServerMonitorController;
 use Modules\Core\Http\Controllers\DashboardController;
 
 $middleware = [];
-if (class_exists(\Modules\Telegram\Auth\TelegramGuard::class)) {
+if (
+	Module::enabled("Telegram") &&
+	class_exists(\Modules\Telegram\Auth\TelegramGuard::class)
+) {
 	$middleware[] = "auth:telegram";
 } else {
 	$middleware[] = "auth";
