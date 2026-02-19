@@ -5,17 +5,17 @@ use Modules\Core\Http\Controllers\CoreController;
 use Modules\Core\Http\Controllers\ServerMonitorController;
 use Modules\Core\Http\Controllers\DashboardController;
 
-$middleware = [];
+$middlewares = [];
 if (
 	Module::collections()->has("Telegram") &&
 	class_exists(\Modules\Telegram\Auth\TelegramGuard::class)
 ) {
-	$middleware[] = "auth:telegram";
+	$middlewares[] = "auth:telegram";
 } else {
-	$middleware[] = "auth";
+	$middlewares[] = "auth";
 }
 
-Route::middleware($middleware)->group(function () {
+Route::middleware($middlewares)->group(function () {
 	Route::get("dashboard", [DashboardController::class, "index"])->name(
 		"cores.dashboard"
 	);
