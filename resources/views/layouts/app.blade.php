@@ -41,7 +41,7 @@
 
     // Fungsi kembali
     function goBack() {
-      window.location.href = "{{ back() }}?initData=" + encodeURIComponent(tg.initData);
+      window.location.href = "{{ url()->back() }}?initData=" + encodeURIComponent(tg.initData);
     }
 
     // Fungsi logout

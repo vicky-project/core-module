@@ -39,7 +39,7 @@
         tg.SettingsButton.show();
         @endif
         tg.BackButton.isVisible = true;
-        tg.BackButton.onClick(() => window.location.href = '{{ back() }}');
+        tg.BackButton.onClick(() => window.location.href = '{{ url()->back() }}');
         tg.BackButton.show();
         
         //tg.setHeaderColor()
