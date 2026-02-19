@@ -100,6 +100,7 @@
         }
 
         // Tampilkan data user di console untuk debugging (opsional)
+        console.log(tg);
         console.log('User unsafe: ', tg.initDataUnsafe?.user);
         
         tg.SettingsButton.isVisible = true;
