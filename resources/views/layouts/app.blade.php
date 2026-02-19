@@ -14,18 +14,18 @@
 </head>
 <body>
   <div class="header">
+    <!-- Tombol Kembali ke halaman utama -->
+    <button class="back-button" onclick="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+      
     <div class="d-flex align-items-center">
-      <!-- Tombol Kembali ke halaman utama -->
-      <button class="back-button" onclick="goBack()">
-        <i class="bi bi-arrow-left"></i>
-      </button>
       <div class="theme-indicator" id="themeIndicator" title="Toggle Theme">
         <i class="bi" id="themeIcon"></i>
       </div>
-    </div>
 
-    <!-- Dropdown User -->
-    <div class="dropdown">
+      <!-- Dropdown User -->
+      <div class="dropdown">
       <div class="user-dropdown" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
           <img class="rounded-circle user-avatar" width="32" height="32" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
@@ -44,6 +44,7 @@
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
       </ul>
+    </div>
     </div>
   </div>
   @yield('content')
