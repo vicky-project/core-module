@@ -28,7 +28,7 @@
         .theme-indicator {
             font-size: 1.2rem;
             color: var(--tg-theme-hint-color, #999);
-            margin-right: 8px;
+            margin-right: 20px;
             cursor: pointer;
             transition: opacity 0.2s;
         }
