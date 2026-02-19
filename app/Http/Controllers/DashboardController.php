@@ -9,7 +9,6 @@ class DashboardController extends BaseController
 {
 	public function index(Request $request)
 	{
-		dd($request->all());
 		return view("core::dashboard.index", [
 			"title" => "Dashboard",
 			"breadcrumbs" => [["name" => "Dashboard", "active" => true]],
