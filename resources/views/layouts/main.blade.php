@@ -114,8 +114,6 @@
           url.searchParams.set(key, value);
         });
         dashboard.href = url.toString();
-
-        // Tampilkan data user di console untuk debugging (opsional)
         
         // Beri tahu Telegram bahwa halaman sudah siap
         tg.ready();
