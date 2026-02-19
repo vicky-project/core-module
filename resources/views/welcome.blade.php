@@ -23,18 +23,18 @@
   <!-- Menu Utama -->
   <div class="container text-center mt-4 p-3">
     <div class="row">
+      <div class="col-4 col-md-2 mb-2">
+        <a href="{{ route('cores.dashboard') }}" class="menu-item rounded-4 p-2">
+          <i class="bi bi-app"></i>
+          <span>Application</span>
+        </a>
+      </div>
       @hasHook('main-apps')
         @hook('main-apps')
       @endHasHook
-      <div class="col-4 col-md-2 mb-2">
-        <a href="{{ route('settings.index') }}" class="menu-item rounded-4 p-2">
-          <i class="bi bi-gear"></i>
-          <span>Pengaturan</span>
-        </a>
-      </div>
     </div>
   </div>
-  <div class="row mt-4 fixed-bottom">
+  <div class="row mt-4 py-3 fixed-bottom">
     <div class="col-12">
       @hasHook('main-footer')
       <div class="d-inline gap-2">
