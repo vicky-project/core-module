@@ -42,7 +42,14 @@
         <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</i></li>
         @endif
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+        @if(Route::has("logout"))
+          <li>
+            <form method="POST" action="{{ route('logout') }}" id="logout-form">
+              @csrf
+              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+            </form>
+          </li>
+        @endif
       </ul>
     </div>
     </div>
