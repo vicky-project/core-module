@@ -7,7 +7,7 @@ use Modules\Core\Http\Controllers\DashboardController;
 
 $middleware = [];
 if (
-	Module::enabled("Telegram") &&
+	Module::collections()->has("Telegram") &&
 	class_exists(\Modules\Telegram\Auth\TelegramGuard::class)
 ) {
 	$middleware[] = "auth:telegram";
