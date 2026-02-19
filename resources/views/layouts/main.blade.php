@@ -33,14 +33,6 @@
         document.body.style.setProperty('--tg-theme-button-text-color', theme.button_text_color || '#ffffff');
         document.body.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color || '#f0f0f0');
         document.body.style.setProperty('--tg-theme-section-bg-color', theme.section_bg_color || '#f0f0f0');
-        @if(Route::has('settings.index'))
-        tg.SettingsButton.isVisible = true;
-        tg.SettingsButton.onClick(() => window.location.href = '{{ route("settings.index") }}');
-        tg.SettingsButton.show();
-        @endif
-        tg.BackButton.isVisible = true;
-        tg.BackButton.onClick(() => window.location.href = '{{ url()->previous() }}');
-        tg.BackButton.show();
         
         //tg.setHeaderColor()
         //tg.requestFullscreen(theme.secondary_bg_color);
