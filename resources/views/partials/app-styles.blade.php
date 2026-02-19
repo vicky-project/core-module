@@ -25,6 +25,16 @@
         .user-dropdown {
             cursor: pointer;
         }
+        .theme-indicator {
+            font-size: 1.2rem;
+            color: var(--tg-theme-hint-color, #999);
+            margin-left: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .theme-indicator:hover {
+            opacity: 0.8s;
+        }
         .user-avatar {
             width: 40px;
             height: 40px;

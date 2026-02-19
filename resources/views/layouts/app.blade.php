@@ -13,6 +13,39 @@
     @stack('styles')
 </head>
 <body>
+  <div class="header">
+    <div class="d-flex align-items-center">
+      <!-- Tombol Kembali ke halaman utama -->
+      <button class="back-button" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div class="theme-indicator" id="themeIndicator" title="Toggle Theme">
+        <i class="bi" id="themeIcon"></i>
+      </div>
+    </div>
+
+    <!-- Dropdown User -->
+    <div class="dropdown">
+      <div class="user-dropdown" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
+          <img class="rounded-circle user-avatar" width="32" height="32" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
+        @elseif(request()->has('photo_url'))
+          <img src="{{ request()->get('photo_url') }}" class="user-avatar" alt="User">
+        @else
+          <div class="user-avatar-placeholder">
+          {{ \Auth::user()->name ? strtoupper(substr(\Auth::user()->name, 0, 1)) : 'U' }}
+          </div>
+        @endif
+      </div>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        @if(Route::has('settings.index'))
+        <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</i></li>
+        @endif
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
   @yield('content')
   
   <!-- Bootstrap JS -->
@@ -23,15 +56,68 @@
     // Inisialisasi Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.expand();
+    
+    // Ambil elemen
+    const themeIndicator = document.getElementById('themeIndicator');
+    const themeIcon = document.getElementById('themeIcon');
 
-    // Terapkan tema Telegram
-    const theme = tg.themeParams;
-    document.body.style.setProperty('--tg-theme-bg-color', theme.bg_color || '#ffffff');
-    document.body.style.setProperty('--tg-theme-text-color', theme.text_color || '#000000');
-    document.body.style.setProperty('--tg-theme-hint-color', theme.hint_color || '#999999');
-    document.body.style.setProperty('--tg-theme-button-color', theme.button_color || '#40a7e3');
-    document.body.style.setProperty('--tg-theme-button-text-color', theme.button_text_color || '#ffffff');
-    document.body.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color || '#f8f9fa');
+    // --- Fungsi Tema Internal ---
+    // Warna untuk light mode (default Bootstrap)
+    const lightTheme = {
+            bg: '#ffffff',
+            text: '#000000',
+            hint: '#999999',
+            button: '#40a7e3',
+            buttonText: '#ffffff',
+            secondaryBg: '#f8f9fa'
+    };
+    // Warna untuk dark mode (custom)
+    const darkTheme = {
+            bg: '#1f1f1f',
+            text: '#ffffff',
+            hint: '#aaaaaa',
+            button: '#8774e1',
+            buttonText: '#ffffff',
+            secondaryBg: '#2f2f2f'
+    };
+
+    // Ambil preferensi dari localStorage, default ke colorScheme Telegram
+    let currentTheme = localStorage.getItem('app_theme');
+    if (!currentTheme) {
+      currentTheme = tg.colorScheme || 'light'; // 'light' atau 'dark'
+    }
+
+    // Fungsi untuk menerapkan tema
+    function applyTheme(theme) {
+            const colors = theme === 'dark' ? darkTheme : lightTheme;
+            document.body.style.setProperty('--tg-theme-bg-color', colors.bg);
+            document.body.style.setProperty('--tg-theme-text-color', colors.text);
+            document.body.style.setProperty('--tg-theme-hint-color', colors.hint);
+            document.body.style.setProperty('--tg-theme-button-color', colors.button);
+            document.body.style.setProperty('--tg-theme-button-text-color', colors.buttonText);
+            document.body.style.setProperty('--tg-theme-secondary-bg-color', colors.secondaryBg);
+
+            // Update ikon dan tooltip
+            if (theme === 'dark') {
+                themeIcon.className = 'bi bi-moon-stars';
+                themeIndicator.setAttribute('title', 'Mode Gelap (klik untuk toggle)');
+            } else {
+                themeIcon.className = 'bi bi-brightness-high';
+                themeIndicator.setAttribute('title', 'Mode Terang (klik untuk toggle)');
+            }
+
+      localStorage.setItem('app_theme', theme);
+    }
+
+    // Terapkan tema awal
+    applyTheme(currentTheme);
+
+    // Event klik untuk toggle tema
+    themeIndicator.addEventListener('click', function() {
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      currentTheme = newTheme;
+      applyTheme(newTheme);
+    });
 
     // Fungsi navigasi sementara
     function navigateTo(page) {
