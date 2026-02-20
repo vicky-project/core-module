@@ -20,7 +20,7 @@
           <button class="back-button" onclick="goBack()">
             <i class="bi bi-arrow-left"></i>
           </button>
-          <div class="theme-indicator" id="themeIndicator" title="Toggle tema">
+          <div class="theme-indicator ms-3" id="themeIndicator" title="Toggle tema">
             <i class="bi" id="themeIcon"></i>
           </div>
         </div>
