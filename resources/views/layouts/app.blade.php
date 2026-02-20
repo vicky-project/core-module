@@ -19,7 +19,7 @@
       <i class="bi bi-arrow-left"></i>
     </button>
       
-    <div class="d-flex align-items-center ms-auto ms-md-0 me-3 me-lg-4">
+    <div class="d-flex align-items-center ms-auto me-3 me-lg-4">
       <div class="theme-indicator" id="themeIndicator" title="Toggle Theme">
         <i class="bi" id="themeIcon"></i>
       </div>
