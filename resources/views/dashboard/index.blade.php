@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="content container-custom">
   <!-- Grid Aplikasi -->
   <div class="app-grid">
     @hasHook('dashboard-widgets')
@@ -14,5 +13,4 @@
       <span>Akun</span>
     </a> --}}
   </div>
-</div>
 @endsection
