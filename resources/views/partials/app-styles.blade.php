@@ -6,13 +6,10 @@
             margin: 0;
             padding: 0;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
+        .navbar {
             background-color: var(--tg-theme-secondary-bg-color, #f8f9fa);
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 0.5rem 1rem;
         }
         .back-button {
             font-size: 1.5rem;
@@ -21,6 +18,7 @@
             background: none;
             border: none;
             padding: 0;
+            line-height: 1;
         }
         .user-dropdown {
             cursor: pointer;
@@ -28,7 +26,7 @@
         .theme-indicator {
             font-size: 1.2rem;
             color: var(--tg-theme-hint-color, #999);
-            margin-right: 20px;
+            margin-right: 0.75rem;
             cursor: pointer;
             transition: opacity 0.2s;
         }

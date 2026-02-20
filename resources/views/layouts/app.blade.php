@@ -13,48 +13,49 @@
     @stack('styles')
 </head>
 <body>
-  <div class="header">
-    <!-- Tombol Kembali ke halaman utama -->
-    <button class="back-button" onclick="goBack()">
-      <i class="bi bi-arrow-left"></i>
-    </button>
-      
-    <div class="d-flex align-items-center ms-auto me-3 me-lg-4">
-      <div class="theme-indicator" id="themeIndicator" title="Toggle Theme">
-        <i class="bi" id="themeIcon"></i>
-      </div>
-
-      <!-- Dropdown User -->
-      <div class="dropdown">
-        <div class="user-dropdown" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
-          <img class="rounded-circle user-avatar" width="32" height="32" src="{{ \Auth::user()->profile()->image() }}"alt="{{ \Auth::user()->name }}">
-        @elseif(request()->has('photo_url'))
-          <img src="{{ request()->get('photo_url') }}" class="user-avatar" alt="User">
-        @else
-          <div class="user-avatar-placeholder">
-          {{ \Auth::user()->name ? strtoupper(substr(\Auth::user()->name, 0, 1)) : 'U' }}
+    <!-- Navbar Bootstrap -->
+    <nav class="navbar">
+      <div class="container-fluid px-0">
+        <div class="d-flex align-items-center">
+          <button class="back-button" onclick="goBack()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div class="theme-indicator ms-3" id="themeIndicator" title="Toggle tema">
+            <i class="bi" id="themeIcon"></i>
           </div>
-        @endif
         </div>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-          @if(Route::has('settings.index'))
-          <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</i></li>
-          @endif
-          <li><hr class="dropdown-divider"></li>
-          @if(Route::has("logout"))
+
+        <!-- Dropdown Profil -->
+        <div class="dropdown">
+          <div class="user-dropdown" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            @if(Module::has('UserManagement') && Module::isEnabled('UserManagement'))
+              <img src="{{ \Auth::user()->profile()->image() }}" class="user-avatar" alt="{{ \Auth::user()->name }}">
+            @elseif(request()->has('photo_url'))
+              <img src="{{ request()->get('photo_url') }}" class="user-avatar" alt="User">
+            @else
+              <div class="user-avatar-placeholder">
+                {{ \Auth::user()->name ? strtoupper(substr(\Auth::user()->name, 0, 1)) : 'U' }}
+              </div>
+            @endif
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            @if(Route::has('settings.index'))
+              <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</i></li>
+            @endif
+            <li><hr class="dropdown-divider"></li>
+            @if(Route::has("logout"))
             <li>
               <form method="POST" action="{{ route('logout') }}" id="logout-form">
                 @csrf
                 <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
               </form>
             </li>
-          @endif
-        </ul>
+            @endif
+          </ul>
+        </div>
       </div>
-    </div>
-  </div>
-  @yield('content')
+    </nav>
+    @yield('content')
   
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
