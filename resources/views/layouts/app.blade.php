@@ -47,8 +47,8 @@
             <li>
               <form method="POST" action="{{ route('logout') }}" id="logout-form">
                 @csrf
-                <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure to log out this session?');"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
               </form>
+              <button type="submit" class="dropdown-item" onclick="logout();"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
             </li>
             @endif
           </ul>
@@ -73,21 +73,21 @@
     // --- Fungsi Tema Internal ---
     // Warna untuk light mode (default Bootstrap)
     const lightTheme = {
-            bg: '#ffffff',
-            text: '#000000',
-            hint: '#999999',
-            button: '#40a7e3',
-            buttonText: '#ffffff',
-            secondaryBg: '#f8f9fa'
+      bg: '#ffffff',
+      text: '#000000',
+      hint: '#999999',
+      button: '#40a7e3',
+      buttonText: '#ffffff',
+      secondaryBg: '#f8f9fa'
     };
     // Warna untuk dark mode (custom)
     const darkTheme = {
-            bg: '#1f1f1f',
-            text: '#ffffff',
-            hint: '#aaaaaa',
-            button: '#8774e1',
-            buttonText: '#ffffff',
-            secondaryBg: '#2f2f2f'
+      bg: '#1f1f1f',
+      text: '#ffffff',
+      hint: '#aaaaaa',
+      button: '#8774e1',
+      buttonText: '#ffffff',
+      secondaryBg: '#2f2f2f'
     };
 
     // Ambil preferensi dari localStorage, default ke colorScheme Telegram
@@ -117,6 +117,14 @@
 
       localStorage.setItem('app_theme', theme);
     }
+    
+    function logout() {
+      if(!confirm('Are you sure to log out this session ?')) {
+        return false;
+      }
+      
+      document.getElementById('logout-form').submit();
+    }
 
     // Terapkan tema awal
     applyTheme(currentTheme);
@@ -137,29 +145,6 @@
     // Fungsi kembali
     function goBack() {
       window.location.href = "{{ url()->previous() }}?initData=" + encodeURIComponent(tg.initData);
-    }
-
-    // Fungsi logout
-    function logout() {
-      fetch('/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ initData: tg.initData })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            window.location.href = "/";
-          } else {
-            showToast('Logout gagal', 'danger');
-          }
-      })
-        .catch(error => {
-          showToast('Terjadi kesalahan', 'danger');
-        });
     }
 
     // Fungsi toast
