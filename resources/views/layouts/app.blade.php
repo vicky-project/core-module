@@ -53,8 +53,11 @@
             @endif
           </ul>
         </div>
+        <!-- ./ Dropdown Profile -->
       </div>
     </nav>
+    <!-- ./ Navbar Bootstrap -->
+    
     @yield('content')
   
   <!-- Bootstrap JS -->
