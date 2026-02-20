@@ -40,7 +40,7 @@
           </div>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             @if(Route::has('settings.index'))
-              <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</i></li>
+              <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
             @endif
             <li><hr class="dropdown-divider"></li>
             @if(Route::has("logout"))
