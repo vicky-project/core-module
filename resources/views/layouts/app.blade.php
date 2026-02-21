@@ -14,7 +14,7 @@
 </head>
 <body>
     <!-- Navbar Bootstrap -->
-    <nav class="navbar">
+    <nav class="navbar fixed-top">
       <div class="container-fluid px-0">
         <div class="d-flex align-items-center">
           <button class="back-button" onclick="goBack()">
@@ -149,7 +149,11 @@
 
     // Fungsi kembali
     function goBack() {
-      window.location.href = "{{ url()->previous() }}?initData=" + encodeURIComponent(tg.initData);
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "{{ route('core.dashboard') }}?initData=" + encodeURIComponent(tg.initData);
+      }
     }
 
     // Fungsi toast
