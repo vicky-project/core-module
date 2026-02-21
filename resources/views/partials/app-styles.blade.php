@@ -116,6 +116,6 @@
   
   .container-custom {
     max-width: 500px;
-    margin: 0 auto;
+    margin: 2rem auto;
   }
 </style>
