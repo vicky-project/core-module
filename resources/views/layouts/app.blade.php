@@ -152,7 +152,7 @@
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        window.location.href = "{{ route('core.dashboard') }}?initData=" + encodeURIComponent(tg.initData);
+        window.location.href = "{{ route('cores.dashboard') }}?initData=" + encodeURIComponent(tg.initData);
       }
     }
 
