@@ -76,50 +76,77 @@
     const themeIcon = document.getElementById('themeIcon');
 
     // --- Fungsi Tema Internal ---
-    // Warna untuk light mode (default Bootstrap)
+    // Warna untuk light mode (default Bootstrap + adaptasi Telegram)
     const lightTheme = {
       bg: '#ffffff',
       text: '#000000',
       hint: '#999999',
-      button: '#40a7e3',
-      buttonText: '#ffffff',
-      secondaryBg: '#f8f9fa'
+      link: '#40a7e3',                     // link_color
+      sectionHeaderText: '#000000',         // section_header_text_color
+      accentText: '#40a7e3',                // accent_text_color
+      subtitleText: '#666666',               // subtitle_text_color
+      destructiveText: '#ff3b30',            // destructive_text_color
+      buttonText: '#ffffff',                 // button_text_color
+      secondaryBg: '#f8f9fa',                // secondary_bg_color
+      headerBg: '#ffffff',                    // header_bg_color
+      sectionSeparator: '#e9ecef',            // section_separator_color
+      sectionBg: '#f8f9fa',                   // section_bg_color
+      button: '#40a7e3'                       // button_color
     };
+    
     // Warna untuk dark mode (custom)
     const darkTheme = {
       bg: '#1f1f1f',
       text: '#ffffff',
       hint: '#aaaaaa',
-      button: '#8774e1',
-      buttonText: '#ffffff',
-      secondaryBg: '#2f2f2f'
+      link: '#8774e1',                       // link_color
+      sectionHeaderText: '#ffffff',           // section_header_text_color
+      accentText: '#8774e1',                  // accent_text_color
+      subtitleText: '#cccccc',                 // subtitle_text_color
+      destructiveText: '#ff453a',              // destructive_text_color
+      buttonText: '#ffffff',                   // button_text_color
+      secondaryBg: '#2f2f2f',                  // secondary_bg_color
+      headerBg: '#1f1f1f',                     // header_bg_color
+      sectionSeparator: '#3a3a3a',             // section_separator_color
+      sectionBg: '#2f2f2f',                    // section_bg_color
+      button: '#8774e1'                        // button_color
     };
-
+    
     // Ambil preferensi dari localStorage, default ke colorScheme Telegram
     let currentTheme = localStorage.getItem('app_theme');
     if (!currentTheme) {
       currentTheme = tg.colorScheme || 'light'; // 'light' atau 'dark'
     }
-
+    
     // Fungsi untuk menerapkan tema
     function applyTheme(theme) {
-            const colors = theme === 'dark' ? darkTheme : lightTheme;
-            document.body.style.setProperty('--tg-theme-bg-color', colors.bg);
-            document.body.style.setProperty('--tg-theme-text-color', colors.text);
-            document.body.style.setProperty('--tg-theme-hint-color', colors.hint);
-            document.body.style.setProperty('--tg-theme-button-color', colors.button);
-            document.body.style.setProperty('--tg-theme-button-text-color', colors.buttonText);
-            document.body.style.setProperty('--tg-theme-secondary-bg-color', colors.secondaryBg);
-
-            // Update ikon dan tooltip
-            if (theme === 'dark') {
-                themeIcon.className = 'bi bi-moon-stars';
-                themeIndicator.setAttribute('title', 'Mode Gelap (klik untuk toggle)');
-            } else {
-                themeIcon.className = 'bi bi-brightness-high';
-                themeIndicator.setAttribute('title', 'Mode Terang (klik untuk toggle)');
-            }
-
+      const colors = theme === 'dark' ? darkTheme : lightTheme;
+      
+      // Set semua variabel CSS tema Telegram
+      document.body.style.setProperty('--tg-theme-bg-color', colors.bg);
+      document.body.style.setProperty('--tg-theme-text-color', colors.text);
+      document.body.style.setProperty('--tg-theme-hint-color', colors.hint);
+      document.body.style.setProperty('--tg-theme-link-color', colors.link);
+      document.body.style.setProperty('--tg-theme-button-color', colors.button);
+      document.body.style.setProperty('--tg-theme-button-text-color', colors.buttonText);
+      document.body.style.setProperty('--tg-theme-secondary-bg-color', colors.secondaryBg);
+      document.body.style.setProperty('--tg-theme-header-bg-color', colors.headerBg);
+      document.body.style.setProperty('--tg-theme-accent-text-color', colors.accentText);
+      document.body.style.setProperty('--tg-theme-section-bg-color', colors.sectionBg);
+      document.body.style.setProperty('--tg-theme-section-header-text-color', colors.sectionHeaderText);
+      document.body.style.setProperty('--tg-theme-subtitle-text-color', colors.subtitleText);
+      document.body.style.setProperty('--tg-theme-destructive-text-color', colors.destructiveText);
+      document.body.style.setProperty('--tg-theme-section-separator-color', colors.sectionSeparator);
+      
+      // Update ikon dan tooltip
+      if (theme === 'dark') {
+        themeIcon.className = 'bi bi-moon-stars';
+        themeIndicator.setAttribute('title', 'Mode Gelap (klik untuk toggle)');
+      } else {
+        themeIcon.className = 'bi bi-brightness-high';
+        themeIndicator.setAttribute('title', 'Mode Terang (klik untuk toggle)');
+      }
+      
       localStorage.setItem('app_theme', theme);
     }
     
